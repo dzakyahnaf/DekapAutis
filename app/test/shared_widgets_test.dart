@@ -1,7 +1,6 @@
 import 'package:dekapautis/core/theme/app_theme.dart';
 import 'package:dekapautis/core/theme/tokens.dart';
 import 'package:dekapautis/data/models/response_level.dart';
-import 'package:dekapautis/shared/widgets/buttons.dart';
 import 'package:dekapautis/shared/widgets/routine_card.dart';
 import 'package:dekapautis/shared/widgets/safety_banner.dart';
 import 'package:dekapautis/shared/widgets/source_chip.dart';
@@ -16,54 +15,25 @@ Widget _host(Widget child) => ProviderScope(
   ),
 );
 
+/// Behaviour of the shared widgets. Their 48dp tap targets are covered
+/// separately in `touch_target_test.dart`.
 void main() {
-  group('touch targets', () {
-    testWidgets('primary button meets the Android tap target guideline', (
-      tester,
-    ) async {
-      final handle = tester.ensureSemantics();
+  group('source chip', () {
+    testWidgets('renders its reference number', (tester) async {
       await tester.pumpWidget(
-        _host(PrimaryButton(label: 'Simpan catatan', onPressed: () {})),
+        _host(Align(child: SourceChip(number: 3, onOpen: () {}))),
       );
-      await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
-      handle.dispose();
+      expect(find.text('3'), findsOneWidget);
     });
 
-    testWidgets('source chip reads small but is still 48dp to hit', (
-      tester,
-    ) async {
-      final handle = tester.ensureSemantics();
+    testWidgets('opens the source panel when pressed', (tester) async {
+      var opened = 0;
       await tester.pumpWidget(
-        _host(Align(child: SourceChip(number: 1, onOpen: () {}))),
+        _host(Align(child: SourceChip(number: 1, onOpen: () => opened++))),
       );
-
-      final size = tester.getSize(find.byType(SourceChip));
-      expect(size.height, greaterThanOrEqualTo(DekapSpace.minTouch));
-      expect(size.width, greaterThanOrEqualTo(DekapSpace.minTouch));
-
-      await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
-      handle.dispose();
-    });
-
-    testWidgets('all three response buttons on a routine card are reachable', (
-      tester,
-    ) async {
-      final handle = tester.ensureSemantics();
-      await tester.pumpWidget(
-        _host(
-          RoutineCard(
-            position: 1,
-            total: 5,
-            time: '08.00',
-            durationMinutes: 10,
-            category: DekapCategory.komunikasi,
-            title: 'Menamai benda di meja makan',
-            onRespond: (_) {},
-          ),
-        ),
-      );
-      await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
-      handle.dispose();
+      await tester.tap(find.byType(SourceChip));
+      await tester.pump();
+      expect(opened, 1);
     });
   });
 
