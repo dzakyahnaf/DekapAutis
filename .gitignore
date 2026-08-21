@@ -1,0 +1,57 @@
+# --- Rahasia: JANGAN PERNAH di-commit (CLAUDE.md aturan mutlak #4) ---
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+key.properties
+secrets.json
+service-account*.json
+
+# --- Android lokal ---
+app/android/local.properties
+app/android/key.properties
+app/android/.gradle/
+app/android/app/debug/
+app/android/app/profile/
+app/android/app/release/
+
+# --- Flutter / Dart ---
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+*.g.dart.lock
+.flutter-plugins
+.flutter-plugins-dependencies
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+
+# --- Supabase ---
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+supabase/.env.local
+supabase/functions/**/.env
+
+# --- Python (skrip evaluasi & indexing) ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+scripts/.venv/
+scripts/out/
+
+# --- Editor & OS ---
+.idea/
+.vscode/
+*.iml
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Artefak build rilis ---
+*.apk
+*.aab
+*.symbols
