@@ -2,13 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'core/accessibility/accessibility_prefs.dart';
+import 'core/config/app_config.dart';
 import 'core/router/app_router.dart';
 import 'core/strings.dart';
 import 'core/theme/app_theme.dart';
+import 'data/supabase/secure_session_storage.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: AppConfig.supabaseUrl,
+    publishableKey: AppConfig.supabasePublishableKey,
+    authOptions: FlutterAuthClientOptions(
+      // The session is a bearer token for a child's records, so it lives in the
+      // platform keystore rather than in SharedPreferences.
+      localStorage: SecureSessionStorage(),
+      // Google sign-in hands control to an external browser and comes back
+      // through the dekapautis:// deep link registered in AndroidManifest.
+      authFlowType: AuthFlowType.pkce,
+    ),
+  );
+
   runApp(const ProviderScope(child: DekapAutisApp()));
 }
 
