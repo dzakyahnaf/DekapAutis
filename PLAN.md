@@ -58,10 +58,10 @@ Tujuan: 12 entitas hidup dengan RLS yang benar, dan pengguna bisa masuk.
 - [x] Migrasi 003: **RLS di setiap tabel**. Default deny. Pengasuh hanya melihat barisnya sendiri; tenaga profesional hanya melihat laporan yang punya `izin_berbagi` aktif; administrator lewat peran terpisah
 - [x] Migrasi 004: indeks — `ivfflat` pada `potongan_dokumen.embedding`, GIN pada `to_tsvector('indonesian', potongan_dokumen.teks)`, indeks komposit pada kolom yang sering difilter
 - [x] Tulis **uji RLS** sebagai skrip SQL: buat dua pengguna, pastikan A tidak bisa membaca satu baris pun milik B. Ini bukti privasi yang akan Anda tunjukkan di video
-- [ ] Implementasi auth Flutter: daftar, masuk, lupa kata sandi, masuk dengan Google, keluar (layar L.14)
-- [ ] Penetapan peran saat pendaftaran: `pengasuh` / `profesional` / `admin` (KF-01)
-- [ ] Sesi persisten via `flutter_secure_storage`; auto-refresh token
-- [ ] Layar splash (L.13) yang memuat sesi dan mengarahkan ke beranda atau masuk
+- [x] Implementasi auth Flutter: daftar, masuk, lupa kata sandi, masuk dengan Google, keluar (layar L.14)
+- [x] Penetapan peran saat pendaftaran: `pengasuh` / `profesional` / `admin` (KF-01)
+- [x] Sesi persisten via `flutter_secure_storage`; auto-refresh token
+- [x] Layar splash (L.13) yang memuat sesi dan mengarahkan ke beranda atau masuk
 
 **Selesai bila:** uji RLS lulus — pengguna A benar-benar tidak bisa membaca data pengguna B, dibuktikan lewat skrip, bukan lewat asumsi. `KF-01` tercentang.
 
@@ -69,13 +69,13 @@ Tujuan: 12 entitas hidup dengan RLS yang benar, dan pengguna bisa masuk.
 
 ## F2 — Onboarding dan profil anak
 
-- [ ] Onboarding 4 langkah (L.1): nama panggilan, usia, kemampuan komunikasi (belum verbal / beberapa kata / kalimat pendek / lancar), sensitivitas sensorik (multi-pilih), fokus perkembangan 3 bulan (KF-02)
-- [ ] Langkah 4 = preferensi aksesibilitas (L.15): Mode Tenang, ukuran teks (standar/besar/sangat besar) dengan pratinjau langsung, kurangi gerakan
-- [ ] Indikator progres bilah **statis** 4 segmen — bukan animasi
-- [ ] Pita privasi di bawah form: "Data anak dienkripsi dan tidak dibagikan tanpa izin Anda"
-- [ ] Simpan ke `profil_anak`; dukung lebih dari satu anak per akun
-- [ ] Layar Profil & Privasi (L.16): sunting profil anak, kelola izin berbagi, unduh salinan seluruh data (JSON), hapus akun beserta seluruh data
-- [ ] **Penghapusan akun harus benar-benar menghapus**, bukan menandai. Uji dengan query langsung setelahnya
+- [x] Onboarding 4 langkah (L.1): nama panggilan, usia, kemampuan komunikasi (belum verbal / beberapa kata / kalimat pendek / lancar), sensitivitas sensorik (multi-pilih), fokus perkembangan 3 bulan (KF-02)
+- [x] Langkah 4 = preferensi aksesibilitas (L.15): Mode Tenang, ukuran teks (standar/besar/sangat besar) dengan pratinjau langsung, kurangi gerakan
+- [x] Indikator progres bilah **statis** 4 segmen — bukan animasi
+- [x] Pita privasi di bawah form: "Data anak dienkripsi dan tidak dibagikan tanpa izin Anda"
+- [x] Simpan ke `profil_anak`; dukung lebih dari satu anak per akun
+- [x] Layar Profil & Privasi (L.16): sunting profil anak, kelola izin berbagi, unduh salinan seluruh data (JSON), hapus akun beserta seluruh data
+- [x] **Penghapusan akun harus benar-benar menghapus**, bukan menandai. Uji dengan query langsung setelahnya
 
 **Selesai bila:** profil anak baru menghasilkan rekaman lengkap, dan penghapusan akun meninggalkan nol baris di 12 tabel. `KF-02` tercentang.
 
