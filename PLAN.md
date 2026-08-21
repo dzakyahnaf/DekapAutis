@@ -32,16 +32,16 @@ F5 dan F3/F4 bisa dikerjakan paralel oleh dua orang. Pembagian yang disarankan: 
 
 Tujuan: kerangka yang bisa di-build, bertema benar, dan aman secara rahasia sejak commit pertama.
 
-- [ ] Inisialisasi repositori Git + `.gitignore` yang sudah memuat `.env*`, `*.jks`, `*.keystore`, `key.properties`, `android/local.properties`
-- [ ] `flutter create` dengan org `id.ac.its.fable5`, application id `id.ac.its.fable5.dekapautis`
-- [ ] Tambah dependensi inti: `flutter_riverpod`, `go_router`, `supabase_flutter`, `drift`, `sqlite3_flutter_libs`, `flutter_secure_storage`, `connectivity_plus`, `google_fonts`, `pdf`, `printing`, `intl`, `share_plus`, `url_launcher`, `geolocator`
-- [ ] Terjemahkan seluruh token desain (`docs/02-DESIGN-SYSTEM.md`) menjadi `core/theme/tokens.dart` + `ThemeData` — warna, tipografi, radius, spasi, tinggi tombol, ukuran ikon
-- [ ] Muat Lexend Deca dan IBM Plex Mono; **bundel sebagai aset lokal**, jangan andalkan unduh runtime dari Google Fonts (aplikasi harus tetap benar saat luring)
-- [ ] Bangun widget bersama: `RoutineCard`, `SourceChip`, `SafetyBanner`, `CategoryPill`, `PrimaryButton`, `SecondaryButton`, `EmptyState`, `OfflineBanner`
-- [ ] Kerangka `go_router` dengan seluruh rute bernama untuk 17 layar + rute profesional/admin, semua masih layar kosong berlabel
-- [ ] `flutter_lints` ketat + `analysis_options.yaml`; nol warning
-- [ ] GitHub Actions: workflow yang menjalankan `flutter analyze` + `flutter test` pada setiap push
-- [ ] Buat `docs/DEVIATIONS.md` kosong dengan header tabel
+- [x] Inisialisasi repositori Git + `.gitignore` yang sudah memuat `.env*`, `*.jks`, `*.keystore`, `key.properties`, `android/local.properties`
+- [x] `flutter create` dengan org `id.ac.its.fable5`, application id `id.ac.its.fable5.dekapautis`
+- [x] Tambah dependensi inti: `flutter_riverpod`, `go_router`, `supabase_flutter`, `drift`, `sqlite3_flutter_libs`, `flutter_secure_storage`, `connectivity_plus`, `google_fonts`, `pdf`, `printing`, `intl`, `share_plus`, `url_launcher`, `geolocator`
+- [x] Terjemahkan seluruh token desain (`docs/02-DESIGN-SYSTEM.md`) menjadi `core/theme/tokens.dart` + `ThemeData` — warna, tipografi, radius, spasi, tinggi tombol, ukuran ikon
+- [x] Muat Lexend Deca dan IBM Plex Mono; **bundel sebagai aset lokal**, jangan andalkan unduh runtime dari Google Fonts (aplikasi harus tetap benar saat luring)
+- [x] Bangun widget bersama: `RoutineCard`, `SourceChip`, `SafetyBanner`, `CategoryPill`, `PrimaryButton`, `SecondaryButton`, `EmptyState`, `OfflineBanner`
+- [x] Kerangka `go_router` dengan seluruh rute bernama untuk 17 layar + rute profesional/admin, semua masih layar kosong berlabel
+- [x] `flutter_lints` ketat + `analysis_options.yaml`; nol warning
+- [x] GitHub Actions: workflow yang menjalankan `flutter analyze` + `flutter test` pada setiap push
+- [x] Buat `docs/DEVIATIONS.md` kosong dengan header tabel
 
 **Selesai bila:** aplikasi berjalan di emulator, menampilkan splash bertema benar, dan seluruh rute bisa dinavigasi meski isinya kosong. Tidak ada satu pun warna di luar palet dalam kode.
 
