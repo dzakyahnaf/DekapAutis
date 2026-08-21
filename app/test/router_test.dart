@@ -88,6 +88,75 @@ void main() {
     }
   });
 
+  group('deep links', () {
+    // Regression: running the real APK showed Android hands the engine the
+    // whole URI, so dekapautis://beranda arrived with "beranda" as the host and
+    // "/" as the path, and matched no route at all.
+    test('scheme URIs are rewritten to plain paths', () {
+      expect(normaliseDeepLink(Uri.parse('dekapautis://beranda')), '/beranda');
+      expect(normaliseDeepLink(Uri.parse('dekapautis://beranda/')), '/beranda');
+      expect(
+        normaliseDeepLink(Uri.parse('dekapautis://rencana/aktivitas/abc')),
+        '/rencana/aktivitas/abc',
+      );
+      expect(
+        normaliseDeepLink(Uri.parse('dekapautis://profil/laporan')),
+        '/profil/laporan',
+      );
+    });
+
+    test('the OAuth callback keeps its query string', () {
+      expect(
+        normaliseDeepLink(Uri.parse('dekapautis://masuk?code=abc123&x=1')),
+        '/masuk?code=abc123&x=1',
+      );
+    });
+
+    test('ordinary in-app paths are left alone', () {
+      expect(normaliseDeepLink(Uri.parse('/beranda')), isNull);
+      expect(normaliseDeepLink(Uri.parse('/profil/laporan/abc')), isNull);
+      expect(
+        normaliseDeepLink(Uri.parse('https://example.com/beranda')),
+        isNull,
+      );
+    });
+  });
+
+  group('unknown routes', () {
+    // Regression: go_router's default error page is an English "Page Not Found"
+    // carrying a raw GoException. Judging runs for ten days unattended, so a
+    // mistyped link must not produce a screen in the wrong language.
+    testWidgets('render an Indonesian screen, never a raw exception', (
+      tester,
+    ) async {
+      await tester.pumpWidget(const ProviderScope(child: DekapAutisApp()));
+      await tester.pumpAndSettle();
+
+      appRouter.go('/rute-yang-tidak-ada');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RouteNotFoundScreen), findsOneWidget);
+      expect(find.text('Halaman ini tidak tersedia'), findsOneWidget);
+      expect(find.text('Kembali ke beranda'), findsOneWidget);
+
+      expect(find.textContaining('Page Not Found'), findsNothing);
+      expect(find.textContaining('GoException'), findsNothing);
+      expect(find.textContaining('Exception'), findsNothing);
+    });
+
+    testWidgets('offer a way back that actually works', (tester) async {
+      await tester.pumpWidget(const ProviderScope(child: DekapAutisApp()));
+      appRouter.go('/tidak-ada-sama-sekali');
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Kembali ke beranda'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RouteNotFoundScreen), findsNothing);
+      expect(find.textContaining('/beranda'), findsOneWidget);
+    });
+  });
+
   testWidgets('the five bottom destinations are labelled in Indonesian', (
     tester,
   ) async {

@@ -61,6 +61,12 @@ abstract final class S {
   static const aksiLihatProfesional = 'Lihat profesional terdekat';
   static const aksiLihatSemua = 'Lihat semua';
 
+  // Routing -----------------------------------------------------------------
+  static const ruteTidakDitemukan = 'Halaman ini tidak tersedia';
+  static const ruteTidakDitemukanIsi =
+      'Alamat yang dituju tidak ada di dalam aplikasi. Kembali ke beranda untuk melanjutkan.';
+  static const aksiKeBeranda = 'Kembali ke beranda';
+
   // Loading, empty, error ---------------------------------------------------
   /// Static text, never a shimmer. Repeating motion is a sensory-load trigger.
   static const memuatRencana = 'Menyiapkan rencana hari ini…';

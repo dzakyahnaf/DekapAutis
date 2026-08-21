@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../shared/widgets/app_shell.dart';
 import '../../shared/widgets/placeholder_screen.dart';
+import '../../shared/widgets/states.dart';
 import '../accessibility/accessibility_prefs.dart';
 import '../strings.dart';
 import '../theme/tokens.dart';
@@ -91,11 +92,51 @@ GoRoute _stub(
   routes: routes,
 );
 
+/// Turns an incoming `dekapautis://` deep link into a plain path.
+///
+/// Android hands the engine the whole URI, so `dekapautis://beranda` arrives
+/// with `beranda` as the *host* and `/` as the path, which matches no route.
+/// Both docs/05 (jumping straight to a screen while recording the demo) and
+/// Supabase `signInWithOAuth` (the callback after the browser hands control
+/// back) depend on this working, so it is normalised here rather than relying
+/// on whoever types the link to remember a third slash.
+String? normaliseDeepLink(Uri uri) {
+  if (uri.scheme != 'dekapautis' || uri.host.isEmpty) return null;
+  final path = uri.path == '/' ? '' : uri.path;
+  final target = '/${uri.host}$path';
+  return uri.hasQuery ? '$target?${uri.query}' : target;
+}
+
+/// Shown when a route does not exist.
+///
+/// go_router's own error page is an English "Page Not Found" with a raw
+/// GoException on it. That breaks two absolute rules at once: the interface is
+/// 100% Bahasa Indonesia, and a raw English message or stack trace is never
+/// shown to the user. Judging runs for ten days without us present, so one
+/// mistyped link must not produce a screen we would be embarrassed by.
+class RouteNotFoundScreen extends StatelessWidget {
+  const RouteNotFoundScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text(S.ruteTidakDitemukan)),
+    body: Center(
+      child: ErrorState(
+        message: S.ruteTidakDitemukanIsi,
+        retryLabel: S.aksiKeBeranda,
+        onRetry: () => context.go('/beranda'),
+      ),
+    ),
+  );
+}
+
 /// Full route tree for the 17 caregiver screens plus the professional and
 /// administrator surfaces, so all three actors in Gambar 6.1 are reachable.
 final appRouter = GoRouter(
   navigatorKey: _rootKey,
   initialLocation: '/splash',
+  redirect: (context, state) => normaliseDeepLink(state.uri),
+  errorBuilder: (context, state) => const RouteNotFoundScreen(),
   routes: [
     _stub('/splash', R.splash, S.appName, phase: 'L.13 - F1'),
     _stub('/masuk', R.masuk, S.titleMasuk, phase: 'L.14 - F1'),

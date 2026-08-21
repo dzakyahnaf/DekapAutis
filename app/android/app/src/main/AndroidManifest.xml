@@ -43,6 +43,33 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <!--
+              Deep links on the dekapautis:// scheme.
+
+              Two things depend on this, neither of them optional:
+              1. docs/05 relies on named routes to jump straight to a screen
+                 while the demo video is being recorded, instead of navigating
+                 there by hand on camera.
+              2. Supabase signInWithOAuth (Masuk dengan Google) hands control to
+                 an external browser and needs a callback to come back to. That
+                 is why this route avoids the SHA-1 keystore trap entirely.
+
+              Example: adb shell am start -a android.intent.action.VIEW \
+                       -d "dekapautis://beranda"
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="dekapautis"/>
+            </intent-filter>
+
+            <!-- Tells the Flutter engine to turn an incoming deep link into the
+                 initial route, which is what go_router reads. -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="true"/>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
