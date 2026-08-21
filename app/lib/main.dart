@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -13,6 +14,10 @@ import 'data/supabase/secure_session_storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Indonesian date names. Without this, DateFormat throws on the first screen
+  // that shows a date - which is the home screen.
+  await initializeDateFormatting('id_ID');
 
   await Supabase.initialize(
     url: AppConfig.supabaseUrl,
