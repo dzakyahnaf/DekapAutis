@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/activity/detail_aktivitas_screen.dart';
 import '../../features/auth/auth_screens.dart';
+import '../../features/home/beranda_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
+import '../../features/plan/rencana_screen.dart';
 import '../../features/profile/preferensi_aksesibilitas.dart';
 import '../../features/profile/profil_screen.dart';
 import '../../features/profile/sunting_anak_screen.dart';
@@ -210,22 +213,22 @@ final appRouter = GoRouter(
       branches: [
         StatefulShellBranch(
           routes: [
-            _stub('/beranda', R.beranda, S.titleBeranda, phase: 'L.2 - F3'),
+            _layar('/beranda', R.beranda, (_, _) => const BerandaScreen()),
           ],
         ),
         StatefulShellBranch(
           routes: [
-            _stub(
+            _layar(
               '/rencana',
               R.rencana,
-              S.titleRencana,
-              phase: 'L.6 - F3',
+              (_, _) => const RencanaScreen(),
               routes: [
-                _stub(
+                _layar(
                   'aktivitas/:id',
                   R.aktivitas,
-                  S.titleAktivitas,
-                  phase: 'L.7 - F3',
+                  (_, state) => DetailAktivitasScreen(
+                    jadwalId: state.pathParameters['id']!,
+                  ),
                 ),
               ],
             ),
