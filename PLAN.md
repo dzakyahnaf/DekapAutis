@@ -52,12 +52,12 @@ Tujuan: kerangka yang bisa di-build, bertema benar, dan aman secara rahasia seja
 Tujuan: 12 entitas hidup dengan RLS yang benar, dan pengguna bisa masuk.
 
 - [ ] Buat project Supabase; catat URL dan anon key ke `.env` lokal (tidak di-commit)
-- [ ] Aktifkan ekstensi `vector` dan verifikasi konfigurasi teks penuh Bahasa Indonesia: `SELECT cfgname FROM pg_ts_config WHERE cfgname='indonesian';`
-- [ ] Migrasi 001: 12 entitas sesuai `docs/03-DATA-MODEL.md` (`pengguna`, `profil_anak`, `rencana`, `jadwal_aktivitas`, `aktivitas`, `catatan_respons`, `catatan_pengasuh`, `laporan`, `dokumen_pengetahuan`, `potongan_dokumen`, `profesional`, `izin_berbagi`)
-- [ ] Migrasi 002: tabel pendukung — `adaptasi_log`, `log_batas_aman`, `postingan_komunitas`, `balasan_komunitas`, `notifikasi`, `versi_basis_pengetahuan`, `tanggapan_profesional`
-- [ ] Migrasi 003: **RLS di setiap tabel**. Default deny. Pengasuh hanya melihat barisnya sendiri; tenaga profesional hanya melihat laporan yang punya `izin_berbagi` aktif; administrator lewat peran terpisah
-- [ ] Migrasi 004: indeks — `ivfflat` pada `potongan_dokumen.embedding`, GIN pada `to_tsvector('indonesian', potongan_dokumen.teks)`, indeks komposit pada kolom yang sering difilter
-- [ ] Tulis **uji RLS** sebagai skrip SQL: buat dua pengguna, pastikan A tidak bisa membaca satu baris pun milik B. Ini bukti privasi yang akan Anda tunjukkan di video
+- [x] Aktifkan ekstensi `vector` dan verifikasi konfigurasi teks penuh Bahasa Indonesia: `SELECT cfgname FROM pg_ts_config WHERE cfgname='indonesian';`
+- [x] Migrasi 001: 12 entitas sesuai `docs/03-DATA-MODEL.md` (`pengguna`, `profil_anak`, `rencana`, `jadwal_aktivitas`, `aktivitas`, `catatan_respons`, `catatan_pengasuh`, `laporan`, `dokumen_pengetahuan`, `potongan_dokumen`, `profesional`, `izin_berbagi`)
+- [x] Migrasi 002: tabel pendukung — `adaptasi_log`, `log_batas_aman`, `postingan_komunitas`, `balasan_komunitas`, `notifikasi`, `versi_basis_pengetahuan`, `tanggapan_profesional`
+- [x] Migrasi 003: **RLS di setiap tabel**. Default deny. Pengasuh hanya melihat barisnya sendiri; tenaga profesional hanya melihat laporan yang punya `izin_berbagi` aktif; administrator lewat peran terpisah
+- [x] Migrasi 004: indeks — `ivfflat` pada `potongan_dokumen.embedding`, GIN pada `to_tsvector('indonesian', potongan_dokumen.teks)`, indeks komposit pada kolom yang sering difilter
+- [x] Tulis **uji RLS** sebagai skrip SQL: buat dua pengguna, pastikan A tidak bisa membaca satu baris pun milik B. Ini bukti privasi yang akan Anda tunjukkan di video
 - [ ] Implementasi auth Flutter: daftar, masuk, lupa kata sandi, masuk dengan Google, keluar (layar L.14)
 - [ ] Penetapan peran saat pendaftaran: `pengasuh` / `profesional` / `admin` (KF-01)
 - [ ] Sesi persisten via `flutter_secure_storage`; auto-refresh token
