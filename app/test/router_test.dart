@@ -1,9 +1,9 @@
 import 'package:dekapautis/core/router/app_router.dart';
-import 'package:dekapautis/main.dart';
 import 'package:dekapautis/shared/widgets/placeholder_screen.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+
+import 'support/fakes.dart';
 
 /// The route tree is the demo script's backbone: docs/05 relies on named routes
 /// so a screen can be reached directly while the camera is running. A route
@@ -11,11 +11,24 @@ import 'package:go_router/go_router.dart';
 void main() {
   /// Every path that must resolve, including the professional and administrator
   /// surfaces, so all three actors in Gambar 6.1 are reachable.
+  /// Screens that F1 and F2 have implemented. These no longer render a
+  /// placeholder, so they are asserted separately.
+  const sudahDibangun = <String>[
+    '/splash',
+    '/masuk',
+    '/daftar',
+    '/onboarding/1',
+    '/profil',
+    '/profil/anak/abc',
+    '/profil/aksesibilitas',
+  ];
+
   const paths = <String>[
     '/splash',
     '/masuk',
     '/daftar',
     '/onboarding/1',
+    '/profil/anak/abc',
     '/notifikasi',
     '/beranda',
     '/rencana',
@@ -63,28 +76,43 @@ void main() {
     );
   });
 
-  test('28 routes are declared, covering all three actors', () {
+  test('every declared route is covered by this test, all three actors', () {
     expect(flatten(appRouter.configuration.routes).length, paths.length);
   });
 
   testWidgets('every declared path resolves to a screen', (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: DekapAutisApp()));
+    await tester.pumpWidget(aplikasiUji());
     await tester.pumpAndSettle();
 
     for (final path in paths) {
       appRouter.go(path);
       await tester.pumpAndSettle();
 
-      expect(
-        find.byType(PlaceholderScreen),
-        findsOneWidget,
-        reason: 'no screen rendered for $path',
-      );
-      expect(
-        find.textContaining(path),
-        findsOneWidget,
-        reason: 'wrong screen rendered for $path',
-      );
+      if (sudahDibangun.contains(path)) {
+        // A real screen, so the placeholder must be gone. Leaving one behind is
+        // exactly the regression this catches.
+        expect(
+          find.byType(PlaceholderScreen),
+          findsNothing,
+          reason: '$path masih menampilkan layar kosong',
+        );
+        expect(
+          find.byType(RouteNotFoundScreen),
+          findsNothing,
+          reason: '$path tidak ditemukan router',
+        );
+      } else {
+        expect(
+          find.byType(PlaceholderScreen),
+          findsOneWidget,
+          reason: 'no screen rendered for $path',
+        );
+        expect(
+          find.textContaining(path),
+          findsOneWidget,
+          reason: 'wrong screen rendered for $path',
+        );
+      }
     }
   });
 
@@ -129,7 +157,7 @@ void main() {
     testWidgets('render an Indonesian screen, never a raw exception', (
       tester,
     ) async {
-      await tester.pumpWidget(const ProviderScope(child: DekapAutisApp()));
+      await tester.pumpWidget(aplikasiUji());
       await tester.pumpAndSettle();
 
       appRouter.go('/rute-yang-tidak-ada');
@@ -145,7 +173,7 @@ void main() {
     });
 
     testWidgets('offer a way back that actually works', (tester) async {
-      await tester.pumpWidget(const ProviderScope(child: DekapAutisApp()));
+      await tester.pumpWidget(aplikasiUji());
       appRouter.go('/tidak-ada-sama-sekali');
       await tester.pumpAndSettle();
 
@@ -160,7 +188,7 @@ void main() {
   testWidgets('the five bottom destinations are labelled in Indonesian', (
     tester,
   ) async {
-    await tester.pumpWidget(const ProviderScope(child: DekapAutisApp()));
+    await tester.pumpWidget(aplikasiUji());
     appRouter.go('/beranda');
     await tester.pumpAndSettle();
 

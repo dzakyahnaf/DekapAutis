@@ -1,7 +1,6 @@
 import 'package:dekapautis/core/router/app_router.dart';
 import 'package:dekapautis/core/theme/app_theme.dart';
 import 'package:dekapautis/core/theme/tokens.dart';
-import 'package:dekapautis/main.dart';
 import 'package:dekapautis/shared/widgets/buttons.dart';
 import 'package:dekapautis/shared/widgets/calm_mode_switch.dart';
 import 'package:dekapautis/shared/widgets/category_pill.dart';
@@ -13,6 +12,8 @@ import 'package:dekapautis/shared/widgets/states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/fakes.dart';
 
 /// Nothing interactive may be smaller than 48x48 dp.
 ///
@@ -185,7 +186,7 @@ void main() {
       tester,
     ) async {
       final handle = tester.ensureSemantics();
-      await tester.pumpWidget(const ProviderScope(child: DekapAutisApp()));
+      await tester.pumpWidget(aplikasiUji());
       appRouter.go('/beranda');
       await tester.pumpAndSettle();
 
