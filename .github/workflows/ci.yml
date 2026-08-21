@@ -47,6 +47,50 @@ jobs:
       - name: Test
         run: flutter test --reporter expanded
 
+  aturan-rencana:
+    name: deterministic plan rules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      # These rules decide what a child is asked to do. They are pure functions
+      # on purpose, so they can be checked here without a database, a model, or
+      # a device - which is also the evidence that the model does not choose.
+      - name: Test plan rules
+        run: deno test --allow-import supabase/functions/_shared/pemetaan_test.ts
+
+  basis-data:
+    name: RLS, deletion and catalogue guards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start local stack
+        run: supabase start
+
+      # Each script raises on failure, so a privacy or content regression cannot
+      # reach a branch quietly. Port 55322 rather than the usual 54322: see
+      # supabase/config.toml.
+      - name: Row Level Security
+        run: psql "$DB" -v ON_ERROR_STOP=1 -f scripts/test_rls.sql
+        env:
+          DB: postgresql://postgres:postgres@127.0.0.1:55322/postgres
+
+      - name: Account deletion really deletes
+        run: psql "$DB" -v ON_ERROR_STOP=1 -f scripts/test_hapus_akun.sql
+        env:
+          DB: postgresql://postgres:postgres@127.0.0.1:55322/postgres
+
+      - name: Activity catalogue content limits
+        run: psql "$DB" -v ON_ERROR_STOP=1 -f scripts/test_katalog.sql
+        env:
+          DB: postgresql://postgres:postgres@127.0.0.1:55322/postgres
+
   secrets:
     name: no API keys in the tree
     runs-on: ubuntu-latest

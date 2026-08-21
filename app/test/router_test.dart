@@ -1,4 +1,5 @@
 import 'package:dekapautis/core/router/app_router.dart';
+import 'package:dekapautis/features/home/beranda_screen.dart';
 import 'package:dekapautis/shared/widgets/placeholder_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +19,9 @@ void main() {
     '/masuk',
     '/daftar',
     '/onboarding/1',
+    '/beranda',
+    '/rencana',
+    '/rencana/aktivitas/abc',
     '/profil',
     '/profil/anak/abc',
     '/profil/aksesibilitas',
@@ -181,7 +185,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RouteNotFoundScreen), findsNothing);
-      expect(find.textContaining('/beranda'), findsOneWidget);
+      expect(find.byType(BerandaScreen), findsOneWidget);
     });
   });
 

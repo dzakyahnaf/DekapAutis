@@ -1,8 +1,12 @@
+import 'package:dekapautis/data/local/database.dart';
 import 'package:dekapautis/data/models/profil_anak.dart';
 import 'package:dekapautis/data/providers.dart';
 import 'package:dekapautis/data/repositories/akun_repository.dart';
 import 'package:dekapautis/data/repositories/auth_repository.dart';
 import 'package:dekapautis/data/repositories/profil_anak_repository.dart';
+import 'package:dekapautis/data/repositories/rencana_repository.dart';
+import 'package:dekapautis/data/repositories/sinkron_peladen.dart';
+import 'package:dekapautis/data/sync/sync_service.dart';
 import 'package:dekapautis/main.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -102,18 +106,88 @@ class FakeAkunRepository implements AkunRepository {
   Future<void> hapusAkunPermanen() async => terhapus = true;
 }
 
+/// A server that can be switched off, and that behaves like the real one:
+/// `klien_id` is UNIQUE, so an upsert with a client id already present replaces
+/// that row instead of adding another.
+class PeladenPalsu implements SinkronPeladen {
+  bool daring = true;
+  int panggilanKirim = 0;
+
+  final Map<String, Map<String, dynamic>> respons = {};
+  final Map<String, Map<String, dynamic>> checkIn = {};
+
+  @override
+  String? get penggunaId => 'pengguna-uji';
+
+  void _pastikanDaring() {
+    if (!daring) throw Exception('tidak ada jaringan');
+  }
+
+  @override
+  Future<void> kirimRespons(Map<String, dynamic> baris) async {
+    panggilanKirim++;
+    _pastikanDaring();
+    respons[baris['klien_id'] as String] = baris;
+  }
+
+  @override
+  Future<void> kirimCheckIn(Map<String, dynamic> baris) async {
+    _pastikanDaring();
+    checkIn['${baris['pengguna_id']}|${baris['tanggal']}'] = baris;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> ambilKatalog() async {
+    _pastikanDaring();
+    return const [];
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> ambilJadwal(String profilAnakId) async {
+    _pastikanDaring();
+    return const [];
+  }
+
+  @override
+  Future<Map<String, dynamic>> mintaRencana(String profilAnakId) async {
+    _pastikanDaring();
+    return const {'alasan': ''};
+  }
+}
+
 /// The whole app wired to fakes, ready to pump.
 Widget aplikasiUji({
   FakeAuthRepository? auth,
   FakeProfilAnakRepository? profil,
   FakeAkunRepository? akun,
-}) => ProviderScope(
-  overrides: [
-    authRepositoryProvider.overrideWithValue(auth ?? FakeAuthRepository()),
-    profilAnakRepositoryProvider.overrideWithValue(
-      profil ?? FakeProfilAnakRepository(),
-    ),
-    akunRepositoryProvider.overrideWithValue(akun ?? FakeAkunRepository()),
-  ],
-  child: const DekapAutisApp(),
-);
+  PeladenPalsu? peladen,
+  DekapDatabase? db,
+}) {
+  // An in-memory database and a fake server: no file, no keystore, no network.
+  final basis = db ?? DekapDatabase.memori();
+  final server = peladen ?? PeladenPalsu();
+  final repo = RencanaRepository(server, basis);
+
+  return ProviderScope(
+    overrides: [
+      authRepositoryProvider.overrideWithValue(auth ?? FakeAuthRepository()),
+      profilAnakRepositoryProvider.overrideWithValue(
+        profil ?? FakeProfilAnakRepository(),
+      ),
+      akunRepositoryProvider.overrideWithValue(akun ?? FakeAkunRepository()),
+      databaseProvider.overrideWithValue(basis),
+      sinkronPeladenProvider.overrideWithValue(server),
+      rencanaRepositoryProvider.overrideWithValue(repo),
+      // A connectivity stream that never fires, so no plugin is needed.
+      syncServiceProvider.overrideWithValue(
+        SyncService(repo, konektivitas: const Stream.empty()),
+      ),
+      // Drift's query streams keep a timer alive past widget disposal, which
+      // the test binding rightly complains about. Widget tests have no business
+      // exercising drift's streaming machinery anyway - the queue itself is
+      // tested for real in antrean_luring_test.dart.
+      menungguSinkronProvider.overrideWith((ref) => Stream.value(0)),
+    ],
+    child: const DekapAutisApp(),
+  );
+}
