@@ -1,0 +1,68 @@
+name: ci
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  flutter:
+    name: analyze + test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.41.6
+          channel: stable
+          cache: true
+
+      # package:sqlite3 v3 loads its native library through Dart build hooks.
+      # Without this the analyzer runs but `flutter test` cannot build.
+      - name: Enable native assets
+        run: flutter config --enable-native-assets
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        run: flutter analyze --fatal-infos --fatal-warnings
+
+      # Includes the contrast audit and the palette scan, which are build
+      # gates rather than advisory checks: a failure here means an
+      # accessibility or design-system regression reached the branch.
+      - name: Test
+        run: flutter test --reporter expanded
+
+  secrets:
+    name: no API keys in the tree
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # KNF-03: model API keys live only in Supabase Edge Function secrets.
+      # A key on the client side is a blocker-level bug, so it fails CI rather
+      # than waiting to be noticed during the APK audit in F11.
+      - name: Scan for key patterns
+        run: |
+          if grep -rEn --binary-files=without-match \
+              'AIza[0-9A-Za-z_-]{35}|sk-[A-Za-z0-9]{20,}|gsk_[A-Za-z0-9]{20,}' \
+              --exclude-dir=.git --exclude-dir=build --exclude-dir=.dart_tool \
+              --exclude='*.md' --exclude='ci.yml' .; then
+            echo "::error::Kunci API ditemukan di dalam repositori."
+            exit 1
+          fi
+          echo "bersih"
