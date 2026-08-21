@@ -83,13 +83,13 @@ Tujuan: 12 entitas hidup dengan RLS yang benar, dan pengguna bisa masuk.
 
 ## F3 — Rencana stimulasi, aktivitas, catatan respons
 
-- [ ] Bangun katalog aktivitas: minimal **60 aktivitas** melintasi 5 kategori (Komunikasi, Motorik, Sensorik, Kemandirian, Sosial) × 4 tingkat kesulitan. Setiap aktivitas punya tujuan, alat yang perlu disiapkan, dan 3–6 langkah pelaksanaan. Lihat `docs/07-DEMO-SEED.md` untuk aturan penyusunannya
-- [ ] Edge Function `generate-plan`: menyusun rencana harian & mingguan dari profil anak (KF-03). Deterministik dulu berdasarkan aturan pemetaan profil→kategori→tingkat; model bahasa hanya dipakai untuk menyusun ulang narasi, bukan memilih aktivitas medis
-- [ ] Layar Rencana Mingguan (L.6): pemilih hari, kartu penjelasan penyesuaian, daftar aktivitas dengan waktu dan durasi
-- [ ] Layar Detail Aktivitas (L.7): tujuan, alat, langkah bernomor, pita catatan respons melekat di bawah (KF-04)
-- [ ] Pencatatan respons tiga tingkat **Mudah / Pas / Sulit** + catatan opsional (KF-05). Tersedia dari kartu di beranda maupun dari detail aktivitas
-- [ ] Beranda (L.2): sapaan, check-in kondisi pengasuh 5 tingkat (KF-13), agenda hari ini, kartu rutinitas dengan tombol respons
-- [ ] Antrian tulis luring: catatan respons tersimpan lokal saat tanpa jaringan lalu disinkronkan otomatis (KNF-02)
+- [x] Bangun katalog aktivitas: minimal **60 aktivitas** melintasi 5 kategori (Komunikasi, Motorik, Sensorik, Kemandirian, Sosial) × 4 tingkat kesulitan. Setiap aktivitas punya tujuan, alat yang perlu disiapkan, dan 3–6 langkah pelaksanaan. Lihat `docs/07-DEMO-SEED.md` untuk aturan penyusunannya
+- [x] Edge Function `generate-plan`: menyusun rencana harian & mingguan dari profil anak (KF-03). Deterministik dulu berdasarkan aturan pemetaan profil→kategori→tingkat; model bahasa hanya dipakai untuk menyusun ulang narasi, bukan memilih aktivitas medis
+- [x] Layar Rencana Mingguan (L.6): pemilih hari, kartu penjelasan penyesuaian, daftar aktivitas dengan waktu dan durasi
+- [x] Layar Detail Aktivitas (L.7): tujuan, alat, langkah bernomor, pita catatan respons melekat di bawah (KF-04)
+- [x] Pencatatan respons tiga tingkat **Mudah / Pas / Sulit** + catatan opsional (KF-05). Tersedia dari kartu di beranda maupun dari detail aktivitas
+- [x] Beranda (L.2): sapaan, check-in kondisi pengasuh 5 tingkat (KF-13), agenda hari ini, kartu rutinitas dengan tombol respons
+- [x] Antrian tulis luring: catatan respons tersimpan lokal saat tanpa jaringan lalu disinkronkan otomatis (KNF-02)
 
 **Selesai bila:** satu pengguna bisa menjalani hari penuh — buka beranda, buka aktivitas, catat respons — sepenuhnya tanpa jaringan, lalu data muncul di peladen setelah online. `KF-03, KF-04, KF-05, KF-13` tercentang.
 
