@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/auth_screens.dart';
+import '../../features/onboarding/onboarding_screen.dart';
+import '../../features/profile/preferensi_aksesibilitas.dart';
+import '../../features/profile/profil_screen.dart';
+import '../../features/profile/sunting_anak_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 import '../../shared/widgets/placeholder_screen.dart';
 import '../../shared/widgets/states.dart';
@@ -33,6 +38,7 @@ abstract final class R {
   static const profil = 'profil';
   static const laporan = 'laporan';
   static const laporanDetail = 'laporan-detail';
+  static const suntingAnak = 'sunting-anak';
   static const aksesibilitas = 'aksesibilitas';
   static const izin = 'izin';
   static const caraPakai = 'cara-pakai';
@@ -92,6 +98,19 @@ GoRoute _stub(
   routes: routes,
 );
 
+GoRoute _layar(
+  String path,
+  String name,
+  Widget Function(BuildContext, GoRouterState) bangun, {
+  List<RouteBase> routes = const [],
+}) => GoRoute(
+  path: path,
+  name: name,
+  pageBuilder: (context, state) =>
+      _page(context, state, bangun(context, state)),
+  routes: routes,
+);
+
 /// Turns an incoming `dekapautis://` deep link into a plain path.
 ///
 /// Android hands the engine the whole URI, so `dekapautis://beranda` arrives
@@ -138,14 +157,15 @@ final appRouter = GoRouter(
   redirect: (context, state) => normaliseDeepLink(state.uri),
   errorBuilder: (context, state) => const RouteNotFoundScreen(),
   routes: [
-    _stub('/splash', R.splash, S.appName, phase: 'L.13 - F1'),
-    _stub('/masuk', R.masuk, S.titleMasuk, phase: 'L.14 - F1'),
-    _stub('/daftar', R.daftar, S.titleDaftar, phase: 'F1'),
-    _stub(
+    _layar('/splash', R.splash, (_, _) => const SplashScreen()),
+    _layar('/masuk', R.masuk, (_, _) => const MasukScreen()),
+    _layar('/daftar', R.daftar, (_, _) => const DaftarScreen()),
+    _layar(
       '/onboarding/:langkah',
       R.onboarding,
-      S.titleOnboarding,
-      phase: 'L.1 - F2',
+      (_, state) => OnboardingScreen(
+        langkah: int.tryParse(state.pathParameters['langkah'] ?? '1') ?? 1,
+      ),
     ),
     _stub('/notifikasi', R.notifikasi, S.titleNotifikasi, phase: 'L.17 - F7'),
 
@@ -275,12 +295,17 @@ final appRouter = GoRouter(
         ),
         StatefulShellBranch(
           routes: [
-            _stub(
+            _layar(
               '/profil',
               R.profil,
-              S.titleProfil,
-              phase: 'L.16 - F2',
+              (_, _) => const ProfilScreen(),
               routes: [
+                _layar(
+                  'anak/:id',
+                  R.suntingAnak,
+                  (_, state) =>
+                      SuntingAnakScreen(id: state.pathParameters['id']!),
+                ),
                 _stub(
                   'laporan',
                   R.laporan,
@@ -290,11 +315,10 @@ final appRouter = GoRouter(
                     _stub(':id', R.laporanDetail, S.titleLaporan, phase: 'F6'),
                   ],
                 ),
-                _stub(
+                _layar(
                   'aksesibilitas',
                   R.aksesibilitas,
-                  S.titleAksesibilitas,
-                  phase: 'L.15 - F2',
+                  (_, _) => const AksesibilitasScreen(),
                 ),
                 _stub('izin', R.izin, S.titleIzin, phase: 'F6'),
                 _stub(
