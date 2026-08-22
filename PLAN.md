@@ -99,16 +99,16 @@ Tujuan: 12 entitas hidup dengan RLS yang benar, dan pengguna bisa masuk.
 
 Ini pilar AI kedua. Logikanya wajib deterministik dan bisa diuji. Algoritma lengkap ada di `docs/04-AI-PIPELINE.md` bagian 3.
 
-- [ ] Kelas Dart murni `AdaptationEngine` — tanpa ketergantungan UI, tanpa panggilan jaringan
-- [ ] Perhitungan skor kesiapan per kategori dari 6 catatan respons terakhir
-- [ ] Aturan A — naik tingkat: ≥2 dari 3 respons terakhir "Mudah" tanpa "Sulit" → tingkat +1 (maks 4)
-- [ ] Aturan B — turun tingkat: ≥2 dari 3 respons terakhir "Sulit" → tingkat −1 (min 1), durasi −25% (min 5 menit), lampirkan saran penyesuaian lingkungan
-- [ ] Aturan C — porsi: kategori dengan skor kesiapan naik mendapat +1 sesi per minggu (maks 3), total harian dibatasi 5
-- [ ] Aturan D — penandaan: capaian menurun 2 periode berturut-turut → tandai `perhatian` pada laporan untuk tenaga profesional
-- [ ] Aturan E — penjadwalan: pilih blok jam dengan rasio "Mudah" tertinggi, minimum 3 sampel, jika kurang pertahankan default
+- [x] Kelas Dart murni `AdaptationEngine` — tanpa ketergantungan UI, tanpa panggilan jaringan
+- [x] Perhitungan skor kesiapan per kategori dari 6 catatan respons terakhir
+- [x] Aturan A — naik tingkat: ≥2 dari 3 respons terakhir "Mudah" tanpa "Sulit" → tingkat +1 (maks 4)
+- [x] Aturan B — turun tingkat: ≥2 dari 3 respons terakhir "Sulit" → tingkat −1 (min 1), durasi −25% (min 5 menit), lampirkan saran penyesuaian lingkungan
+- [x] Aturan C — porsi: kategori dengan skor kesiapan naik mendapat +1 sesi per minggu (maks 3), total harian dibatasi 5
+- [x] Aturan D — penandaan: capaian menurun 2 periode berturut-turut → tandai `perhatian` pada laporan untuk tenaga profesional
+- [x] Aturan E — penjadwalan: pilih blok jam dengan rasio "Mudah" tertinggi, minimum 3 sampel, jika kurang pertahankan default
 - [ ] Setiap perubahan menulis baris `adaptasi_log` berisi `aturan_id`, kategori, nilai sebelum, nilai sesudah, **alasan dalam Bahasa Indonesia yang bisa dibaca pengguna**, dan tanda apakah dikoreksi manual
 - [ ] UI: kartu penjelasan penyesuaian di layar Rencana, dengan tombol koreksi manual (KF-06)
-- [ ] **Unit test untuk kelima aturan**, termasuk kasus batas: data kosong, tepat 3 sampel, tingkat sudah di batas atas/bawah, respons campur rata
+- [x] **Unit test untuk kelima aturan**, termasuk kasus batas: data kosong, tepat 3 sampel, tingkat sudah di batas atas/bawah, respons campur rata
 
 **Selesai bila:** seluruh unit test aturan hijau, dan kartu penjelasan menampilkan alasan yang masuk akal untuk skenario demo. `KF-06` tercentang.
 
