@@ -1,0 +1,50 @@
+name: keep-alive
+
+# Menjaga proyek Supabase tetap hidup selama masa penjurian.
+#
+# Proyek free ter-pause setelah 7 hari tanpa aktivitas basis data, sementara
+# penjurian berlangsung 2-11 September - sepuluh hari. Tanpa cron ini, aplikasi
+# bisa padam di tengah penilaian, dan juri yang membukanya melihat kesalahan
+# jaringan, bukan sebuah produk.
+#
+# Dijadwalkan harian, bukan mingguan: jeda tujuh hari tidak menyisakan ruang
+# untuk satu kali kegagalan.
+
+on:
+  schedule:
+    # 23.00 UTC = 06.00 WIB. Kalau gagal, masih ada satu hari penuh untuk
+    # menyadarinya sebelum batas tujuh hari terlampaui.
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+jobs:
+  sentuh-basis-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Panggil Edge Function keep-alive
+        env:
+          URL: ${{ secrets.SUPABASE_URL }}
+          KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "SUPABASE_URL atau SUPABASE_PUBLISHABLE_KEY belum diset."
+            echo "Tambahkan keduanya di Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+          kode=$(curl -sS -o respons.json -w '%{http_code}' \
+            --max-time 30 \
+            -H "Authorization: Bearer $KEY" \
+            -H "apikey: $KEY" \
+            "$URL/functions/v1/keep-alive")
+
+          echo "HTTP $kode"
+          cat respons.json
+          echo
+
+          # Gagal keras. Cron yang selalu hijau tidak dapat memberi tahu siapa
+          # pun bahwa basis datanya berhenti menjawab.
+          if [ "$kode" != "200" ]; then
+            echo "::error::keep-alive gagal dengan HTTP $kode"
+            exit 1
+          fi

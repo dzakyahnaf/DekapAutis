@@ -9,9 +9,6 @@
     <!-- L.9 distance filter only, and only when the user taps "Gunakan lokasi
          saya". A manually chosen city is the primary path. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- F8: scheduled local reminder for an activity with no response recorded.
-         Required from Android 13 (API 33) onwards. -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!-- Location is optional: the directory still works without GPS hardware. -->
     <uses-feature

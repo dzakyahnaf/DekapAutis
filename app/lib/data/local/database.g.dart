@@ -1955,6 +1955,214 @@ class CacheCheckInCompanion extends UpdateCompanion<CacheCheckInData> {
   }
 }
 
+class $PreferensiTable extends Preferensi
+    with TableInfo<$PreferensiTable, PreferensiData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PreferensiTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _kunciMeta = const VerificationMeta('kunci');
+  @override
+  late final GeneratedColumn<String> kunci = GeneratedColumn<String>(
+    'kunci',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nilaiMeta = const VerificationMeta('nilai');
+  @override
+  late final GeneratedColumn<String> nilai = GeneratedColumn<String>(
+    'nilai',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [kunci, nilai];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'preferensi';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PreferensiData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('kunci')) {
+      context.handle(
+        _kunciMeta,
+        kunci.isAcceptableOrUnknown(data['kunci']!, _kunciMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kunciMeta);
+    }
+    if (data.containsKey('nilai')) {
+      context.handle(
+        _nilaiMeta,
+        nilai.isAcceptableOrUnknown(data['nilai']!, _nilaiMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nilaiMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {kunci};
+  @override
+  PreferensiData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PreferensiData(
+      kunci: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kunci'],
+      )!,
+      nilai: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}nilai'],
+      )!,
+    );
+  }
+
+  @override
+  $PreferensiTable createAlias(String alias) {
+    return $PreferensiTable(attachedDatabase, alias);
+  }
+}
+
+class PreferensiData extends DataClass implements Insertable<PreferensiData> {
+  final String kunci;
+  final String nilai;
+  const PreferensiData({required this.kunci, required this.nilai});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['kunci'] = Variable<String>(kunci);
+    map['nilai'] = Variable<String>(nilai);
+    return map;
+  }
+
+  PreferensiCompanion toCompanion(bool nullToAbsent) {
+    return PreferensiCompanion(kunci: Value(kunci), nilai: Value(nilai));
+  }
+
+  factory PreferensiData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PreferensiData(
+      kunci: serializer.fromJson<String>(json['kunci']),
+      nilai: serializer.fromJson<String>(json['nilai']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'kunci': serializer.toJson<String>(kunci),
+      'nilai': serializer.toJson<String>(nilai),
+    };
+  }
+
+  PreferensiData copyWith({String? kunci, String? nilai}) =>
+      PreferensiData(kunci: kunci ?? this.kunci, nilai: nilai ?? this.nilai);
+  PreferensiData copyWithCompanion(PreferensiCompanion data) {
+    return PreferensiData(
+      kunci: data.kunci.present ? data.kunci.value : this.kunci,
+      nilai: data.nilai.present ? data.nilai.value : this.nilai,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PreferensiData(')
+          ..write('kunci: $kunci, ')
+          ..write('nilai: $nilai')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(kunci, nilai);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PreferensiData &&
+          other.kunci == this.kunci &&
+          other.nilai == this.nilai);
+}
+
+class PreferensiCompanion extends UpdateCompanion<PreferensiData> {
+  final Value<String> kunci;
+  final Value<String> nilai;
+  final Value<int> rowid;
+  const PreferensiCompanion({
+    this.kunci = const Value.absent(),
+    this.nilai = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PreferensiCompanion.insert({
+    required String kunci,
+    required String nilai,
+    this.rowid = const Value.absent(),
+  }) : kunci = Value(kunci),
+       nilai = Value(nilai);
+  static Insertable<PreferensiData> custom({
+    Expression<String>? kunci,
+    Expression<String>? nilai,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (kunci != null) 'kunci': kunci,
+      if (nilai != null) 'nilai': nilai,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PreferensiCompanion copyWith({
+    Value<String>? kunci,
+    Value<String>? nilai,
+    Value<int>? rowid,
+  }) {
+    return PreferensiCompanion(
+      kunci: kunci ?? this.kunci,
+      nilai: nilai ?? this.nilai,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (kunci.present) {
+      map['kunci'] = Variable<String>(kunci.value);
+    }
+    if (nilai.present) {
+      map['nilai'] = Variable<String>(nilai.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PreferensiCompanion(')
+          ..write('kunci: $kunci, ')
+          ..write('nilai: $nilai, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$DekapDatabase extends GeneratedDatabase {
   _$DekapDatabase(QueryExecutor e) : super(e);
   $DekapDatabaseManager get managers => $DekapDatabaseManager(this);
@@ -1962,6 +2170,7 @@ abstract class _$DekapDatabase extends GeneratedDatabase {
   late final $CacheJadwalTable cacheJadwal = $CacheJadwalTable(this);
   late final $CacheResponsTable cacheRespons = $CacheResponsTable(this);
   late final $CacheCheckInTable cacheCheckIn = $CacheCheckInTable(this);
+  late final $PreferensiTable preferensi = $PreferensiTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1971,6 +2180,7 @@ abstract class _$DekapDatabase extends GeneratedDatabase {
     cacheJadwal,
     cacheRespons,
     cacheCheckIn,
+    preferensi,
   ];
 }
 
@@ -2983,6 +3193,146 @@ typedef $$CacheCheckInTableProcessedTableManager =
       CacheCheckInData,
       PrefetchHooks Function()
     >;
+typedef $$PreferensiTableCreateCompanionBuilder =
+    PreferensiCompanion Function({
+      required String kunci,
+      required String nilai,
+      Value<int> rowid,
+    });
+typedef $$PreferensiTableUpdateCompanionBuilder =
+    PreferensiCompanion Function({
+      Value<String> kunci,
+      Value<String> nilai,
+      Value<int> rowid,
+    });
+
+class $$PreferensiTableFilterComposer
+    extends Composer<_$DekapDatabase, $PreferensiTable> {
+  $$PreferensiTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get kunci => $composableBuilder(
+    column: $table.kunci,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nilai => $composableBuilder(
+    column: $table.nilai,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PreferensiTableOrderingComposer
+    extends Composer<_$DekapDatabase, $PreferensiTable> {
+  $$PreferensiTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get kunci => $composableBuilder(
+    column: $table.kunci,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nilai => $composableBuilder(
+    column: $table.nilai,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PreferensiTableAnnotationComposer
+    extends Composer<_$DekapDatabase, $PreferensiTable> {
+  $$PreferensiTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get kunci =>
+      $composableBuilder(column: $table.kunci, builder: (column) => column);
+
+  GeneratedColumn<String> get nilai =>
+      $composableBuilder(column: $table.nilai, builder: (column) => column);
+}
+
+class $$PreferensiTableTableManager
+    extends
+        RootTableManager<
+          _$DekapDatabase,
+          $PreferensiTable,
+          PreferensiData,
+          $$PreferensiTableFilterComposer,
+          $$PreferensiTableOrderingComposer,
+          $$PreferensiTableAnnotationComposer,
+          $$PreferensiTableCreateCompanionBuilder,
+          $$PreferensiTableUpdateCompanionBuilder,
+          (
+            PreferensiData,
+            BaseReferences<_$DekapDatabase, $PreferensiTable, PreferensiData>,
+          ),
+          PreferensiData,
+          PrefetchHooks Function()
+        > {
+  $$PreferensiTableTableManager(_$DekapDatabase db, $PreferensiTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PreferensiTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PreferensiTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PreferensiTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> kunci = const Value.absent(),
+                Value<String> nilai = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) =>
+                  PreferensiCompanion(kunci: kunci, nilai: nilai, rowid: rowid),
+          createCompanionCallback:
+              ({
+                required String kunci,
+                required String nilai,
+                Value<int> rowid = const Value.absent(),
+              }) => PreferensiCompanion.insert(
+                kunci: kunci,
+                nilai: nilai,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PreferensiTableProcessedTableManager =
+    ProcessedTableManager<
+      _$DekapDatabase,
+      $PreferensiTable,
+      PreferensiData,
+      $$PreferensiTableFilterComposer,
+      $$PreferensiTableOrderingComposer,
+      $$PreferensiTableAnnotationComposer,
+      $$PreferensiTableCreateCompanionBuilder,
+      $$PreferensiTableUpdateCompanionBuilder,
+      (
+        PreferensiData,
+        BaseReferences<_$DekapDatabase, $PreferensiTable, PreferensiData>,
+      ),
+      PreferensiData,
+      PrefetchHooks Function()
+    >;
 
 class $DekapDatabaseManager {
   final _$DekapDatabase _db;
@@ -2995,4 +3345,6 @@ class $DekapDatabaseManager {
       $$CacheResponsTableTableManager(_db, _db.cacheRespons);
   $$CacheCheckInTableTableManager get cacheCheckIn =>
       $$CacheCheckInTableTableManager(_db, _db.cacheCheckIn);
+  $$PreferensiTableTableManager get preferensi =>
+      $$PreferensiTableTableManager(_db, _db.preferensi);
 }

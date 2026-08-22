@@ -43,6 +43,8 @@ void main() {
     '/admin/verifikasi',
     '/admin/pengetahuan',
     '/admin/moderasi',
+    // F10.
+    '/profil/cara-pakai',
   ];
 
   const paths = <String>[

@@ -1,0 +1,17 @@
+DekapAutis — Implementasi Aplikasi
+Tim Fable 5 Enjoyer — Institut Teknologi Sepuluh Nopember
+
+APK (Google Drive) : <ISI TAUTAN GOOGLE DRIVE>
+Repositori GitHub  : <ISI TAUTAN REPOSITORI>
+Coba tanpa pasang  : <ISI TAUTAN WEB>
+
+Akun demo
+  Pengasuh     : demo@dekapautis.id / DemoDekap2026
+  Profesional  : demo.profesional@dekapautis.id / DemoDekap2026
+  Administrator: demo.admin@dekapautis.id / DemoDekap2026
+
+Atau tekan "Masuk sebagai demo" pada layar masuk.
+Minimum: Android 8.0, RAM 3 GB.
+
+Catatan: akun demo berisi data sintetis. Rina Kartika dan Bima adalah persona
+contoh, bukan pengguna sungguhan.

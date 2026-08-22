@@ -200,8 +200,8 @@ Fase ini yang mengamankan bobot **Cara Penggunaan 30%**. Jangan diperlakukan seb
 - [x] **Akun demo terseed** `demo@dekapautis.id` dengan riwayat 4 minggu yang realistis: Rina Kartika sebagai pengasuh, Bima 6 tahun, 24 catatan respons, tren membaik pada Komunikasi, satu kategori menurun agar penandaan `perhatian` benar-benar terlihat, beberapa postingan komunitas, satu laporan yang sudah dibagikan
 - [x] Tombol **"Masuk sebagai demo"** di layar masuk — juri tidak perlu mendaftar. Beri label jelas bahwa ini akun demo berisi data sintetis
 - [x] Seed akun profesional demo dan akun admin demo
-- [ ] Tur pertama kali: 4 sorotan singkat pada beranda, bisa dilewati, hanya sekali
-- [ ] Layar "Cara pakai" di dalam aplikasi yang meringkas 6 langkah alur pada Bab IX proposal
+- [x] Tur pertama kali: 4 sorotan singkat pada beranda, bisa dilewati, hanya sekali
+- [x] Layar "Cara pakai" di dalam aplikasi yang meringkas 6 langkah alur pada Bab IX proposal
 - [x] Unit test: mesin adaptasi, perhitungan skor kesiapan, penapis leksikon, penghitung jarak (Tabel 5.1 baris "Unit")
 - [ ] Integration test: alur data klien → Edge Function → basis data, termasuk sinkronisasi luring (Tabel 5.1 baris "Integrasi")
 - [ ] `scripts/eval_groundedness.py`: ≥95% jawaban dapat ditelusuri ke potongan sumber — *skrip selesai; belum dapat diukur karena korpus masih 0 dokumen*
@@ -217,12 +217,12 @@ Fase ini yang mengamankan bobot **Cara Penggunaan 30%**. Jangan diperlakukan seb
 ## F11 — Rilis dan bundel submission
 
 - [ ] Buat keystore rilis; simpan `key.properties` di luar Git
-- [ ] `flutter build apk --release` — APK ditandatangani, uji pasang pada perangkat bersih tanpa Flutter terpasang
+- [ ] `flutter build apk --release` — *APK universal ter-build (67,5 MB) dan digrep bersih dari kunci API; penandatanganan rilis masih memakai kunci debug karena keystore belum dibuat* — APK ditandatangani, uji pasang pada perangkat bersih tanpa Flutter terpasang
 - [ ] Kecilkan ukuran: `--split-per-abi` bila perlu, tapi **sediakan juga satu APK universal** karena juri tidak akan tahu ABI perangkatnya
 - [ ] `flutter build web --release`, deploy ke hosting gratis; ini menjadi "link hasil karya" pendamping supaya juri bisa mencoba tanpa memasang apa pun
-- [ ] **Keep-alive Supabase**: cron GitHub Actions harian yang memanggil Edge Function `keep-alive` untuk menyentuh basis data. Project free ter-pause setelah 7 hari tanpa aktivitas database, sementara penjurian berlangsung 2–11 September
+- [ ] **Keep-alive Supabase**: *fungsi `keep-alive` dan workflow harian sudah ditulis; menunggu proyek remote untuk dijalankan sekali* — cron GitHub Actions harian yang memanggil Edge Function `keep-alive` untuk menyentuh basis data. Project free ter-pause setelah 7 hari tanpa aktivitas database, sementara penjurian berlangsung 2–11 September
 - [ ] Pantau kuota API model harian selama masa penjurian; siapkan kunci cadangan
-- [ ] `README.md` repositori: ringkasan produk, tangkapan layar, arsitektur, cara menjalankan, kredensial akun demo, batasan yang diketahui
+- [x] `README.md` repositori: ringkasan produk, tangkapan layar, arsitektur, cara menjalankan, kredensial akun demo, batasan yang diketahui — *tangkapan layar menunggu perangkat nyata*
 - [ ] Rapikan riwayat commit dan buat rilis GitHub bertag `v1.0.0` dengan APK terlampir
 - [ ] Unggah APK ke Google Drive, setel akses publik, **uji tautan dari jendela penyamaran**
 - [ ] Susun berkas ZIP submission:

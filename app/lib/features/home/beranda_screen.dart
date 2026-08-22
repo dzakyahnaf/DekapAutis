@@ -12,6 +12,7 @@ import '../../data/providers.dart';
 import '../../shared/widgets/routine_card.dart';
 import '../../shared/widgets/states.dart';
 import '../caregiver_checkin/check_in_card.dart';
+import '../onboarding/tur_pertama.dart';
 
 /// L.2 - Beranda.
 ///
@@ -59,95 +60,115 @@ class _BerandaScreenState extends ConsumerState<BerandaScreen> {
     final anak = ref.watch(anakAktifProvider).value;
     final text = Theme.of(context).textTheme;
 
+    // Defaults to "seen" while the read is in flight, so the tour never flashes
+    // over the screen for one frame on every launch.
+    final sudahTur = ref.watch(turSudahDilihatProvider).value ?? true;
+
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: unawaitedSegarkan,
-                child: ListView(
-                  padding: const EdgeInsets.all(DekapSpace.screenPadding),
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: unawaitedSegarkan,
+                    child: ListView(
+                      padding: const EdgeInsets.all(DekapSpace.screenPadding),
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(_sapaan(), style: text.titleLarge),
-                              Text(_tanggalHariIni(), style: text.bodySmall),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => context.go('/notifikasi'),
-                          icon: const Icon(Symbols.notifications_rounded),
-                          tooltip: 'Notifikasi',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: DekapSpace.screenPadding),
-
-                    const CheckInCard(),
-                    const SizedBox(height: DekapSpace.screenPadding),
-
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Rencana hari ini',
-                            style: text.titleMedium,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () => context.go('/rencana'),
-                          child: const Text(S.aksiLihatSemua),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: DekapSpace.cardGap),
-
-                    agenda.when(
-                      loading: () =>
-                          const LoadingText(message: S.memuatRencana),
-                      error: (_, _) => ErrorState(
-                        message: S.gagalLayanan,
-                        onRetry: unawaitedSegarkan,
-                      ),
-                      data: (daftar) => daftar.isEmpty
-                          ? EmptyState(
-                              message: anak == null
-                                  ? 'Belum ada profil anak. Tambahkan satu untuk mulai menyusun rencana harian.'
-                                  : 'Belum ada aktivitas terjadwal hari ini. Susun rencana minggu ini untuk memulai.',
-                              actionLabel: anak == null
-                                  ? 'Tambah profil anak'
-                                  : 'Buka rencana',
-                              onAction: () => context.go(
-                                anak == null ? '/onboarding/1' : '/rencana',
-                              ),
-                            )
-                          : Column(
-                              children: [
-                                for (var i = 0; i < daftar.length; i++) ...[
-                                  _Kartu(
-                                    item: daftar[i],
-                                    posisi: i + 1,
-                                    total: daftar.length,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(_sapaan(), style: text.titleLarge),
+                                  Text(
+                                    _tanggalHariIni(),
+                                    style: text.bodySmall,
                                   ),
-                                  if (i != daftar.length - 1)
-                                    const SizedBox(height: DekapSpace.cardGap),
                                 ],
-                              ],
+                              ),
                             ),
+                            IconButton(
+                              onPressed: () => context.go('/notifikasi'),
+                              icon: const Icon(Symbols.notifications_rounded),
+                              tooltip: 'Notifikasi',
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: DekapSpace.screenPadding),
+
+                        const CheckInCard(),
+                        const SizedBox(height: DekapSpace.screenPadding),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Rencana hari ini',
+                                style: text.titleMedium,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => context.go('/rencana'),
+                              child: const Text(S.aksiLihatSemua),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: DekapSpace.cardGap),
+
+                        agenda.when(
+                          loading: () =>
+                              const LoadingText(message: S.memuatRencana),
+                          error: (_, _) => ErrorState(
+                            message: S.gagalLayanan,
+                            onRetry: unawaitedSegarkan,
+                          ),
+                          data: (daftar) => daftar.isEmpty
+                              ? EmptyState(
+                                  message: anak == null
+                                      ? 'Belum ada profil anak. Tambahkan satu untuk mulai menyusun rencana harian.'
+                                      : 'Belum ada aktivitas terjadwal hari ini. Susun rencana minggu ini untuk memulai.',
+                                  actionLabel: anak == null
+                                      ? 'Tambah profil anak'
+                                      : 'Buka rencana',
+                                  onAction: () => context.go(
+                                    anak == null ? '/onboarding/1' : '/rencana',
+                                  ),
+                                )
+                              : Column(
+                                  children: [
+                                    for (var i = 0; i < daftar.length; i++) ...[
+                                      _Kartu(
+                                        item: daftar[i],
+                                        posisi: i + 1,
+                                        total: daftar.length,
+                                      ),
+                                      if (i != daftar.length - 1)
+                                        const SizedBox(
+                                          height: DekapSpace.cardGap,
+                                        ),
+                                    ],
+                                  ],
+                                ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+          // The tour sits over the home screen rather than replacing it, so the
+          // first thing a caregiver sees behind the card is their own plan, not
+          // an empty scrim.
+          if (!sudahTur)
+            TurPertama(
+              onSelesai: () => ref.invalidate(turSudahDilihatProvider),
+            ),
+        ],
       ),
     );
   }

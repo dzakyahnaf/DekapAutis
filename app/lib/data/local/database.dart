@@ -79,8 +79,24 @@ class CacheCheckIn extends Table {
   Set<Column> get primaryKey => {klienId};
 }
 
+/// Small key-value store for things that belong to this installation rather
+/// than to the account: whether the first-run tour has been seen, and whatever
+/// else of that shape comes later.
+///
+/// Not `flutter_secure_storage`: that is for the session token and the database
+/// key, and putting a boolean beside them makes the important entries harder to
+/// find. Not the server either - a caregiver who reinstalls has good reason to
+/// see the tour again.
+class Preferensi extends Table {
+  TextColumn get kunci => text()();
+  TextColumn get nilai => text()();
+
+  @override
+  Set<Column> get primaryKey => {kunci};
+}
+
 @DriftDatabase(
-  tables: [CacheAktivitas, CacheJadwal, CacheRespons, CacheCheckIn],
+  tables: [CacheAktivitas, CacheJadwal, CacheRespons, CacheCheckIn, Preferensi],
 )
 class DekapDatabase extends _$DekapDatabase {
   DekapDatabase(super.e);
@@ -89,7 +105,32 @@ class DekapDatabase extends _$DekapDatabase {
   DekapDatabase.memori() : super(bukaDatabaseMemori());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) => m.createAll(),
+    onUpgrade: (m, dari, ke) async {
+      // v2 added `preferensi`. The cache tables are untouched: they hold a copy
+      // of server data and the queue, and dropping them on upgrade would throw
+      // away writes a caregiver made offline.
+      if (dari < 2) await m.createTable(preferensi);
+    },
+  );
+
+  // ---------------------------------------------------------- preferences --
+
+  Future<String?> bacaPreferensi(String kunci) async {
+    final baris = await (select(
+      preferensi,
+    )..where((p) => p.kunci.equals(kunci))).getSingleOrNull();
+    return baris?.nilai;
+  }
+
+  Future<void> simpanPreferensi(String kunci, String nilai) =>
+      into(preferensi).insertOnConflictUpdate(
+        PreferensiCompanion.insert(kunci: kunci, nilai: nilai),
+      );
 
   // ------------------------------------------------------------- catalogue --
 

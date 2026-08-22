@@ -16,6 +16,7 @@ import '../../features/home/beranda_screen.dart';
 import '../../features/library/detail_artikel_screen.dart';
 import '../../features/library/pustaka_screen.dart';
 import '../../features/notifications/notifikasi_screen.dart';
+import '../../features/onboarding/cara_pakai_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/plan/rencana_screen.dart';
 import '../../features/professional/detail_laporan_screen.dart';
@@ -326,11 +327,10 @@ final appRouter = GoRouter(
                   (_, _) => const AksesibilitasScreen(),
                 ),
                 _layar('izin', R.izin, (_, _) => const IzinBerbagiScreen()),
-                _stub(
+                _layar(
                   'cara-pakai',
                   R.caraPakai,
-                  S.titleCaraPakai,
-                  phase: 'F10',
+                  (_, _) => const CaraPakaiScreen(),
                 ),
               ],
             ),
