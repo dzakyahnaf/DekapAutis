@@ -66,8 +66,13 @@ jobs:
       - name: Test the medical boundary lexicon
         run: deno test --allow-import supabase/functions/_shared/lexicon_test.ts
 
+      # The report goes to a therapist who cannot tell an invented percentage
+      # from a measured one. This is the check that stops one reaching them.
+      - name: Test report narrative verification
+        run: deno test --allow-import supabase/functions/_shared/narasi_test.ts
+
       - name: Type-check Edge Functions
-        run: deno check --allow-import supabase/functions/ask/index.ts supabase/functions/generate-plan/index.ts supabase/functions/hapus-akun/index.ts
+        run: deno check --allow-import supabase/functions/ask/index.ts supabase/functions/generate-plan/index.ts supabase/functions/hapus-akun/index.ts supabase/functions/summarize-report/index.ts
 
   basis-data:
     name: RLS, deletion and catalogue guards
