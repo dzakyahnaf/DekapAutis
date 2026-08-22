@@ -1,5 +1,4 @@
 import 'package:dekapautis/domain/adaptasi/adaptation_engine.dart';
-import 'package:dekapautis/domain/adaptasi/kategori.dart';
 import 'package:test/test.dart';
 
 /// The adaptation engine (KF-06), the second AI pillar.
@@ -49,7 +48,8 @@ void main() {
     periodeSekarang: minggu3,
   );
 
-  HasilAdaptasi jalankan(MasukanAdaptasi m) => const AdaptationEngine().jalankan(m);
+  HasilAdaptasi jalankan(MasukanAdaptasi m) =>
+      const AdaptationEngine().jalankan(m);
 
   BarisAdaptasiLog? logUntuk(HasilAdaptasi h, String aturan, Kategori k) =>
       h.log.where((l) => l.aturanId == aturan && l.kategori == k).firstOrNull;
@@ -174,8 +174,10 @@ void main() {
       );
       final log = logUntuk(hasil, 'B_turun', Kategori.komunikasi)!;
       expect(log.alasan, contains('Matikan televisi'));
-      expect(hasil.saranDitampilkan[Kategori.komunikasi],
-          'Matikan televisi saat aktivitas.');
+      expect(
+        hasil.saranDitampilkan[Kategori.komunikasi],
+        'Matikan televisi saat aktivitas.',
+      );
     });
 
     test('the reason names the real minutes, before and after', () {
@@ -354,23 +356,26 @@ void main() {
       expect(hasil.penandaPerhatian, isNot(contains(Kategori.sosial)));
     });
 
-    test('the flag goes to the report, never to the caregiver as a warning', () {
-      final hasil = jalankan(
-        masukan(
-          catatan: [
-            ...minggu(minggu1, 3, 1),
-            ...minggu(minggu2, 2, 2),
-            ...minggu(minggu3, 1, 3),
-          ],
-        ),
-      );
-      final log = logUntuk(hasil, 'D_tandai', Kategori.sosial)!;
-      expect(log.tampilkanKePengasuh, isFalse);
-      // Nothing that reads as a verdict on the child.
-      for (final kata in ['gagal', 'menurun drastis', 'buruk', 'khawatir']) {
-        expect(log.alasan.toLowerCase(), isNot(contains(kata)));
-      }
-    });
+    test(
+      'the flag goes to the report, never to the caregiver as a warning',
+      () {
+        final hasil = jalankan(
+          masukan(
+            catatan: [
+              ...minggu(minggu1, 3, 1),
+              ...minggu(minggu2, 2, 2),
+              ...minggu(minggu3, 1, 3),
+            ],
+          ),
+        );
+        final log = logUntuk(hasil, 'D_tandai', Kategori.sosial)!;
+        expect(log.tampilkanKePengasuh, isFalse);
+        // Nothing that reads as a verdict on the child.
+        for (final kata in ['gagal', 'menurun drastis', 'buruk', 'khawatir']) {
+          expect(log.alasan.toLowerCase(), isNot(contains(kata)));
+        }
+      },
+    );
 
     test('the reason names the three real percentages', () {
       final hasil = jalankan(
@@ -478,43 +483,58 @@ void main() {
         ),
       );
       expect(logUntuk(hasil, 'A_naik', Kategori.komunikasi), isNotNull);
-      expect(logUntuk(hasil, 'C_porsi', Kategori.komunikasi), isNull,
-          reason: 'C butuh dua periode, tidak boleh jalan dari satu minggu');
+      expect(
+        logUntuk(hasil, 'C_porsi', Kategori.komunikasi),
+        isNull,
+        reason: 'C butuh dua periode, tidak boleh jalan dari satu minggu',
+      );
     });
 
-    test('3. already at level 4 and A fires: stays 4, and nothing is logged', () {
-      final hasil = jalankan(
-        masukan(
-          catatan: [
-            c(NilaiRespons.mudah, hariKe: 0),
-            c(NilaiRespons.mudah, hariKe: 1),
-            c(NilaiRespons.pas, hariKe: 2),
-          ],
-          tingkat: {Kategori.komunikasi: 4},
-        ),
-      );
-      expect(hasil.tingkat[Kategori.komunikasi], 4);
-      expect(logUntuk(hasil, 'A_naik', Kategori.komunikasi), isNull,
-          reason: 'log tanpa perubahan hanya menambah kebisingan');
-    });
+    test(
+      '3. already at level 4 and A fires: stays 4, and nothing is logged',
+      () {
+        final hasil = jalankan(
+          masukan(
+            catatan: [
+              c(NilaiRespons.mudah, hariKe: 0),
+              c(NilaiRespons.mudah, hariKe: 1),
+              c(NilaiRespons.pas, hariKe: 2),
+            ],
+            tingkat: {Kategori.komunikasi: 4},
+          ),
+        );
+        expect(hasil.tingkat[Kategori.komunikasi], 4);
+        expect(
+          logUntuk(hasil, 'A_naik', Kategori.komunikasi),
+          isNull,
+          reason: 'log tanpa perubahan hanya menambah kebisingan',
+        );
+      },
+    );
 
-    test('4. already at level 1 and B fires: stays 1, duration still shortens', () {
-      final hasil = jalankan(
-        masukan(
-          catatan: [
-            c(NilaiRespons.sulit, hariKe: 0),
-            c(NilaiRespons.sulit, hariKe: 1),
-            c(NilaiRespons.pas, hariKe: 2),
-          ],
-          tingkat: {Kategori.komunikasi: 1},
-          durasi: {Kategori.komunikasi: 12},
-        ),
-      );
-      expect(hasil.tingkat[Kategori.komunikasi], 1);
-      expect(hasil.durasi[Kategori.komunikasi], 9);
-      expect(logUntuk(hasil, 'B_turun', Kategori.komunikasi), isNotNull,
-          reason: 'ada yang berubah, jadi harus tercatat');
-    });
+    test(
+      '4. already at level 1 and B fires: stays 1, duration still shortens',
+      () {
+        final hasil = jalankan(
+          masukan(
+            catatan: [
+              c(NilaiRespons.sulit, hariKe: 0),
+              c(NilaiRespons.sulit, hariKe: 1),
+              c(NilaiRespons.pas, hariKe: 2),
+            ],
+            tingkat: {Kategori.komunikasi: 1},
+            durasi: {Kategori.komunikasi: 12},
+          ),
+        );
+        expect(hasil.tingkat[Kategori.komunikasi], 1);
+        expect(hasil.durasi[Kategori.komunikasi], 9);
+        expect(
+          logUntuk(hasil, 'B_turun', Kategori.komunikasi),
+          isNotNull,
+          reason: 'ada yang berubah, jadi harus tercatat',
+        );
+      },
+    );
 
     test('5. an even mix moves nothing', () {
       final hasil = jalankan(
@@ -600,7 +620,8 @@ void main() {
         expect(
           RegExp(r'\d').hasMatch(baris.alasan),
           isTrue,
-          reason: '${baris.aturanId} tidak menyebut satu pun angka: '
+          reason:
+              '${baris.aturanId} tidak menyebut satu pun angka: '
               '"${baris.alasan}"',
         );
         expect(baris.alasan.trim(), endsWith('.'));
@@ -632,12 +653,27 @@ void main() {
       for (final baris in hasil.log) {
         final teks = baris.alasan.toLowerCase();
         for (final terlarang in [
-          'autis', 'diagnos', 'derajat', 'keparahan', 'penderita',
-          'penyandang', 'pasien', 'obat', 'dosis', 'terapi', 'skor anak',
-          'kemampuan anak', 'normal', 'terlambat', 'gangguan',
+          'autis',
+          'diagnos',
+          'derajat',
+          'keparahan',
+          'penderita',
+          'penyandang',
+          'pasien',
+          'obat',
+          'dosis',
+          'terapi',
+          'skor anak',
+          'kemampuan anak',
+          'normal',
+          'terlambat',
+          'gangguan',
         ]) {
-          expect(teks, isNot(contains(terlarang)),
-              reason: '${baris.aturanId} memuat "$terlarang"');
+          expect(
+            teks,
+            isNot(contains(terlarang)),
+            reason: '${baris.aturanId} memuat "$terlarang"',
+          );
         }
       }
     });
@@ -670,8 +706,12 @@ void main() {
             c(NilaiRespons.mudah, minggu: minggu3, hariKe: i),
         ],
       );
-      final a = jalankan(m).log.map((l) => '${l.aturanId}|${l.alasan}').toList();
-      final b = jalankan(m).log.map((l) => '${l.aturanId}|${l.alasan}').toList();
+      final a = jalankan(
+        m,
+      ).log.map((l) => '${l.aturanId}|${l.alasan}').toList();
+      final b = jalankan(
+        m,
+      ).log.map((l) => '${l.aturanId}|${l.alasan}').toList();
       expect(a, b);
     });
   });

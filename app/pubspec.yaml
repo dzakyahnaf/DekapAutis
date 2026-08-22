@@ -69,6 +69,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   drift_dev: ^2.34.0
   build_runner: ^2.15.1
+  test: ^1.30.0
 
 # Native build hooks (package:sqlite3 v3.x).
 # sqlite3mc = SQLite3MultipleCiphers -> encryption at rest on device (KNF-03).

@@ -1,5 +1,4 @@
 import 'package:dekapautis/domain/adaptasi/adaptation_engine.dart';
-import 'package:dekapautis/domain/adaptasi/kategori.dart';
 import 'package:test/test.dart';
 
 /// Readiness score, on its own.
