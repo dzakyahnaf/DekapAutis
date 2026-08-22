@@ -2,12 +2,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'local/database.dart';
+import 'models/direktori.dart';
 import 'models/item_rencana.dart';
+import 'models/komunitas.dart';
+import 'models/notifikasi.dart';
 import 'models/profil_anak.dart';
+import 'models/pustaka.dart';
 import 'repositories/akun_repository.dart';
 import 'repositories/auth_repository.dart';
+import 'repositories/direktori_repository.dart';
+import 'repositories/komunitas_repository.dart';
 import 'repositories/laporan_repository.dart';
+import 'repositories/notifikasi_repository.dart';
 import 'repositories/profil_anak_repository.dart';
+import 'repositories/pustaka_repository.dart';
 import 'repositories/rencana_repository.dart';
 import 'repositories/sinkron_peladen.dart';
 import 'sync/sync_service.dart';
@@ -125,3 +133,71 @@ final daftarIzinProvider = FutureProvider<List<IzinBerbagi>>((ref) {
   ref.watch(statusAuthProvider);
   return ref.watch(laporanRepositoryProvider).daftarIzin();
 });
+
+// ------------------------------------------------------------------- F7 --
+
+final direktoriRepositoryProvider = Provider<DirektoriRepository>(
+  (ref) => DirektoriRepository(ref.watch(supabaseClientProvider)),
+);
+
+final komunitasRepositoryProvider = Provider<KomunitasRepository>(
+  (ref) => KomunitasRepository(ref.watch(supabaseClientProvider)),
+);
+
+final pustakaRepositoryProvider = Provider<PustakaRepository>(
+  (ref) => PustakaRepository(ref.watch(supabaseClientProvider)),
+);
+
+final notifikasiRepositoryProvider = Provider<NotifikasiRepository>(
+  (ref) => NotifikasiRepository(ref.watch(supabaseClientProvider)),
+);
+
+/// L.9. Sorting by distance happens on the device, so this stays the raw list.
+final daftarProfesionalProvider = FutureProvider<List<Profesional>>(
+  (ref) => ref.watch(direktoriRepositoryProvider).daftar(),
+);
+
+final profesionalProvider = FutureProvider.family<Profesional?, String>(
+  (ref, id) => ref.watch(direktoriRepositoryProvider).satu(id),
+);
+
+/// L.11, filtered by topic. `family` so switching the filter refetches
+/// instead of filtering a stale list on the client.
+final postinganProvider =
+    FutureProvider.family<List<Postingan>, TopikKomunitas>(
+      (ref, topik) =>
+          ref.watch(komunitasRepositoryProvider).daftar(topik: topik),
+    );
+
+final postinganSatuProvider = FutureProvider.family<Postingan?, String>(
+  (ref, id) => ref.watch(komunitasRepositoryProvider).satu(id),
+);
+
+final balasanProvider = FutureProvider.family<List<Balasan>, String>(
+  (ref, postinganId) =>
+      ref.watch(komunitasRepositoryProvider).balasan(postinganId),
+);
+
+/// L.12.
+final pustakaTerbaruProvider = FutureProvider<List<DokumenPustaka>>(
+  (ref) => ref.watch(pustakaRepositoryProvider).terbaru(),
+);
+
+final pencarianPustakaProvider =
+    FutureProvider.family<List<DokumenPustaka>, String>(
+      (ref, kata) => ref.watch(pustakaRepositoryProvider).cari(kata),
+    );
+
+final dokumenPustakaProvider = FutureProvider.family<DokumenPustaka?, String>(
+  (ref, id) => ref.watch(pustakaRepositoryProvider).satu(id),
+);
+
+/// Counted from the database. The mockup's "148 dokumen" is a drawing.
+final jumlahDokumenProvider = FutureProvider<int>(
+  (ref) => ref.watch(pustakaRepositoryProvider).jumlahDokumen(),
+);
+
+/// L.17.
+final daftarNotifikasiProvider = FutureProvider<List<Notifikasi>>(
+  (ref) => ref.watch(notifikasiRepositoryProvider).daftar(),
+);

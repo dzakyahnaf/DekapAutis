@@ -3,6 +3,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/strings.dart';
 import '../../core/theme/tokens.dart';
+import '../../data/repositories/auth_repository.dart';
 import 'buttons.dart';
 
 /// Loading. Static text, never a shimmer.
@@ -26,6 +27,15 @@ class LoadingText extends StatelessWidget {
     ),
   );
 }
+
+/// Turns whatever an async provider failed with into a sentence we wrote.
+///
+/// CLAUDE.md rule 7: a raw English exception or a stack trace never reaches the
+/// screen. The repositories already wrap their failures in [KesalahanAuth];
+/// this is the net under anything that slipped past one, so a screen can pass
+/// an error straight to [ErrorState] without having to remember.
+String pesanKesalahan(Object? error) =>
+    error is KesalahanAuth ? error.pesan : S.gagalLayanan;
 
 /// Lets a block of text scroll when the space it was handed is too small, and
 /// stays out of the way when the parent already scrolls.

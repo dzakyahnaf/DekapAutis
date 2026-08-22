@@ -5,7 +5,14 @@ import 'package:go_router/go_router.dart';
 import '../../features/activity/detail_aktivitas_screen.dart';
 import '../../features/assistant/tanya_screen.dart';
 import '../../features/auth/auth_screens.dart';
+import '../../features/community/detail_diskusi_screen.dart';
+import '../../features/community/komunitas_screen.dart';
+import '../../features/directory/detail_profesional_screen.dart';
+import '../../features/directory/direktori_screen.dart';
 import '../../features/home/beranda_screen.dart';
+import '../../features/library/detail_artikel_screen.dart';
+import '../../features/library/pustaka_screen.dart';
+import '../../features/notifications/notifikasi_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/plan/rencana_screen.dart';
 import '../../features/profile/preferensi_aksesibilitas.dart';
@@ -173,7 +180,7 @@ final appRouter = GoRouter(
         langkah: int.tryParse(state.pathParameters['langkah'] ?? '1') ?? 1,
       ),
     ),
-    _stub('/notifikasi', R.notifikasi, S.titleNotifikasi, phase: 'L.17 - F7'),
+    _layar('/notifikasi', R.notifikasi, (_, _) => const NotifikasiScreen()),
 
     // Professional actor.
     _stub(
@@ -245,40 +252,42 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           initialLocation: '/direktori',
           routes: [
-            _stub(
+            _layar(
               '/direktori',
               R.direktori,
-              S.titleDirektori,
-              phase: 'L.9 - F7',
+              (_, _) => const DirektoriScreen(),
               routes: [
-                _stub(
+                _layar(
                   ':id',
                   R.direktoriDetail,
-                  S.titleProfesional,
-                  phase: 'L.10 - F7',
+                  (_, state) =>
+                      DetailProfesionalScreen(id: state.pathParameters['id']!),
                 ),
               ],
             ),
-            _stub(
+            _layar(
               '/pustaka',
               R.pustaka,
-              S.titlePustaka,
-              phase: 'L.12 - F5',
+              (_, _) => const PustakaScreen(),
               routes: [
-                _stub(':id', R.pustakaDetail, S.titleArtikel, phase: 'F5'),
+                _layar(
+                  ':id',
+                  R.pustakaDetail,
+                  (_, state) =>
+                      DetailArtikelScreen(id: state.pathParameters['id']!),
+                ),
               ],
             ),
-            _stub(
+            _layar(
               '/komunitas',
               R.komunitas,
-              S.titleKomunitas,
-              phase: 'L.11 - F7',
+              (_, _) => const KomunitasScreen(),
               routes: [
-                _stub(
+                _layar(
                   ':postId',
                   R.komunitasDetail,
-                  S.titleDiskusi,
-                  phase: 'F7',
+                  (_, state) =>
+                      DetailDiskusiScreen(id: state.pathParameters['postId']!),
                 ),
               ],
             ),

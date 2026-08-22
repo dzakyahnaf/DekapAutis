@@ -14,6 +14,7 @@ library;
 enum JenisNotifikasi {
   /// The plan was adapted after the child's recorded responses.
   penyesuaianRencana(
+    dbValue: 'penyesuaian',
     label: 'Penyesuaian rencana',
     penting: true,
     alasan:
@@ -23,6 +24,7 @@ enum JenisNotifikasi {
 
   /// A professional answered a schedule request.
   persetujuanJadwal(
+    dbValue: 'jadwal',
     label: 'Persetujuan jadwal',
     penting: true,
     alasan: 'Ada orang lain yang menunggu jawaban, dan waktunya terikat.',
@@ -30,6 +32,7 @@ enum JenisNotifikasi {
 
   /// A gentle nudge that today's activity has not been recorded.
   aktivitasBelumTercatat(
+    dbValue: 'belum_dicatat',
     label: 'Aktivitas belum tercatat',
     penting: false,
     alasan: 'Pengingat, bukan kabar baru. Tetap muncul di daftar.',
@@ -37,6 +40,7 @@ enum JenisNotifikasi {
 
   /// Someone replied in the community.
   balasanKomunitas(
+    dbValue: 'balasan',
     label: 'Balasan komunitas',
     penting: false,
     alasan: 'Bisa dibaca kapan saja.',
@@ -44,16 +48,24 @@ enum JenisNotifikasi {
 
   /// A new library article passed review.
   artikelBaru(
+    dbValue: 'artikel',
     label: 'Artikel baru ditinjau',
     penting: false,
     alasan: 'Informasi, tanpa tenggat.',
   );
 
   const JenisNotifikasi({
+    required this.dbValue,
     required this.label,
     required this.penting,
     required this.alasan,
   });
+
+  /// Matches the `jenis` check constraint on the `notifikasi` table. Spelled
+  /// out rather than derived from `name`: the Dart names read as sentences and
+  /// the column values are short, and letting them drift apart would mean
+  /// every insert failing the constraint at runtime.
+  final String dbValue;
 
   /// Indonesian label, shown as the group heading on L.17.
   final String label;
@@ -65,12 +77,9 @@ enum JenisNotifikasi {
   /// person changing it can see the reasoning rather than guessing at it.
   final String alasan;
 
-  /// Matches the `jenis` check constraint on the `notifikasi` table.
-  String get dbValue => name;
-
   static JenisNotifikasi fromDb(String value) =>
       JenisNotifikasi.values.firstWhere(
-        (j) => j.name == value,
+        (j) => j.dbValue == value,
         orElse: () => JenisNotifikasi.artikelBaru,
       );
 }

@@ -131,7 +131,7 @@ Pilar AI pertama dan bagian paling berisiko. Spesifikasi penuh di `docs/04-AI-PI
 - [x] Layar Tanya Dekap (L.3): percakapan, riwayat, jawaban dengan keping rujukan bernomor (KF-07)
 - [x] Panel Sumber (L.4): lembar bawah berisi judul, penerbit, tahun, halaman, kutipan asli, tautan buka sumber (KF-08). Baris kaki menampilkan **jumlah dokumen riil dari basis data**
 - [x] Pemberitahuan Batas Aman (L.5): ungu tergelap `#4A2657`, garis 2,4 px, ikon perisai, daftar "yang bisa saya bantu", tombol ke direktori profesional dan ke pembuatan laporan (KF-09)
-- [ ] Layar Pustaka Edukasi (L.12): konten terkurasi, kategori, penanda status tinjauan (KF-15)
+- [x] Layar Pustaka Edukasi (L.12): konten terkurasi, kategori, penanda status tinjauan (KF-15) — *jumlah dokumen dihitung `COUNT(*)`, bukan angka mockup*
 
 **Selesai bila:** `python scripts/eval_safety.py` menolak 20/20 prompt terlarang **dan** menjawab 20/20 prompt yang seharusnya dijawab; `eval_groundedness.py` melaporkan ≥95% keterlacakan. `KF-07, KF-08, KF-09, KF-15` tercentang.
 
@@ -152,12 +152,12 @@ Pilar AI pertama dan bagian paling berisiko. Spesifikasi penuh di `docs/04-AI-PI
 
 ## F7 — Direktori, komunitas, pustaka
 
-- [ ] Direktori Profesional (L.9): pencarian, filter jenis layanan, jarak dihitung **Haversine di klien** dari koordinat tersimpan — tanpa SDK peta berbayar. Lencana terverifikasi (KF-12)
-- [ ] Detail Profesional (L.10): tentang, layanan, jadwal praktik, tombol ajukan jadwal konsultasi, tombol kirim laporan
-- [ ] Pengajuan jadwal menyimpan permintaan dan memberi notifikasi ke profesional. **Tanpa pembayaran, tanpa sesi konsultasi di dalam aplikasi** — sesuai batasan Bab 4.1
-- [ ] Komunitas (L.11): daftar diskusi, filter topik, unggah dengan opsi anonim, balasan, pita "dimoderasi relawan dan tenaga profesional" (KF-14)
-- [ ] Moderasi: penapis kata terlarang + antrean laporan penyalahgunaan yang bisa ditindak admin
-- [ ] Notifikasi (L.17): pengelompokan Hari ini / Kemarin / Minggu ini, jenis — penyesuaian rencana, aktivitas belum tercatat, balasan komunitas, artikel baru ditinjau, persetujuan jadwal
+- [x] Direktori Profesional (L.9): pencarian, filter jenis layanan, jarak dihitung **Haversine di klien** dari koordinat tersimpan — tanpa SDK peta berbayar. Lencana terverifikasi (KF-12)
+- [x] Detail Profesional (L.10): tentang, layanan, jadwal praktik, tombol ajukan jadwal konsultasi, tombol kirim laporan
+- [x] Pengajuan jadwal menyimpan permintaan dan memberi notifikasi ke profesional. **Tanpa pembayaran, tanpa sesi konsultasi di dalam aplikasi** — sesuai batasan Bab 4.1
+- [x] Komunitas (L.11): daftar diskusi, filter topik, unggah dengan opsi anonim, balasan, pita "dimoderasi relawan dan tenaga profesional" (KF-14)
+- [x] Moderasi: penapis kata terlarang + antrean laporan penyalahgunaan yang bisa ditindak admin — *tabel, RLS, dan pelaporan dari layar selesai; layar admin `/admin/moderasi` tetap di F9*
+- [x] Notifikasi (L.17): pengelompokan Hari ini / Kemarin / Minggu ini, jenis — penyesuaian rencana, aktivitas belum tercatat, balasan komunitas, artikel baru ditinjau, persetujuan jadwal
 
 **Selesai bila:** `KF-12, KF-14` tercentang dan seluruh 17 layar terisi.
 

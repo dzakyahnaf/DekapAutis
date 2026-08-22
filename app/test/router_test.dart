@@ -28,6 +28,14 @@ void main() {
     '/profil/aksesibilitas',
     '/profil/laporan',
     '/profil/izin',
+    // F7.
+    '/notifikasi',
+    '/direktori',
+    '/direktori/abc',
+    '/pustaka',
+    '/pustaka/abc',
+    '/komunitas',
+    '/komunitas/abc',
   ];
 
   const paths = <String>[
