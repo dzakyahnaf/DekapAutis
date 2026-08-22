@@ -61,20 +61,24 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     final text = Theme.of(context).textTheme;
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(DekapSpace.screenPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(S.appName, style: text.titleLarge),
-              const SizedBox(height: DekapSpace.cardGap / 2),
-              Text(S.tagline, style: text.bodyLarge),
-              const SizedBox(height: DekapSpace.screenPadding),
-              const StepIndicator(langkahSaatIni: 1, totalLangkah: 3),
-              const SizedBox(height: DekapSpace.cardGap),
-              Text(S.memuatRencana, style: text.bodySmall),
-            ],
+        // Centred while it fits, scrollable once it does not. At 200% text the
+        // tagline alone wraps past the fold on a small phone.
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(DekapSpace.screenPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(S.appName, style: text.titleLarge),
+                const SizedBox(height: DekapSpace.cardGap / 2),
+                Text(S.tagline, style: text.bodyLarge),
+                const SizedBox(height: DekapSpace.screenPadding),
+                const StepIndicator(langkahSaatIni: 1, totalLangkah: 3),
+                const SizedBox(height: DekapSpace.cardGap),
+                Text(S.memuatRencana, style: text.bodySmall),
+              ],
+            ),
           ),
         ),
       ),

@@ -36,7 +36,7 @@ class PlaceholderScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(DekapSpace.screenPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

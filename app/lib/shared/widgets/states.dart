@@ -27,6 +27,28 @@ class LoadingText extends StatelessWidget {
   );
 }
 
+/// Lets a block of text scroll when the space it was handed is too small, and
+/// stays out of the way when the parent already scrolls.
+///
+/// Text scaling is the whole reason this exists. A message that sits on one
+/// line at 100% wraps to four at 200%, and the button underneath it then falls
+/// off the bottom of a fixed-height box - which is exactly what
+/// `text_scale_test.dart` caught on L.3 and L.16. An unbounded parent (a
+/// ListView, say) is left alone, because a scroll view inside a scroll view
+/// with no height throws.
+class ScrollIfCramped extends StatelessWidget {
+  const ScrollIfCramped({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => constraints.hasBoundedHeight
+        ? SingleChildScrollView(child: child)
+        : child,
+  );
+}
+
 /// Empty state. An invitation, never an apology.
 class EmptyState extends StatelessWidget {
   const EmptyState({
@@ -41,22 +63,24 @@ class EmptyState extends StatelessWidget {
   final VoidCallback? onAction;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(DekapSpace.screenPadding),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(message, style: Theme.of(context).textTheme.bodyLarge),
-        if (actionLabel != null && onAction != null) ...[
-          const SizedBox(height: DekapSpace.cardPadding),
-          SecondaryButton(
-            label: actionLabel!,
-            onPressed: onAction,
-            expand: false,
-          ),
+  Widget build(BuildContext context) => ScrollIfCramped(
+    child: Padding(
+      padding: const EdgeInsets.all(DekapSpace.screenPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(message, style: Theme.of(context).textTheme.bodyLarge),
+          if (actionLabel != null && onAction != null) ...[
+            const SizedBox(height: DekapSpace.cardPadding),
+            SecondaryButton(
+              label: actionLabel!,
+              onPressed: onAction,
+              expand: false,
+            ),
+          ],
         ],
-      ],
+      ),
     ),
   );
 }
@@ -77,34 +101,40 @@ class ErrorState extends StatelessWidget {
   final String retryLabel;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(DekapSpace.screenPadding),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Icon(
-              Symbols.info_rounded,
-              size: DekapSpace.iconSize,
-              color: DekapColors.textSecondary,
-            ),
-            const SizedBox(width: DekapSpace.cardGap),
-            Expanded(
-              child: Text(
-                message,
-                style: Theme.of(context).textTheme.bodyLarge,
+  Widget build(BuildContext context) => ScrollIfCramped(
+    child: Padding(
+      padding: const EdgeInsets.all(DekapSpace.screenPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(
+                Symbols.info_rounded,
+                size: DekapSpace.iconSize,
+                color: DekapColors.textSecondary,
               ),
+              const SizedBox(width: DekapSpace.cardGap),
+              Expanded(
+                child: Text(
+                  message,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+            ],
+          ),
+          if (onRetry != null) ...[
+            const SizedBox(height: DekapSpace.cardPadding),
+            SecondaryButton(
+              label: retryLabel,
+              onPressed: onRetry,
+              expand: false,
             ),
           ],
-        ),
-        if (onRetry != null) ...[
-          const SizedBox(height: DekapSpace.cardPadding),
-          SecondaryButton(label: retryLabel, onPressed: onRetry, expand: false),
         ],
-      ],
+      ),
     ),
   );
 }
