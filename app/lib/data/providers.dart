@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'local/database.dart';
+import 'local/koneksi/koneksi.dart';
 import 'models/direktori.dart';
 import 'models/item_rencana.dart';
 import 'models/komunitas.dart';
