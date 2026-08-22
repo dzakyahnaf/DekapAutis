@@ -119,18 +119,18 @@ Ini pilar AI kedua. Logikanya wajib deterministik dan bisa diuji. Algoritma leng
 Pilar AI pertama dan bagian paling berisiko. Spesifikasi penuh di `docs/04-AI-PIPELINE.md`.
 
 - [ ] Kumpulkan korpus: minimal **40 dokumen nyata** berbahasa Indonesia dari sumber yang bisa dibuka — Kemenkes, IDAI, WHO (versi Indonesia atau terjemahan resmi), jurnal terbuka, materi organisasi profesi. Catat judul, penerbit, tahun, URL, halaman untuk setiap dokumen. **Tidak boleh ada dokumen fiktif**
-- [ ] Skrip `scripts/index_corpus.py`: potong dokumen (600–800 token, tumpang tindih 100), embed, muat ke `dokumen_pengetahuan` + `potongan_dokumen`
-- [ ] Edge Function `ask` — pipeline lengkap:
-  - [ ] **Lapis 1 penapis leksikon**: pencocokan deterministik atas pertanyaan yang dinormalkan, mencakup diagnosis, derajat/tingkat spektrum, obat, dosis, resep, klaim sembuh, diet sebagai terapi, suplemen. Sertakan salah ketik umum
-  - [ ] **Lapis 2 klasifikasi maksud** oleh model bahasa, mengembalikan JSON `{kategori, alasan}`
-  - [ ] **Pengambilan hibrida**: kemiripan kosinus pgvector **digabung** pencarian teks penuh `indonesian`, gabungkan dengan Reciprocal Rank Fusion, ambil 8 potongan teratas
-  - [ ] **Pembangkitan** dengan instruksi menjawab hanya dari konteks, wajib menyertakan nomor rujukan
-  - [ ] **Lapis 3 verifikasi keluaran**: bila jawaban tidak didukung potongan mana pun, ganti dengan "informasi belum tersedia" + saran konsultasi
-  - [ ] Failover otomatis Gemini → Groq pada 429/5xx; bila keduanya gagal, jatuh ke pencarian teks penuh saja dan tandai "mode terbatas"
-  - [ ] Catat setiap pemicu batas aman ke `log_batas_aman`
-- [ ] Layar Tanya Dekap (L.3): percakapan, riwayat, jawaban dengan keping rujukan bernomor (KF-07)
-- [ ] Panel Sumber (L.4): lembar bawah berisi judul, penerbit, tahun, halaman, kutipan asli, tautan buka sumber (KF-08). Baris kaki menampilkan **jumlah dokumen riil dari basis data**
-- [ ] Pemberitahuan Batas Aman (L.5): ungu tergelap `#4A2657`, garis 2,4 px, ikon perisai, daftar "yang bisa saya bantu", tombol ke direktori profesional dan ke pembuatan laporan (KF-09)
+- [x] Skrip `scripts/index_corpus.py`: potong dokumen (600–800 token, tumpang tindih 100), embed, muat ke `dokumen_pengetahuan` + `potongan_dokumen`
+- [x] Edge Function `ask` — pipeline lengkap:
+  - [x] **Lapis 1 penapis leksikon**: pencocokan deterministik atas pertanyaan yang dinormalkan, mencakup diagnosis, derajat/tingkat spektrum, obat, dosis, resep, klaim sembuh, diet sebagai terapi, suplemen. Sertakan salah ketik umum
+  - [x] **Lapis 2 klasifikasi maksud** oleh model bahasa, mengembalikan JSON `{kategori, alasan}`
+  - [x] **Pengambilan hibrida**: kemiripan kosinus pgvector **digabung** pencarian teks penuh `indonesian`, gabungkan dengan Reciprocal Rank Fusion, ambil 8 potongan teratas
+  - [x] **Pembangkitan** dengan instruksi menjawab hanya dari konteks, wajib menyertakan nomor rujukan
+  - [x] **Lapis 3 verifikasi keluaran**: bila jawaban tidak didukung potongan mana pun, ganti dengan "informasi belum tersedia" + saran konsultasi
+  - [x] Failover otomatis Gemini → Groq pada 429/5xx; bila keduanya gagal, jatuh ke pencarian teks penuh saja dan tandai "mode terbatas"
+  - [x] Catat setiap pemicu batas aman ke `log_batas_aman`
+- [x] Layar Tanya Dekap (L.3): percakapan, riwayat, jawaban dengan keping rujukan bernomor (KF-07)
+- [x] Panel Sumber (L.4): lembar bawah berisi judul, penerbit, tahun, halaman, kutipan asli, tautan buka sumber (KF-08). Baris kaki menampilkan **jumlah dokumen riil dari basis data**
+- [x] Pemberitahuan Batas Aman (L.5): ungu tergelap `#4A2657`, garis 2,4 px, ikon perisai, daftar "yang bisa saya bantu", tombol ke direktori profesional dan ke pembuatan laporan (KF-09)
 - [ ] Layar Pustaka Edukasi (L.12): konten terkurasi, kategori, penanda status tinjauan (KF-15)
 
 **Selesai bila:** `python scripts/eval_safety.py` menolak 20/20 prompt terlarang **dan** menjawab 20/20 prompt yang seharusnya dijawab; `eval_groundedness.py` melaporkan ≥95% keterlacakan. `KF-07, KF-08, KF-09, KF-15` tercentang.
