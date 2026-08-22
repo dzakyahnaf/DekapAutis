@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/accessibility/accessibility_prefs.dart';
 import '../../core/strings.dart';
+import '../../core/theme/calm.dart';
 import '../../core/theme/tokens.dart';
 
 /// The Calm Mode switch (L.15).
@@ -63,12 +64,12 @@ class CalmModeSwitch extends ConsumerWidget {
 }
 
 /// Small pill in the header, so an active Calm Mode is never a hidden state.
-class CalmModePill extends ConsumerWidget {
+class CalmModePill extends StatelessWidget {
   const CalmModePill({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (!ref.watch(calmModeProvider)) return const SizedBox.shrink();
+  Widget build(BuildContext context) {
+    if (!DekapCalm.of(context).enabled) return const SizedBox.shrink();
 
     return Container(
       padding: const EdgeInsets.symmetric(

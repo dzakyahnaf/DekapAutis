@@ -10,7 +10,9 @@ import 'core/config/app_config.dart';
 import 'core/router/app_router.dart';
 import 'core/strings.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/calm.dart';
 import 'data/supabase/secure_session_storage.dart';
+import 'shared/widgets/app_status_strip.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,10 +47,18 @@ class DekapAutisApp extends ConsumerWidget {
     return MaterialApp.router(
       title: S.appName,
       debugShowCheckedModeBanner: false,
+      // Calm Mode must arrive the instant it is switched on. Material's
+      // default 200ms theme cross-fade would fade the five effects in, which
+      // is motion the person reaching for that switch just asked to stop.
+      themeAnimationDuration: Duration.zero,
       routerConfig: appRouter,
+      // Calm Mode is resolved exactly once, here, and carried on the theme.
+      // Nothing downstream re-derives it.
       theme: DekapTheme.build(
-        calm: prefs.calmMode,
-        spacingScale: prefs.spacingScale,
+        calm: DekapCalm(
+          enabled: prefs.calmMode,
+          reduceMotion: prefs.reduceMotion,
+        ),
       ),
       // Indonesian only. There is no language switcher and there will not be
       // one: the audience is Indonesian caregivers.
@@ -94,7 +104,7 @@ class _AccessibilityScope extends ConsumerWidget {
 
     return MediaQuery(
       data: media.copyWith(textScaler: TextScaler.linear(combined)),
-      child: child ?? const SizedBox.shrink(),
+      child: AppStatusStrip(child: child),
     );
   }
 }

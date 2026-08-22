@@ -1,5 +1,6 @@
 import 'package:dekapautis/core/router/app_router.dart';
 import 'package:dekapautis/core/theme/app_theme.dart';
+import 'package:dekapautis/core/theme/calm.dart';
 import 'package:dekapautis/core/theme/tokens.dart';
 import 'package:dekapautis/shared/widgets/buttons.dart';
 import 'package:dekapautis/shared/widgets/calm_mode_switch.dart';
@@ -25,7 +26,7 @@ import 'support/fakes.dart';
 void main() {
   Widget host(Widget child, {double textScale = 1.0}) => ProviderScope(
     child: MaterialApp(
-      theme: DekapTheme.build(calm: false, spacingScale: 0),
+      theme: DekapTheme.build(calm: const DekapCalm()),
       home: MediaQuery(
         data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
         child: Scaffold(

@@ -1,4 +1,5 @@
 import 'package:dekapautis/core/theme/app_theme.dart';
+import 'package:dekapautis/core/theme/calm.dart';
 import 'package:dekapautis/core/theme/tokens.dart';
 import 'package:dekapautis/shared/widgets/step_indicator.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// the check lives here instead.
 void main() {
   Widget host(Widget child) => MaterialApp(
-    theme: DekapTheme.build(calm: false, spacingScale: 0),
+    theme: DekapTheme.build(calm: const DekapCalm()),
     home: Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(DekapSpace.screenPadding),

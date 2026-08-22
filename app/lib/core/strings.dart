@@ -90,6 +90,7 @@ abstract final class S {
   // Calm Mode ---------------------------------------------------------------
   static const modeTenang = 'Mode Tenang';
   static const modeTenangAktif = 'Mode Tenang aktif';
+  static const statusNormal = 'Semua catatan tersimpan dan tersinkron.';
 
   // Medical boundary --------------------------------------------------------
   static const batasJudul = 'DekapAutis tidak dapat mendiagnosis';

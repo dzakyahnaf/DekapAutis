@@ -9,8 +9,6 @@ import '../../core/theme/tokens.dart';
 import '../../data/models/item_rencana.dart';
 import '../../data/models/response_level.dart';
 import '../../data/providers.dart';
-import '../../shared/widgets/calm_mode_switch.dart';
-import '../../shared/widgets/offline_banner.dart';
 import '../../shared/widgets/routine_card.dart';
 import '../../shared/widgets/states.dart';
 import '../caregiver_checkin/check_in_card.dart';
@@ -59,14 +57,12 @@ class _BerandaScreenState extends ConsumerState<BerandaScreen> {
   Widget build(BuildContext context) {
     final agenda = ref.watch(agendaHariIniProvider);
     final anak = ref.watch(anakAktifProvider).value;
-    final menunggu = ref.watch(menungguSinkronProvider).value ?? 0;
     final text = Theme.of(context).textTheme;
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            OfflineBanner(pendingCount: menunggu),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: unawaitedSegarkan,
@@ -85,7 +81,6 @@ class _BerandaScreenState extends ConsumerState<BerandaScreen> {
                             ],
                           ),
                         ),
-                        const CalmModePill(),
                         IconButton(
                           onPressed: () => context.go('/notifikasi'),
                           icon: const Icon(Symbols.notifications_rounded),

@@ -1,5 +1,6 @@
 import 'package:dekapautis/core/accessibility/accessibility_prefs.dart';
 import 'package:dekapautis/core/theme/app_theme.dart';
+import 'package:dekapautis/core/theme/calm.dart';
 import 'package:dekapautis/features/profile/preferensi_aksesibilitas.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -15,7 +16,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   Widget host() => ProviderScope(
     child: MaterialApp(
-      theme: DekapTheme.build(calm: false, spacingScale: 0),
+      theme: DekapTheme.build(calm: const DekapCalm()),
       home: const Scaffold(
         body: SingleChildScrollView(child: PreferensiAksesibilitasPanel()),
       ),
@@ -109,7 +110,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: DekapTheme.build(calm: false, spacingScale: 0),
+          theme: DekapTheme.build(calm: const DekapCalm()),
           home: Scaffold(
             body: Consumer(
               builder: (context, r, _) {

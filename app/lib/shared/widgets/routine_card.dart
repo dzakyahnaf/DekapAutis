@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../core/accessibility/accessibility_prefs.dart';
+import '../../core/theme/calm.dart';
 import '../../core/theme/tokens.dart';
 import '../../data/models/response_level.dart';
 import 'category_pill.dart';
@@ -14,7 +13,7 @@ import 'category_pill.dart';
 /// is where it is most visible: position number, time and duration, category
 /// bar down the left edge, icon and title, category label, then three
 /// equal-width response buttons. Same order, same shapes, everywhere.
-class RoutineCard extends ConsumerWidget {
+class RoutineCard extends StatelessWidget {
   const RoutineCard({
     required this.position,
     required this.total,
@@ -47,10 +46,10 @@ class RoutineCard extends ConsumerWidget {
   final VoidCallback? onOpen;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final prefs = ref.watch(accessibilityProvider);
+  Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
-    final gap = DekapSpace.cardGap + prefs.spacingScale;
+    // Effect 3, resolved once on the theme.
+    final gap = DekapCalm.of(context).gap();
 
     return Semantics(
       container: true,

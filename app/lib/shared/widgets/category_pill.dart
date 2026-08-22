@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/accessibility/accessibility_prefs.dart';
+import '../../core/theme/calm.dart';
 import '../../core/theme/tokens.dart';
 
 /// Category marker: tinted field, icon, and label.
@@ -9,7 +8,7 @@ import '../../core/theme/tokens.dart';
 /// Colour is never the only carrier of meaning. The icon and the text label are
 /// always present, which is also why the contrast audit does not need to treat
 /// the category hues as information-bearing graphics.
-class CategoryPill extends ConsumerWidget {
+class CategoryPill extends StatelessWidget {
   const CategoryPill({required this.category, this.compact = false, super.key});
 
   final DekapCategory category;
@@ -19,9 +18,9 @@ class CategoryPill extends ConsumerWidget {
   final bool compact;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final calm = ref.watch(calmModeProvider);
-    final fill = category.surfaceFor(calm: calm);
+  Widget build(BuildContext context) {
+    // Effect 2, read off the theme rather than re-derived from the provider.
+    final fill = DekapCalm.of(context).categorySurface(category);
 
     return Semantics(
       label: 'Kategori ${category.label}',

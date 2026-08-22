@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'calm.dart';
 import 'tokens.dart';
 
 /// Builds the single [ThemeData] the whole application runs on.
@@ -9,18 +10,24 @@ import 'tokens.dart';
 /// knows whether Calm Mode is on, so Material's own zoom transition is disabled
 /// here to stop two motions stacking on top of each other.
 abstract final class DekapTheme {
-  static ThemeData build({required bool calm, required double spacingScale}) {
+  static ThemeData build({required DekapCalm calm}) {
     final text = _textTheme;
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: _scheme,
+      // Every widget downstream reads Calm Mode off the theme rather than
+      // reaching for the provider itself. That is what keeps the five effects
+      // in one place instead of scattered through the screens.
+      extensions: <ThemeExtension<dynamic>>[calm],
       scaffoldBackgroundColor: DekapColors.background,
       canvasColor: DekapColors.background,
       fontFamily: DekapType.family,
       textTheme: text,
-      splashFactory: calm ? NoSplash.splashFactory : InkRipple.splashFactory,
+      splashFactory: calm.enabled
+          ? NoSplash.splashFactory
+          : InkRipple.splashFactory,
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: <TargetPlatform, PageTransitionsBuilder>{
           TargetPlatform.android: _RouterOwnedTransitionsBuilder(),
@@ -81,7 +88,7 @@ abstract final class DekapTheme {
         fillColor: DekapColors.surface,
         contentPadding: EdgeInsets.symmetric(
           horizontal: DekapSpace.cardPadding,
-          vertical: DekapSpace.cardGap + spacingScale,
+          vertical: calm.gap(),
         ),
         hintStyle: text.bodyMedium?.copyWith(color: DekapColors.textSecondary),
         border: _inputBorder(DekapColors.border),

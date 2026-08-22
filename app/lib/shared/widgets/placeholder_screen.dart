@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/strings.dart';
 import '../../core/theme/tokens.dart';
-import 'calm_mode_switch.dart';
 
 /// Temporary body for a route whose screen has not been built yet.
 ///
@@ -27,15 +26,7 @@ class PlaceholderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: DekapSpace.screenPadding),
-            child: Center(child: CalmModePill()),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(title)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(DekapSpace.screenPadding),
         child: Column(

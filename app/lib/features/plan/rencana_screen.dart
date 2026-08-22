@@ -10,8 +10,6 @@ import '../../data/models/item_rencana.dart';
 import '../../data/providers.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../shared/widgets/buttons.dart';
-import '../../shared/widgets/calm_mode_switch.dart';
-import '../../shared/widgets/offline_banner.dart';
 import '../../shared/widgets/routine_card.dart';
 import '../../shared/widgets/states.dart';
 
@@ -33,25 +31,15 @@ class _RencanaScreenState extends ConsumerState<RencanaScreen> {
     final mingguan = ref.watch(rencanaMingguanProvider);
     final terpilih = ref.watch(hariTerpilihProvider);
     final anak = ref.watch(anakAktifProvider).value;
-    final menunggu = ref.watch(menungguSinkronProvider).value ?? 0;
     final awal = awalMinggu(terpilih);
     final text = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(S.titleRencana),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: DekapSpace.screenPadding),
-            child: Center(child: CalmModePill()),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text(S.titleRencana)),
       body: SafeArea(
         top: false,
         child: Column(
           children: [
-            OfflineBanner(pendingCount: menunggu),
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 DekapSpace.screenPadding,
