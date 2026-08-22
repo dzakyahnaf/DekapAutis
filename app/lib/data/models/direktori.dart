@@ -38,6 +38,8 @@ class Profesional {
     this.jadwalPraktik = const [],
     this.kota,
     this.posisi,
+    this.buktiKredensial,
+    this.alasanPenolakan,
   });
 
   factory Profesional.fromMap(Map<String, dynamic> m) => Profesional(
@@ -54,6 +56,8 @@ class Profesional {
     ],
     kota: m['kota'] as String?,
     posisi: _posisi(m['lokasi_lat'], m['lokasi_lng']),
+    buktiKredensial: m['bukti_kredensial'] as String?,
+    alasanPenolakan: m['alasan_penolakan'] as String?,
   );
 
   final String id;
@@ -72,6 +76,15 @@ class Profesional {
   /// Null when the practice never filled in coordinates. Those sort last on
   /// L.9 rather than appearing to be nearby - see [urutkanTerdekat].
   final Koordinat? posisi;
+
+  /// What the practice submitted for the administrator to check. Free text
+  /// rather than a file for now: the storage bucket is F11 work, and a link to
+  /// a registration number is already something a human can verify.
+  final String? buktiKredensial;
+
+  /// Why a submission was turned down. Shown back to the practice so they can
+  /// fix it rather than resubmit unchanged.
+  final String? alasanPenolakan;
 
   /// Two letters, for the avatar field on the card.
   String get inisial {

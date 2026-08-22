@@ -182,12 +182,12 @@ Pilar AI pertama dan bagian paling berisiko. Spesifikasi penuh di `docs/04-AI-PI
 
 Ini yang membuat tiga aktor pada Gambar 6.1 benar-benar terimplementasi, bukan sekadar tergambar.
 
-- [ ] Onboarding profesional: profil praktik, spesialisasi, lokasi, jadwal, unggah bukti kredensial
-- [ ] Kotak masuk laporan: daftar laporan yang dibagikan pengasuh, dengan penanda `perhatian` dari mesin adaptasi
-- [ ] Detail laporan + form tanggapan; tanggapan tersimpan ke `tanggapan_profesional` dan muncul di sisi pengasuh, menutup lingkaran alur bisnis Gambar 7.1
-- [ ] Admin: verifikasi akun profesional (setujui/tolak dengan alasan)
-- [ ] Admin: kelola versi basis pengetahuan — unggah dokumen, tandai status tinjauan, picu indexing ulang
-- [ ] Admin: antrean moderasi komunitas
+- [x] Onboarding profesional: profil praktik, spesialisasi, lokasi, jadwal, unggah bukti kredensial
+- [x] Kotak masuk laporan: daftar laporan yang dibagikan pengasuh, dengan penanda `perhatian` dari mesin adaptasi
+- [x] Detail laporan + form tanggapan; tanggapan tersimpan ke `tanggapan_profesional` dan muncul di sisi pengasuh, menutup lingkaran alur bisnis Gambar 7.1
+- [x] Admin: verifikasi akun profesional (setujui/tolak dengan alasan) — *penolakan tanpa alasan ditolak basis data, bukan hanya oleh UI*
+- [x] Admin: kelola versi basis pengetahuan — unggah dokumen, tandai status tinjauan, picu indexing ulang — *tombol menandai dokumen ke antrean; embedding dijalankan `scripts/index_corpus.py` karena kunci API tidak boleh ada di klien*
+- [x] Admin: antrean moderasi komunitas
 
 **Selesai bila:** satu laporan bisa mengalir penuh dari pengasuh → profesional → tanggapan → kembali memengaruhi rencana.
 

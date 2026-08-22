@@ -323,6 +323,9 @@ class _PenulisPostinganState extends ConsumerState<PenulisPostingan> {
 
             DropdownButtonFormField<TopikKomunitas>(
               initialValue: _topik,
+              // Without this the selected label lays out at its natural
+              // width and overflows the field instead of ellipsizing.
+              isExpanded: true,
               decoration: const InputDecoration(labelText: 'Topik'),
               items: [
                 for (final t in TopikKomunitas.values)

@@ -17,6 +17,7 @@ import 'repositories/direktori_repository.dart';
 import 'repositories/komunitas_repository.dart';
 import 'repositories/laporan_repository.dart';
 import 'repositories/notifikasi_repository.dart';
+import 'repositories/penerapan_saran_repository.dart';
 import 'repositories/profesional_repository.dart';
 import 'repositories/profil_anak_repository.dart';
 import 'repositories/pustaka_repository.dart';
@@ -256,3 +257,28 @@ final antreanIndeksProvider = FutureProvider<int>(
 final antreanModerasiProvider = FutureProvider<List<LaporanPenyalahgunaan>>(
   (ref) => ref.watch(adminRepositoryProvider).antreanModerasi(),
 );
+
+final penerapanSaranRepositoryProvider = Provider<PenerapanSaranRepository>(
+  (ref) => PenerapanSaranRepository(ref.watch(supabaseClientProvider)),
+);
+
+/// Responses on the caregiver's own report. Same rows the professional wrote;
+/// RLS is what lets both sides read them.
+final tanggapanUntukPengasuhProvider =
+    FutureProvider.family<List<TanggapanProfesional>, String>(
+      (ref, laporanId) =>
+          ref.watch(profesionalRepositoryProvider).tanggapan(laporanId),
+    );
+
+/// Id of the child's most recent saved report, or null before the first one
+/// is created. Responses hang off a specific report, so the caregiver's screen
+/// needs this before it can show any.
+final laporanTerakhirProvider = FutureProvider.family<String?, String>((
+  ref,
+  profilAnakId,
+) async {
+  final daftar = await ref
+      .watch(laporanRepositoryProvider)
+      .daftarLaporan(profilAnakId);
+  return daftar.isEmpty ? null : daftar.first['id'] as String;
+});

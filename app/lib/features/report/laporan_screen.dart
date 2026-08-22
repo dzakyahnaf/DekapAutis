@@ -19,6 +19,7 @@ import '../../domain/laporan/metrik_laporan.dart';
 import '../../shared/widgets/buttons.dart';
 import '../../shared/widgets/calm_mode_switch.dart';
 import '../../shared/widgets/states.dart';
+import 'kartu_tanggapan.dart';
 import 'laporan_pdf.dart';
 
 final periodeLaporanProvider = StateProvider<PeriodeLaporan>(
@@ -179,6 +180,10 @@ class _LaporanScreenState extends ConsumerState<LaporanScreen> {
                   style: text.bodyMedium?.copyWith(color: DekapColors.boundary),
                 ),
               ],
+
+              // Where the loop in Gambar 7.1 closes in front of the person
+              // it is about.
+              DaftarTanggapan(profilAnakId: anak.id),
 
               const SizedBox(height: DekapSpace.screenPadding),
               PrimaryButton(

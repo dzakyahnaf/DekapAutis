@@ -162,6 +162,10 @@ Widget aplikasiUji({
   FakeAkunRepository? akun,
   PeladenPalsu? peladen,
   DekapDatabase? db,
+
+  /// Extra overrides, appended last so they win. Used by the end-to-end loop
+  /// test to hand both roles the same in-memory store.
+  List<Override> tambahan = const [],
 }) {
   // An in-memory database and a fake server: no file, no keystore, no network.
   final basis = db ?? DekapDatabase.memori();
@@ -187,6 +191,7 @@ Widget aplikasiUji({
       // exercising drift's streaming machinery anyway - the queue itself is
       // tested for real in antrean_luring_test.dart.
       menungguSinkronProvider.overrideWith((ref) => Stream.value(0)),
+      ...tambahan,
     ],
     child: const DekapAutisApp(),
   );

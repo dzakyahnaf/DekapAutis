@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/activity/detail_aktivitas_screen.dart';
+import '../../features/admin/moderasi_screen.dart';
+import '../../features/admin/pengetahuan_screen.dart';
+import '../../features/admin/verifikasi_screen.dart';
 import '../../features/assistant/tanya_screen.dart';
 import '../../features/auth/auth_screens.dart';
 import '../../features/community/detail_diskusi_screen.dart';
@@ -15,6 +18,9 @@ import '../../features/library/pustaka_screen.dart';
 import '../../features/notifications/notifikasi_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/plan/rencana_screen.dart';
+import '../../features/professional/detail_laporan_screen.dart';
+import '../../features/professional/kotak_masuk_screen.dart';
+import '../../features/professional/profil_praktik_screen.dart';
 import '../../features/profile/preferensi_aksesibilitas.dart';
 import '../../features/profile/profil_screen.dart';
 import '../../features/profile/sunting_anak_screen.dart';
@@ -183,39 +189,39 @@ final appRouter = GoRouter(
     _layar('/notifikasi', R.notifikasi, (_, _) => const NotifikasiScreen()),
 
     // Professional actor.
-    _stub(
+    _layar(
       '/profesional/masuk-kotak',
       R.profesionalKotakMasuk,
-      S.titleKotakMasuk,
-      phase: 'F9',
+      (_, _) => const KotakMasukScreen(),
     ),
-    _stub(
+    _layar(
       '/profesional/laporan/:id',
       R.profesionalLaporan,
-      S.titleLaporan,
-      phase: 'F9',
+      (_, state) =>
+          DetailLaporanProfesionalScreen(id: state.pathParameters['id']!),
     ),
-    _stub(
+    _layar(
       '/profesional/profil',
       R.profesionalProfil,
-      S.titleProfilPraktik,
-      phase: 'F9',
+      (_, _) => const ProfilPraktikScreen(),
     ),
 
     // Administrator actor.
-    _stub(
+    _layar(
       '/admin/verifikasi',
       R.adminVerifikasi,
-      S.titleVerifikasi,
-      phase: 'F9',
+      (_, _) => const VerifikasiScreen(),
     ),
-    _stub(
+    _layar(
       '/admin/pengetahuan',
       R.adminPengetahuan,
-      S.titlePengetahuan,
-      phase: 'F9',
+      (_, _) => const PengetahuanScreen(),
     ),
-    _stub('/admin/moderasi', R.adminModerasi, S.titleModerasi, phase: 'F9'),
+    _layar(
+      '/admin/moderasi',
+      R.adminModerasi,
+      (_, _) => const ModerasiScreen(),
+    ),
 
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>

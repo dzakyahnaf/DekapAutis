@@ -36,6 +36,13 @@ void main() {
     '/pustaka/abc',
     '/komunitas',
     '/komunitas/abc',
+    // F9.
+    '/profesional/masuk-kotak',
+    '/profesional/laporan/abc',
+    '/profesional/profil',
+    '/admin/verifikasi',
+    '/admin/pengetahuan',
+    '/admin/moderasi',
   ];
 
   const paths = <String>[

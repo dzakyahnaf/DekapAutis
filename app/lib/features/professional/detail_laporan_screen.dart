@@ -253,6 +253,9 @@ class _FormTanggapanState extends ConsumerState<FormTanggapan> {
 
         DropdownButtonFormField<int?>(
           initialValue: _durasi,
+          // Without this the selected label lays out at its natural
+          // width and overflows the field instead of ellipsizing.
+          isExpanded: true,
           decoration: const InputDecoration(labelText: 'Saran panjang sesi'),
           items: [
             const DropdownMenuItem(
