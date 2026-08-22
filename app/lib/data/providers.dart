@@ -6,6 +6,7 @@ import 'models/item_rencana.dart';
 import 'models/profil_anak.dart';
 import 'repositories/akun_repository.dart';
 import 'repositories/auth_repository.dart';
+import 'repositories/laporan_repository.dart';
 import 'repositories/profil_anak_repository.dart';
 import 'repositories/rencana_repository.dart';
 import 'repositories/sinkron_peladen.dart';
@@ -114,3 +115,13 @@ final rencanaMingguanProvider = FutureProvider<List<ItemRencana>>((ref) async {
 final checkInHariIniProvider = FutureProvider<int?>(
   (ref) => ref.watch(rencanaRepositoryProvider).checkInHariIni(),
 );
+
+final laporanRepositoryProvider = Provider<LaporanRepository>(
+  (ref) => LaporanRepository(ref.watch(supabaseClientProvider)),
+);
+
+/// Who currently has access to which report (L.16, KNF-04).
+final daftarIzinProvider = FutureProvider<List<IzinBerbagi>>((ref) {
+  ref.watch(statusAuthProvider);
+  return ref.watch(laporanRepositoryProvider).daftarIzin();
+});

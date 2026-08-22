@@ -11,6 +11,8 @@ import '../../features/plan/rencana_screen.dart';
 import '../../features/profile/preferensi_aksesibilitas.dart';
 import '../../features/profile/profil_screen.dart';
 import '../../features/profile/sunting_anak_screen.dart';
+import '../../features/report/izin_berbagi_screen.dart';
+import '../../features/report/laporan_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 import '../../shared/widgets/placeholder_screen.dart';
 import '../../shared/widgets/states.dart';
@@ -295,13 +297,12 @@ final appRouter = GoRouter(
                   (_, state) =>
                       SuntingAnakScreen(id: state.pathParameters['id']!),
                 ),
-                _stub(
+                _layar(
                   'laporan',
                   R.laporan,
-                  S.titleLaporan,
-                  phase: 'L.8 - F6',
+                  (_, _) => const LaporanScreen(),
                   routes: [
-                    _stub(':id', R.laporanDetail, S.titleLaporan, phase: 'F6'),
+                    _stub(':id', R.laporanDetail, S.titleLaporan, phase: 'F9'),
                   ],
                 ),
                 _layar(
@@ -309,7 +310,7 @@ final appRouter = GoRouter(
                   R.aksesibilitas,
                   (_, _) => const AksesibilitasScreen(),
                 ),
-                _stub('izin', R.izin, S.titleIzin, phase: 'F6'),
+                _layar('izin', R.izin, (_, _) => const IzinBerbagiScreen()),
                 _stub(
                   'cara-pakai',
                   R.caraPakai,

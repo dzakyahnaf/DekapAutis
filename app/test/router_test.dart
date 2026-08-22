@@ -26,6 +26,8 @@ void main() {
     '/profil',
     '/profil/anak/abc',
     '/profil/aksesibilitas',
+    '/profil/laporan',
+    '/profil/izin',
   ];
 
   const paths = <String>[
