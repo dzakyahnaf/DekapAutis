@@ -7,14 +7,17 @@ import 'models/direktori.dart';
 import 'models/item_rencana.dart';
 import 'models/komunitas.dart';
 import 'models/notifikasi.dart';
+import 'models/profesional_admin.dart';
 import 'models/profil_anak.dart';
 import 'models/pustaka.dart';
+import 'repositories/admin_repository.dart';
 import 'repositories/akun_repository.dart';
 import 'repositories/auth_repository.dart';
 import 'repositories/direktori_repository.dart';
 import 'repositories/komunitas_repository.dart';
 import 'repositories/laporan_repository.dart';
 import 'repositories/notifikasi_repository.dart';
+import 'repositories/profesional_repository.dart';
 import 'repositories/profil_anak_repository.dart';
 import 'repositories/pustaka_repository.dart';
 import 'repositories/rencana_repository.dart';
@@ -201,4 +204,55 @@ final jumlahDokumenProvider = FutureProvider<int>(
 /// L.17.
 final daftarNotifikasiProvider = FutureProvider<List<Notifikasi>>(
   (ref) => ref.watch(notifikasiRepositoryProvider).daftar(),
+);
+
+// ------------------------------------------------------------------- F9 --
+
+final profesionalRepositoryProvider = Provider<ProfesionalRepository>(
+  (ref) => ProfesionalRepository(ref.watch(supabaseClientProvider)),
+);
+
+final adminRepositoryProvider = Provider<AdminRepository>(
+  (ref) => AdminRepository(ref.watch(supabaseClientProvider)),
+);
+
+/// The practice profile of the signed-in professional, if they have one.
+final profilPraktikProvider = FutureProvider<Profesional?>(
+  (ref) => ref.watch(profesionalRepositoryProvider).profilSaya(),
+);
+
+final statusVerifikasiProvider = FutureProvider<StatusVerifikasi>(
+  (ref) => ref.watch(profesionalRepositoryProvider).statusVerifikasiSaya(),
+);
+
+/// Reports shared with this professional, flagged and unanswered first.
+final kotakMasukProvider = FutureProvider<List<LaporanMasuk>>(
+  (ref) => ref.watch(profesionalRepositoryProvider).kotakMasuk(),
+);
+
+final laporanMasukProvider = FutureProvider.family<LaporanMasuk?, String>(
+  (ref, id) => ref.watch(profesionalRepositoryProvider).laporan(id),
+);
+
+final tanggapanProvider =
+    FutureProvider.family<List<TanggapanProfesional>, String>(
+      (ref, laporanId) =>
+          ref.watch(profesionalRepositoryProvider).tanggapan(laporanId),
+    );
+
+/// Administrator queues.
+final antreanVerifikasiProvider = FutureProvider<List<Profesional>>(
+  (ref) => ref.watch(adminRepositoryProvider).antreanVerifikasi(),
+);
+
+final dokumenAdminProvider = FutureProvider<List<DokumenPustaka>>(
+  (ref) => ref.watch(adminRepositoryProvider).dokumen(),
+);
+
+final antreanIndeksProvider = FutureProvider<int>(
+  (ref) => ref.watch(adminRepositoryProvider).jumlahAntreanIndeks(),
+);
+
+final antreanModerasiProvider = FutureProvider<List<LaporanPenyalahgunaan>>(
+  (ref) => ref.watch(adminRepositoryProvider).antreanModerasi(),
 );
