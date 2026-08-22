@@ -282,3 +282,30 @@ final laporanTerakhirProvider = FutureProvider.family<String?, String>((
       .daftarLaporan(profilAnakId);
   return daftar.isEmpty ? null : daftar.first['id'] as String;
 });
+
+/// True when the signed-in account is one of the seeded demo accounts.
+///
+/// CLAUDE.md rule 2: demo data is synthetic and must look synthetic on screen.
+/// Read from the database rather than inferred from the email, so an account
+/// renamed later cannot quietly lose its label.
+final adalahDemoProvider = FutureProvider<bool>((ref) async {
+  ref.watch(statusAuthProvider);
+  // The client read is inside the try as well. Reaching for
+  // `Supabase.instance` before it is initialised throws an AssertionError
+  // rather than an Exception, and a widget test that never touches a backend
+  // should get `false` here rather than a red screen.
+  try {
+    final klien = ref.watch(supabaseClientProvider);
+    final id = klien.auth.currentUser?.id;
+    if (id == null) return false;
+
+    final baris = await klien
+        .from('pengguna')
+        .select('adalah_demo')
+        .eq('id', id)
+        .maybeSingle();
+    return (baris?['adalah_demo'] as bool?) ?? false;
+  } on Object {
+    return false;
+  }
+});

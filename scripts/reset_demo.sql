@@ -1,0 +1,21 @@
+-- Mengembalikan akun demo ke keadaan awal tanpa membangun ulang basis data.
+--
+-- Gunanya satu: merekam ulang video. Setelah alur dicoba di depan kamera, data
+-- demo sudah berubah - tanggapan terkirim, notifikasi terbaca, saran
+-- diterapkan. Skrip ini mengembalikannya tanpa menyentuh migrasi, katalog
+-- aktivitas, atau korpus pengetahuan.
+--
+-- Jalankan dari akar repositori:
+--
+--   docker exec -i supabase_db_dekapautis \
+--     psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f - \
+--     < supabase/seed/demo.sql
+--
+-- Berkas ini sengaja tidak memuat logika pembersihan sendiri. `demo.sql` sudah
+-- idempoten - ia menghapus barisnya sendiri lebih dulu - dan menulis
+-- pembersihan kedua di sini berarti dua tempat yang harus tetap sinkron. Yang
+-- kedua adalah yang akan tertinggal.
+--
+-- Kalau psql dijalankan dari akar repositori, baris di bawah cukup:
+
+\i supabase/seed/demo.sql

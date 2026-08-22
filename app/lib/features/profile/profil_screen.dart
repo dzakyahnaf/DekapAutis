@@ -44,6 +44,10 @@ class ProfilScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(DekapSpace.screenPadding),
         children: [
           Text(auth.pengguna?.email ?? 'Belum masuk', style: text.titleMedium),
+          if (ref.watch(adalahDemoProvider).value ?? false) ...[
+            const SizedBox(height: DekapSpace.cardGap),
+            const KepingAkunDemo(),
+          ],
           const SizedBox(height: DekapSpace.screenPadding),
 
           _Judul('Profil anak'),
@@ -360,4 +364,38 @@ class _DialogHapusAkunState extends ConsumerState<_DialogHapusAkun> {
       });
     }
   }
+}
+
+/// Marks a seeded account as synthetic, on screen, where the person using it
+/// can see it. Rina Kartika and Bima are personas; a judge who mistakes their
+/// four weeks of records for a real family's has been misled.
+class KepingAkunDemo extends StatelessWidget {
+  const KepingAkunDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(
+      horizontal: DekapSpace.cardGap,
+      vertical: DekapSpace.cardGap / 2,
+    ),
+    decoration: BoxDecoration(
+      color: DekapColors.cream200,
+      borderRadius: BorderRadius.circular(DekapSpace.radiusControl),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(
+          Symbols.science_rounded,
+          size: DekapSpace.iconSize - 8,
+          color: DekapColors.cream700,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          'Akun demo - data sintetis',
+          style: Theme.of(context).textTheme.labelSmall,
+        ),
+      ],
+    ),
+  );
 }

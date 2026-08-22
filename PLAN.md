@@ -197,15 +197,15 @@ Ini yang membuat tiga aktor pada Gambar 6.1 benar-benar terimplementasi, bukan s
 
 Fase ini yang mengamankan bobot **Cara Penggunaan 30%**. Jangan diperlakukan sebagai tugas sisa.
 
-- [ ] **Akun demo terseed** `demo@dekapautis.id` dengan riwayat 4 minggu yang realistis: Rina Kartika sebagai pengasuh, Bima 6 tahun, 24 catatan respons, tren membaik pada Komunikasi, satu kategori menurun agar penandaan `perhatian` benar-benar terlihat, beberapa postingan komunitas, satu laporan yang sudah dibagikan
-- [ ] Tombol **"Masuk sebagai demo"** di layar masuk — juri tidak perlu mendaftar. Beri label jelas bahwa ini akun demo berisi data sintetis
-- [ ] Seed akun profesional demo dan akun admin demo
+- [x] **Akun demo terseed** `demo@dekapautis.id` dengan riwayat 4 minggu yang realistis: Rina Kartika sebagai pengasuh, Bima 6 tahun, 24 catatan respons, tren membaik pada Komunikasi, satu kategori menurun agar penandaan `perhatian` benar-benar terlihat, beberapa postingan komunitas, satu laporan yang sudah dibagikan
+- [x] Tombol **"Masuk sebagai demo"** di layar masuk — juri tidak perlu mendaftar. Beri label jelas bahwa ini akun demo berisi data sintetis
+- [x] Seed akun profesional demo dan akun admin demo
 - [ ] Tur pertama kali: 4 sorotan singkat pada beranda, bisa dilewati, hanya sekali
 - [ ] Layar "Cara pakai" di dalam aplikasi yang meringkas 6 langkah alur pada Bab IX proposal
-- [ ] Unit test: mesin adaptasi, perhitungan skor kesiapan, penapis leksikon, penghitung jarak (Tabel 5.1 baris "Unit")
+- [x] Unit test: mesin adaptasi, perhitungan skor kesiapan, penapis leksikon, penghitung jarak (Tabel 5.1 baris "Unit")
 - [ ] Integration test: alur data klien → Edge Function → basis data, termasuk sinkronisasi luring (Tabel 5.1 baris "Integrasi")
-- [ ] `scripts/eval_groundedness.py`: ≥95% jawaban dapat ditelusuri ke potongan sumber
-- [ ] `scripts/eval_safety.py`: 40 prompt — 20 wajib ditolak, 20 wajib dijawab. Nol kebocoran, dan catat juga tingkat penolakan palsu
+- [ ] `scripts/eval_groundedness.py`: ≥95% jawaban dapat ditelusuri ke potongan sumber — *skrip selesai; belum dapat diukur karena korpus masih 0 dokumen*
+- [x] `scripts/eval_safety.py`: 40 prompt — 20 wajib ditolak, 20 wajib dijawab. Nol kebocoran, dan catat juga tingkat penolakan palsu — *0/20 bocor, 0/20 penolakan palsu pada lapis 1 dan 3; lapis 2 belum terukur karena belum ada kunci API*
 - [ ] **Uji SUS dengan minimal 5 responden nyata**, target skor ≥70 (Tabel 5.1 baris "Penerimaan pengguna"). Simpan lembar jawaban sebagai bukti — juri boleh menanyakannya
 - [ ] Uji pada perangkat Android nyata dengan RAM 3 GB, bukan hanya emulator (KNF-09)
 - [ ] Uji jalur gagal: matikan jaringan di tengah alur, habiskan kuota API secara sengaja, pastikan tidak ada crash

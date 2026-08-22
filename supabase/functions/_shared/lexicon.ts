@@ -70,7 +70,7 @@ const LEKSIKON: Array<[KategoriBatas, RegExp[]]> = [
   [
     'obat',
     [
-      /\bobat\s+(?:apa|apakah|yang|untuk|buat|penenang)\b/,
+      /\bobat\s+(?:apa|apakah|yang|untuk|buat|penenang|tidur|herbal)\b/,
       /\b(?:minum|konsumsi|diberi|dikasih|beri)\s+obat\b/,
       /\bresep\s+(?:obat|dokter)\b/,
       /\bdiresepkan\b/,
@@ -93,10 +93,17 @@ const LEKSIKON: Array<[KategoriBatas, RegExp[]]> = [
     [
       /\bberapa\s+(?:mg|miligram|ml|mililiter|tetes|sendok|butir|tablet|kapsul|sachet)\b/,
       /\b(?:berapa|brp)\s+(?:dosis|dossis|takaran|banyak)\b/,
-      /\bdosis\s+(?:untuk|anak|yang|per|harian)\b/,
-      /\btakaran\s+(?:untuk|anak|yang)\b/,
+      // The bare noun. These used to require a following word, so "dosis obat
+      // anak saya" and "dosisnya sudah pas" both walked straight through -
+      // found by eval_safety.py, not by reading. The product never discusses
+      // dosage in any framing, so there is no phrasing worth letting past.
+      /\bdosis(?:nya)?\b/,
+      /\btakaran(?:nya)?\b/,
       /\bseberapa banyak\b[^.?]{0,25}\b(?:obat|suplemen|vitamin|tetes)\b/,
       /\bberapa kali sehari\b/,
+      // A quantity with a unit, with nothing asked. "Saya beri 3 mg tiap
+      // malam, sudah pas?" is a dosage question in the shape of a statement.
+      /\b\d+\s*(?:mg|miligram|ml|mililiter|tetes|kapsul|tablet|sendok)\b/,
     ],
   ],
   [
@@ -106,6 +113,9 @@ const LEKSIKON: Array<[KategoriBatas, RegExp[]]> = [
       /\bcara\s+(?:menyembuhkan|mengobati|menormalkan)\b/,
       /\bobat penyembuh\b/,
       /\bsembuh total\b/,
+      // Without a leading "cara" or "bisa". "Terapi apa yang menyembuhkan
+      // autisme" asserts the premise rather than asking about it.
+      /\bmenyembuhkan\s+(?:autis|autisme|spektrum)\b/,
       /\bpenyembuhan\s+(?:autis|autisme|total)\b/,
       new RegExp(`\\b${AUTIS}\\b[^.?]{0,20}\\b(?:hilang|sembuh)\\b`),
     ],
@@ -119,6 +129,7 @@ const LEKSIKON: Array<[KategoriBatas, RegExp[]]> = [
       /\bdiet\s+gfcf\b/,
       /\bbebas (?:gluten|kasein|casein)\b[^.?]{0,25}\b(?:sembuh|menyembuhkan|mengobati|terapi)\b/,
       /\bsuntik\b[^.?]{0,20}\b(?:autis|autisme|spektrum)\b/,
+      /\bterapi medis\b/,
     ],
   ],
   [
@@ -129,6 +140,11 @@ const LEKSIKON: Array<[KategoriBatas, RegExp[]]> = [
       new RegExp(`\\btermasuk\\b[^.?]{0,20}\\b(?:${AUTIS}|spektrum)\\b`),
       /\bdi ?diagnos(?:a|is|ns)?\b/,
       /\bdiagnosa\b/,
+      // The bare noun, but only when one is being *asked for*. Kept narrow on
+      // purpose: a caregiver asking what a diagnosis they already have means
+      // is asking something this app may answer.
+      /\b(?:tolong|coba|bisa|minta|mohon)\b[^.?]{0,25}\bdiagnos/,
+      /\bdiagnos(?:is|a)\s+(?:anak|dia|ia)\b/,
       /\bapakah\b[^.?]{0,15}\b(?:anak|dia|ia)\b[^.?]{0,15}\bnormal\b/,
       /\bnormal atau tidak\b/,
       new RegExp(`\\bmasuk (?:kategori|golongan)\\b[^.?]{0,15}\\b${AUTIS}\\b`),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/strings.dart';
 import '../../core/theme/tokens.dart';
@@ -85,6 +86,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     );
   }
 }
+
+/// Credentials for the seeded caregiver account (docs/07 §1). Also written in
+/// README.md so they can be typed by hand.
+const emailDemo = 'demo@dekapautis.id';
+const sandiDemo = 'DemoDekap2026';
 
 /// L.14.
 class MasukScreen extends ConsumerStatefulWidget {
@@ -190,6 +196,20 @@ class _MasukScreenState extends ConsumerState<MasukScreen> {
               label: 'Masuk dengan Google',
               onPressed: _sibuk ? null : _google,
             ),
+
+            // A judge should not have to register to see the product. The
+            // button fills the demo credentials and signs in through the same
+            // path as anyone else - it is not a bypass, just a shortcut past
+            // typing.
+            const SizedBox(height: DekapSpace.screenPadding),
+            const _PitaDemo(),
+            const SizedBox(height: DekapSpace.cardGap),
+            SecondaryButton(
+              label: 'Masuk sebagai demo',
+              icon: Symbols.play_circle_rounded,
+              onPressed: _sibuk ? null : _demo,
+            ),
+
             const SizedBox(height: DekapSpace.cardPadding),
             Center(
               child: TextButton(
@@ -234,6 +254,21 @@ class _MasukScreenState extends ConsumerState<MasukScreen> {
 
   Future<void> _google() =>
       _jalankan(() => ref.read(authRepositoryProvider).masukDenganGoogle());
+
+  /// Signs in as Rina Kartika, the seeded caregiver.
+  ///
+  /// The credentials are filled into the visible fields first rather than sent
+  /// straight to the API: a judge should be able to see what account they are
+  /// entering, and be able to type it again themselves from the README.
+  Future<void> _demo() {
+    _email.text = emailDemo;
+    _sandi.text = sandiDemo;
+    return _jalankan(
+      () => ref
+          .read(authRepositoryProvider)
+          .masuk(email: emailDemo, sandi: sandiDemo),
+    );
+  }
 
   Future<void> _lupaSandi() {
     if (_email.text.trim().isEmpty) {
@@ -396,4 +431,33 @@ class _DaftarScreenState extends ConsumerState<DaftarScreen> {
       });
     }
   }
+}
+
+/// Says plainly what the demo account is before anyone enters it.
+///
+/// CLAUDE.md rule 2: demo data is synthetic and must look synthetic. A judge
+/// who mistakes Bima's four weeks of records for a real family's has been
+/// misled, and nothing about the product is improved by that.
+class _PitaDemo extends StatelessWidget {
+  const _PitaDemo();
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(DekapSpace.cardPadding),
+    decoration: BoxDecoration(
+      color: DekapColors.cream50,
+      borderRadius: BorderRadius.circular(DekapSpace.radiusCard),
+      border: Border.all(
+        color: DekapColors.border,
+        width: DekapSpace.borderWidth,
+      ),
+    ),
+    child: Text(
+      'Akun demo berisi data sintetis: Rina Kartika dan Bima adalah persona '
+      'contoh, bukan pengguna sungguhan. Riwayat empat minggunya dibuat untuk '
+      'menunjukkan cara kerja aplikasi.',
+      style: Theme.of(context).textTheme.bodySmall,
+    ),
+  );
 }
