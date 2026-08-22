@@ -214,10 +214,13 @@ values ('ffffffff-0000-4000-8000-000000000001', :A::uuid, 'rutinitas',
 
 set role authenticated;
 select uji_rls.jadi(:B::uuid);
+-- Migration 008 removed `nama_penulis` outright: the view now emits an
+-- initial, and an anonymous post does not even get that. The stronger
+-- structural form of this check lives in test_direktori_komunitas.sql.
 select uji_rls.catat(
   '8. Postingan anonim tidak membocorkan identitas',
   (select count(*) from postingan_publik
-    where id = 'ffffffff-0000-4000-8000-000000000001' and nama_penulis is null) = 1
+    where id = 'ffffffff-0000-4000-8000-000000000001' and inisial is null) = 1
   and (select count(*) from postingan_komunitas
         where id = 'ffffffff-0000-4000-8000-000000000001') = 0,
   'view menyembunyikan penulis, tabel dasar tidak terbaca pengguna lain',
