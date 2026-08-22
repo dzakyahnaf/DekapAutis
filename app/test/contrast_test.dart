@@ -34,6 +34,56 @@ void main() {
       },
     );
 
+    test('every colour in tokens.dart is accounted for', () {
+      // The audit is only as good as its coverage. A new token that nobody
+      // registered would otherwise sail past every check above and still end
+      // up behind text on a real screen.
+      final tidakDiklasifikasi = <String>[];
+
+      for (final entry in DekapColors.semua.entries) {
+        final dipakaiUntukTeks = DekapContrast.allowedTextPairs.any(
+          (p) => p.background == entry.value || p.foreground == entry.value,
+        );
+        final dinyatakanBukanTeks = DekapContrast.nonTextColours.containsKey(
+          entry.key,
+        );
+
+        if (!dipakaiUntukTeks && !dinyatakanBukanTeks) {
+          tidakDiklasifikasi.add(entry.key);
+        }
+      }
+
+      expect(
+        tidakDiklasifikasi,
+        isEmpty,
+        reason:
+            'Add these to allowedTextPairs with a measured ratio, or to '
+            'nonTextColours with a reason: ${tidakDiklasifikasi.join(', ')}',
+      );
+    });
+
+    test('a colour declared non-text is not also used behind text', () {
+      for (final nama in DekapContrast.nonTextColours.keys) {
+        final warna = DekapColors.semua[nama];
+        expect(
+          warna,
+          isNotNull,
+          reason: '$nama is not a colour in tokens.dart',
+        );
+
+        final dipakai = DekapContrast.allowedTextPairs.any(
+          (p) => p.background == warna || p.foreground == warna,
+        );
+        expect(
+          dipakai,
+          isFalse,
+          reason:
+              '$nama is declared non-text but appears in a text pair - one of '
+              'the two statements is wrong',
+        );
+      }
+    });
+
     test('banned pairs really do fail, and are absent from the registry', () {
       for (final banned in DekapContrast.forbiddenTextPairs) {
         expect(

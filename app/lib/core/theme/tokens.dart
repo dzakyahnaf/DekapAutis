@@ -47,6 +47,29 @@ abstract final class DekapColors {
   /// (L.5) at [DekapSpace.boundaryBorderWidth]. Using it as a thick border
   /// anywhere else dilutes the one signal that must never be diluted.
   static const boundary = Color(0xFF4A2657);
+
+  /// Every colour in the system, by name.
+  ///
+  /// `contrast_test.dart` walks this and fails if a colour is neither part of a
+  /// checked text pair nor declared non-text with a reason. Without it the
+  /// audit only covers what somebody remembered to register, which is the one
+  /// thing an audit must not depend on.
+  static const semua = <String, Color>{
+    'surface': surface,
+    'background': background,
+    'border': border,
+    'textPrimary': textPrimary,
+    'textSecondary': textSecondary,
+    'purple700': purple700,
+    'purple500': purple500,
+    'purple300': purple300,
+    'purple100': purple100,
+    'cream700': cream700,
+    'cream400': cream400,
+    'cream200': cream200,
+    'cream50': cream50,
+    'boundary': boundary,
+  };
 }
 
 /// Typography. Both families are bundled locally under `assets/fonts/`

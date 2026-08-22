@@ -149,6 +149,19 @@ abstract final class DekapContrast {
     DekapTextPair(DekapColors.purple300, DekapColors.textSecondary, '2.65:1'),
   ];
 
+  /// Colours that carry no text, and why.
+  ///
+  /// A colour lands here or in [allowedTextPairs] - never in neither. The test
+  /// walks [DekapColors.semua] and fails on anything unclassified, so adding a
+  /// token to the palette forces a decision about whether text may sit on it
+  /// rather than letting it drift into use unchecked.
+  static const nonTextColours = <String, String>{
+    'border': 'hairline only; meaning is never carried by a line alone',
+    'purple500': 'category bar and dots; 3.75:1 on surface, fails as a fill',
+    'purple300': 'category bar and dots only',
+    'cream400': 'category bar and dots only',
+  };
+
   /// Category fills must stay legible under [DekapColors.textPrimary] in both
   /// normal and Calm Mode.
   static Iterable<DekapTextPair> categoryPairs() sync* {
