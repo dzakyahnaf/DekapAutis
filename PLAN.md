@@ -165,14 +165,14 @@ Pilar AI pertama dan bagian paling berisiko. Spesifikasi penuh di `docs/04-AI-PI
 
 ## F8 — Aksesibilitas, Mode Tenang, luring, notifikasi
 
-- [ ] **Mode Tenang** sebagai fitur menyeluruh, bukan sekadar setelan (KF-16): sembunyikan gambar dan ganti label teks, turunkan saturasi kategori ke tint, naikkan spasi satu tingkat, bisukan notifikasi non-kritis, seluruh transisi 0 ms. Tampilkan pil "Mode Tenang aktif" di header agar keadaannya tidak tersembunyi
-- [ ] Penskalaan teks sampai 200% tanpa layout rusak — uji setiap layar pada faktor 1,0 / 1,5 / 2,0 (KNF-05)
-- [ ] Hormati pengaturan kurangi gerak sistem
-- [ ] Audit kontras otomatis: skrip yang memeriksa setiap pasangan warna di `tokens.dart` terhadap ambang WCAG 2.2 AA dan gagal build jika ada yang lolos di bawah ambang
-- [ ] Audit target sentuh: widget test yang memastikan tidak ada kontrol interaktif di bawah 48×48
-- [ ] Label semantik pada seluruh ikon bermakna; uji dengan TalkBack pada perangkat nyata
-- [ ] Indikator luring dan sinkronisasi menyeluruh
-- [ ] Notifikasi lokal terjadwal untuk aktivitas belum tercatat
+- [x] **Mode Tenang** sebagai fitur menyeluruh, bukan sekadar setelan (KF-16): sembunyikan gambar dan ganti label teks, turunkan saturasi kategori ke tint, naikkan spasi satu tingkat, bisukan notifikasi non-kritis, seluruh transisi 0 ms. Tampilkan pil "Mode Tenang aktif" di header agar keadaannya tidak tersembunyi
+- [x] Penskalaan teks sampai 200% tanpa layout rusak — uji setiap layar pada faktor 1,0 / 1,5 / 2,0 (KNF-05)
+- [x] Hormati pengaturan kurangi gerak sistem
+- [x] Audit kontras otomatis: skrip yang memeriksa setiap pasangan warna di `tokens.dart` terhadap ambang WCAG 2.2 AA dan gagal build jika ada yang lolos di bawah ambang
+- [x] Audit target sentuh: widget test yang memastikan tidak ada kontrol interaktif di bawah 48×48
+- [ ] Label semantik pada seluruh ikon bermakna; uji dengan TalkBack pada perangkat nyata — *audit otomatis selesai (`semantics_test.dart` menelusuri pohon semantik seluruh rute); uji TalkBack di perangkat nyata belum dijalankan*
+- [x] Indikator luring dan sinkronisasi menyeluruh — `AppStatusStrip` dipasang sekali di `MaterialApp.builder`, bukan per layar
+- [ ] Notifikasi lokal terjadwal untuk aktivitas belum tercatat — *logika penjadwalan selesai dan teruji (`domain/notifikasi/pengingat.dart`); pengikatan ke plugin platform menunggu keputusan dependensi `flutter_local_notifications`*
 
 **Selesai bila:** skrip audit kontras dan widget test target sentuh lulus, dan seluruh layar terbaca dengan TalkBack. `KF-16, KNF-05` tercentang.
 
