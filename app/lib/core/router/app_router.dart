@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/activity/detail_aktivitas_screen.dart';
+import '../../features/assistant/tanya_screen.dart';
 import '../../features/auth/auth_screens.dart';
 import '../../features/home/beranda_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
@@ -235,22 +236,7 @@ final appRouter = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          routes: [
-            _stub(
-              '/tanya',
-              R.tanya,
-              S.titleTanya,
-              phase: 'L.3 - F5',
-              routes: [
-                _stub(
-                  'sumber/:jawabanId',
-                  R.sumber,
-                  S.titleSumber,
-                  phase: 'L.4 - F5',
-                ),
-              ],
-            ),
-          ],
+          routes: [_layar('/tanya', R.tanya, (_, _) => const TanyaScreen())],
         ),
         // Jelajah hosts three surfaces at their documented top-level paths, so
         // deep links from docs/05 keep working.
