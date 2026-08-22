@@ -61,6 +61,14 @@ jobs:
       - name: Test plan rules
         run: deno test --allow-import supabase/functions/_shared/pemetaan_test.ts
 
+      # Layer 1 of the medical boundary. Both halves are asserted: nothing
+      # forbidden gets through, and nothing ordinary gets refused.
+      - name: Test the medical boundary lexicon
+        run: deno test --allow-import supabase/functions/_shared/lexicon_test.ts
+
+      - name: Type-check Edge Functions
+        run: deno check --allow-import supabase/functions/ask/index.ts supabase/functions/generate-plan/index.ts supabase/functions/hapus-akun/index.ts
+
   basis-data:
     name: RLS, deletion and catalogue guards
     runs-on: ubuntu-latest
@@ -88,6 +96,11 @@ jobs:
 
       - name: Activity catalogue content limits
         run: psql "$DB" -v ON_ERROR_STOP=1 -f scripts/test_katalog.sql
+        env:
+          DB: postgresql://postgres:postgres@127.0.0.1:55322/postgres
+
+      - name: Hybrid retrieval
+        run: psql "$DB" -v ON_ERROR_STOP=1 -f scripts/test_cari_potongan.sql
         env:
           DB: postgresql://postgres:postgres@127.0.0.1:55322/postgres
 
