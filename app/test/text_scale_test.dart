@@ -1,9 +1,9 @@
 import 'package:dekapautis/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
 
 import 'support/fakes.dart';
+import 'support/rute.dart';
 
 /// KNF-05: text scaling to 200% without the layout breaking.
 ///
@@ -30,7 +30,7 @@ void main() {
   const faktor = <double>[1.0, 1.5, 2.0];
 
   /// Every concrete path in the route tree, with parameters filled in.
-  final rute = _kumpulkanRute(appRouter.configuration.routes);
+  final rute = kumpulkanRute(appRouter.configuration.routes);
 
   test('the walk found the whole route tree', () {
     // Guards the test itself: if the walk silently returned nothing, every
@@ -99,44 +99,3 @@ Future<List<String>> _renderDanKumpulkanMasalah(
   tester.takeException();
   return masalah;
 }
-
-/// Walks the go_router tree and returns every concrete path it can serve.
-///
-/// Shell routes contribute no path of their own; their branches do. Path
-/// parameters are filled with `demo`, which also exercises what a screen does
-/// with an id that matches nothing - the deep-link case from docs/05.
-List<String> _kumpulkanRute(List<RouteBase> routes, [String induk = '']) {
-  final hasil = <String>[];
-
-  for (final route in routes) {
-    switch (route) {
-      case GoRoute():
-        final path = _gabung(induk, route.path);
-        // A route with a builder serves a screen; one with only children is
-        // just a namespace and has nothing to render.
-        if (route.builder != null || route.pageBuilder != null) {
-          hasil.add(_isiParameter(path));
-        }
-        hasil.addAll(_kumpulkanRute(route.routes, path));
-      case StatefulShellRoute():
-        for (final branch in route.branches) {
-          hasil.addAll(_kumpulkanRute(branch.routes, induk));
-        }
-      case ShellRouteBase():
-        hasil.addAll(_kumpulkanRute(route.routes, induk));
-    }
-  }
-
-  return hasil;
-}
-
-String _gabung(String induk, String path) {
-  if (path.startsWith('/')) return path;
-  final dasar = induk.endsWith('/')
-      ? induk.substring(0, induk.length - 1)
-      : induk;
-  return '$dasar/$path';
-}
-
-String _isiParameter(String path) =>
-    path.replaceAll(RegExp(r':[A-Za-z]+'), 'demo');

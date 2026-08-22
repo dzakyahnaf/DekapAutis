@@ -40,16 +40,21 @@ class CalmModeSwitch extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(child: Text(S.modeTenang, style: text.titleMedium)),
-              Switch(
-                value: prefs.calmMode,
-                onChanged: (v) => ref
-                    .read(accessibilityProvider.notifier)
-                    .setCalmMode(enabled: v),
-              ),
-            ],
+          // Merged so TalkBack announces "Mode Tenang, switch" rather than a
+          // switch with no name. Caught by semantics_test.dart - on the
+          // accessibility screen itself, which is the worst place for it.
+          MergeSemantics(
+            child: Row(
+              children: [
+                Expanded(child: Text(S.modeTenang, style: text.titleMedium)),
+                Switch(
+                  value: prefs.calmMode,
+                  onChanged: (v) => ref
+                      .read(accessibilityProvider.notifier)
+                      .setCalmMode(enabled: v),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: DekapSpace.cardGap),
           for (final effect in effects)

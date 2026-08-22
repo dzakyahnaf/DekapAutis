@@ -121,11 +121,17 @@ class _KartuKurangiGerak extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(child: Text('Kurangi gerakan', style: text.titleMedium)),
-              Switch(value: aktif, onChanged: onUbah),
-            ],
+          // Merged so the switch is announced with its name. On its own a
+          // bare Switch reads as "on, switch" with nothing to say what it is.
+          MergeSemantics(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text('Kurangi gerakan', style: text.titleMedium),
+                ),
+                Switch(value: aktif, onChanged: onUbah),
+              ],
+            ),
           ),
           const SizedBox(height: DekapSpace.cardGap / 2),
           Text('Semua transisi menjadi 0 milidetik.', style: text.bodySmall),
