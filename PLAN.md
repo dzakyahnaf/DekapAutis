@@ -139,12 +139,12 @@ Pilar AI pertama dan bagian paling berisiko. Spesifikasi penuh di `docs/04-AI-PI
 
 ## F6 — Laporan perkembangan
 
-- [ ] Edge Function `summarize-report`: meringkas catatan harian menjadi narasi Bahasa Indonesia untuk tenaga profesional. Narasi **hanya boleh menyebut data yang benar-benar ada** — tanpa interpretasi klinis, tanpa skor tunggal (KF-10)
-- [ ] Layar Laporan (L.8): pemilih periode 2 minggu / 1 bulan / 3 bulan, tiga metrik ringkas, grafik tren "Mudah" per minggu, rincian per kategori, kotak ringkasan untuk terapis
-- [ ] Grafik digambar dengan `CustomPainter` — tanpa animasi masuk, angka memakai IBM Plex Mono
-- [ ] Ekspor PDF memakai paket `pdf` + `printing`, tata letak A4, memuat kop, periode, metrik, tabel per kategori, narasi, dan catatan penyangkalan bahwa dokumen ini bukan hasil pemeriksaan klinis (KF-11)
-- [ ] Berbagi ke tenaga profesional lewat `izin_berbagi`: persetujuan eksplisit per tindakan, bisa ditarik kembali, tercatat waktunya
-- [ ] Layar kelola izin berbagi di Profil, memperlihatkan siapa punya akses ke apa dan sejak kapan
+- [x] Edge Function `summarize-report`: meringkas catatan harian menjadi narasi Bahasa Indonesia untuk tenaga profesional. Narasi **hanya boleh menyebut data yang benar-benar ada** — tanpa interpretasi klinis, tanpa skor tunggal (KF-10)
+- [x] Layar Laporan (L.8): pemilih periode 2 minggu / 1 bulan / 3 bulan, tiga metrik ringkas, grafik tren "Mudah" per minggu, rincian per kategori, kotak ringkasan untuk terapis
+- [x] Grafik digambar dengan `CustomPainter` — tanpa animasi masuk, angka memakai IBM Plex Mono
+- [x] Ekspor PDF memakai paket `pdf` + `printing`, tata letak A4, memuat kop, periode, metrik, tabel per kategori, narasi, dan catatan penyangkalan bahwa dokumen ini bukan hasil pemeriksaan klinis (KF-11)
+- [x] Berbagi ke tenaga profesional lewat `izin_berbagi`: persetujuan eksplisit per tindakan, bisa ditarik kembali, tercatat waktunya
+- [x] Layar kelola izin berbagi di Profil, memperlihatkan siapa punya akses ke apa dan sejak kapan
 
 **Selesai bila:** PDF terbuat dari data riil, terbaca rapi, dan pencabutan izin benar-benar memutus akses profesional — dibuktikan lewat uji RLS kedua. `KF-10, KF-11` tercentang.
 
