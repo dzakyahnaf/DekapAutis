@@ -119,7 +119,7 @@ salah tempat.
 ## Pengujian
 
 ```bash
-cd app && flutter test                      # 347 test
+cd app && flutter test                      # 353 test
 docker run --rm -v "${PWD}:/w" -w /w --entrypoint deno denoland/deno:alpine \
   test --allow-import supabase/functions/_shared/      # 52 test
 
@@ -138,7 +138,7 @@ python scripts/eval_safety.py               # batas medis, 40 prompt
 python scripts/eval_groundedness.py         # keterlacakan jawaban
 ```
 
-Total: **347 test Flutter, 52 test Deno, 112 pemeriksaan SQL.**
+Total: **353 test Flutter, 52 test Deno, 112 pemeriksaan SQL.**
 
 **Verifikasi tidak ada kunci API di APK:**
 

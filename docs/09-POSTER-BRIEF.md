@@ -168,13 +168,138 @@ di atas 75 mata kehilangan barisnya.
 - **Pemisah antarbagian bukan hanya jarak kosong** (gate 9): pakai garis
   rambut `#D8C6E0`, pergeseran warna bidang, atau perubahan ritme kolom.
 
-### Ikon dan ilustrasi
+### Ikon — aturan umum
 
-- **Satu pustaka ikon saja.** Aplikasinya memakai Material Symbols Rounded —
-  pakai itu, jangan mencampur dua pustaka (gate 30).
-- **Tanpa emoji sebagai ikon fitur** (gate 30). ✨🚀⚡ adalah tanda AI.
-- Ilustrasi digambar sendiri sebagai bentuk geometris sederhana. Tanpa Lottie,
-  tanpa stok foto anak.
+Poster ini tidak boleh menjadi dinding teks. Ikon adalah cara utamanya keluar
+dari itu, tetapi ikon yang dipilih asal justru membuatnya terlihat lebih
+buatan mesin, bukan kurang. Tiga aturan yang mengatur semuanya:
+
+- **Satu pustaka saja: Material Symbols Rounded** — persis yang dipakai
+  aplikasi (`material_symbols_icons: ^4.2960.0`). Jangan mencampur dua
+  pustaka (gate 30). Kalau sebuah ikon tidak ada di pustaka itu, ganti
+  gagasannya, jangan ganti pustakanya.
+- **Ambil dari 52 ikon yang benar-benar dipakai aplikasi**, daftarnya di
+  bawah. Ini bukan formalitas: juri menilai kesesuaian dengan produk (25%),
+  dan ikon yang sama antara poster dan tangkapan layar terbaca sebagai satu
+  produk. Ikon karangan terbaca sebagai poster yang dibuat terpisah dari
+  aplikasinya.
+- **Ikon tidak pernah berdiri sendiri.** Selalu berpasangan dengan label
+  teks. Ini aturan produk, bukan selera: `CLAUDE.md` melarang membedakan
+  kategori atau status hanya lewat warna atau bentuk. Kisi ikon tanpa kata
+  adalah teka-teki, bukan informasi.
+
+**Geometri** — satu berat, satu ukuran optis, satu warna:
+
+| | |
+|---|---|
+| Berat | 400 saja. Jangan mencampur 300 dan 700 dalam satu poster |
+| Ukuran optis | 24 dp, di-scale ke ukuran poster — jangan pakai 20 dan 48 bersamaan |
+| Isian | Outline (`fill 0`). Ikon terisi hanya untuk simpul aktif diagram |
+| Warna | Monokrom `#6B5F73`, atau `#4A2657` bila di atas bidang terang |
+| Ukuran cetak | 32 px simpul diagram · 24 px inline · 20 px lencana kaki |
+| Goresan | Sejajar dengan garis rambut 1–2 px. Ikon tebal di sebelah garis tipis terlihat tertempel |
+
+### Ikon mana untuk apa — semuanya diambil dari aplikasi
+
+**Enam simpul lingkaran.** Ikon di dalam lingkaran simpul, nomor mono di
+luarnya. Ikon menggantikan ilustrasi kosong, bukan menggantikan label:
+
+```
+◯ 1  person_rounded          Profil anak
+◯ 2  calendar_month_rounded  Rencana mingguan
+◯ 3  edit_note_rounded       Catat respons
+◯ 4  tune_rounded            Rencana menyesuaikan
+◯ 5  description_rounded     Bagikan laporan
+◯ 6  handshake_rounded       Tanggapan profesional
+◯    auto_awesome_rounded    Tanya Dekap  (simpul yang disuplai pipeline)
+```
+
+**Tiga lapis pipeline batas medis.** Satu ikon per lapis di sepanjang spine,
+plus satu untuk cabang penolakan:
+
+```
+Lapis 1   search_rounded        leksikon deterministik
+Lapis 2   auto_awesome_rounded  klasifikasi niat model
+Lapis 3   verified_rounded      verifikasi keluaran
+cabang    shield_rounded        penolakan → pemberitahuan batas aman
+keluaran  article_rounded       jawaban dengan sumber terkutip
+```
+
+`shield_rounded` adalah ikon yang benar-benar dipakai `safety_banner.dart`.
+Memakainya di poster berarti juri melihat lambang yang sama di poster dan di
+layar — itu poin kesesuaian yang gratis.
+
+**Lima kategori aktivitas**, kalau Anda menampilkan rincian kategori. Nilai
+persis dari `tokens.dart`, jangan ditukar:
+
+```
+Komunikasi   chat_bubble_rounded         #4A2657 purple700
+Motorik      directions_run_rounded      purple500
+Sensorik     blur_on_rounded             purple300
+Kemandirian  accessibility_new_rounded   cream400
+Sosial       groups_rounded              cream700
+```
+
+Kategori Sosial adalah yang bertanda perhatian di data demo. Kalau Anda
+menandainya, pakai `flag_rounded` — sekali lagi, ikon yang sama dengan
+aplikasi.
+
+**Di mana ikon TIDAK boleh dipakai:**
+
+- Bukan sebagai peluru di depan setiap baris teks. Itu kisi ikon seragam
+  yang gate 3 tolak.
+- Bukan di kolom MASALAH. Prosa naratif tidak butuh ikon, dan menaruhnya di
+  sana membuat masalah manusia terlihat seperti daftar fitur.
+- Bukan di baris angka. Angka sudah bekerja sendiri dalam mono.
+- **Tanpa emoji sebagai ikon** (gate 30). ✨🚀⚡ adalah tanda AI paling khas.
+
+### Lencana tumpukan teknologi
+
+Rulebook tidak memintanya, tetapi ini bidang Software Development: lencana
+tumpukan teknologi memberi tahu juri apa yang sebenarnya dibangun, dan
+memberi kaki poster sesuatu selain teks. Perlakukan sebagai kategori
+tersendiri — **lambang merek bukan ikon antarmuka**, jadi aturan "satu
+pustaka ikon" tidak berlaku padanya, tetapi aturan palet tetap berlaku.
+
+**Wajib monokrom.** Ini bukan selera, ini konsekuensi paletnya: warna resmi
+Flutter (#02569B biru), Dart (#0175C2 biru), Supabase (#3ECF8E hijau),
+PostgreSQL (#336791 biru), dan gradien Gemini semuanya termasuk warna yang
+`CLAUDE.md` larang. Render setiap lambang **satu warna `#6B5F73`** pada
+kertas. Satu bidang gelap dengan lambang `#F2E8F6` juga boleh, asal
+konsisten.
+
+**Lima lambang, tidak lebih:**
+
+```
+Flutter · Supabase · PostgreSQL · Deno · Gemini
+```
+
+Itu klien, backend, basis data, runtime Edge Function, dan model bahasa —
+satu per lapis, tidak ada yang mubazir. Jangan menambahkan Dart di sebelah
+Flutter (redundan), jangan menambahkan GitHub, VS Code, atau Figma (itu
+perkakas Anda, bukan produknya).
+
+**Yang tidak punya lambang layak, set sebagai teks mono**, jangan dikarang
+lambangnya — menggambar logo palsu adalah kegagalan spesifisitas yang paling
+mudah dilihat:
+
+```
+pgvector · Drift · Riverpod · RRF k=60
+```
+
+**Penempatan.** Satu baris di kaki poster, tepat di atas atau di bawah baris
+angka, dipisah titik tengah `·`, tinggi lambang 20 px cetak, sejajar
+baseline dengan teks mono di sebelahnya. **Bukan** kotak berjajar, **bukan**
+kartu, **bukan** kisi — sebaris, setinggi garis rambut. Kaki poster adalah
+tempatnya; menaruhnya di kepala akan bersaing dengan tiga logo wajib.
+
+Kalau ruang di kaki tidak cukup, buang lencananya, jangan mengecilkan
+diagram. Bobot penilaian ada pada proses, bukan pada tumpukan teknologi.
+
+### Ilustrasi
+
+- Digambar sendiri sebagai bentuk geometris sederhana. Tanpa Lottie, tanpa
+  stok foto anak, tanpa ilustrasi orang bergaya korporat.
 - **Setiap hiasan harus punya alasan** (gate 45). Angka di sudut tanpa makna,
   bentuk abstrak tanpa jangkar isi — itu slop. Nomor simpul diagram punya
   makna; ornamen acak tidak.
@@ -196,17 +321,17 @@ Lingkaran adalah tulang punggungnya. Segala hal lain menggantung padanya.
 │                                                          │
 │  MASALAH          ╭───────────────────────────╮          │
 │  kolom sempit     │                           │          │
-│  kiri, 50 ch      │   ◯ 1 Profil anak         │          │
+│  kiri, 50 ch      │  ⑴ ⬡person   Profil anak  │          │
 │                   │        ↘                  │          │
-│  Antrean terapi   │   ◯ 2 Rencana mingguan ←──┼──╮       │
-│  panjang, biaya   │        ↘              [ss] │  │       │
-│  berulang, jarak  │   ◯ 3 Catat respons       │  │       │
-│  ke profesional.  │        ↘         [ss]     │  │       │
-│  Di antara dua    │   ◯ 4 Rencana menyesuaikan│  │       │
+│  Antrean terapi   │  ⑵ ⬡calendar Rencana  ←───┼──╮       │
+│  panjang, biaya   │        ↘             [ss] │  │       │
+│  berulang, jarak  │  ⑶ ⬡edit_note Catat resp. │  │       │
+│  ke profesional.  │        ↘        [ss]      │  │       │
+│  Di antara dua    │  ⑷ ⬡tune     Menyesuaikan │  │       │
 │  jadwal, rumah    │        ↘                  │  │       │
-│  jadi tempat      │   ◯ 5 Bagikan laporan[ss] │  │       │
+│  jadi tempat      │  ⑸ ⬡descript. Laporan[ss] │  │       │
 │  belajar utama.   │        ↘                  │  │       │
-│                   │   ◯ 6 Tanggapan ──────────┼──╯       │
+│                   │  ⑹ ⬡handshake Tanggapan ──┼──╯       │
 │                   ╰───────────────────────────╯          │
 │                     "tanggapan kembali mengubah rencana" │
 ├─────────────────────────────────────────────────────────┤  pergeseran bidang
@@ -216,7 +341,9 @@ Lingkaran adalah tulang punggungnya. Segala hal lain menggantung padanya.
 ├─────────────────────────────────────────────────────────┤  garis rambut
 │  TUJUAN · MANFAAT   ditulis sebagai prosa mengalir,      │
 │                     bukan tiga kartu seragam             │
-│  60 · 31 · 3 · 17 · 5 · 347    #ITC2026 #SOFTDEV         │  mono, hairline
+│  60 · 31 · 3 · 17 · 5 · 353    #ITC2026 #SOFTDEV         │  mono, hairline
+│  ⬡Flutter ·⬡Supabase ·⬡PostgreSQL ·⬡Deno ·⬡Gemini        │  lencana mono
+│  pgvector · Drift · Riverpod · RRF k=60                  │  20px, sebaris
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -227,6 +354,15 @@ kanan pada baris yang sama. Jangan menaruh semuanya di satu poros tengah.
 terpisah di bawah. Itu yang membuat mockup melayani diagram alih-alih
 bersaing dengannya — dan yang membuat kesesuaian dengan proposal (25%)
 terbaca bersamaan dengan proses (30%).
+
+**Setiap simpul membawa ikon aplikasinya**, bukan lingkaran kosong bernomor.
+Nomor mono di luar simpul, ikon Material Symbols di dalamnya, label teks di
+sebelahnya — tiga hal yang saling melengkapi, bukan tiga hal yang mengulang.
+Ini yang membuat diagram terbaca sebagai gambar, bukan sebagai daftar
+bernomor yang kebetulan digambari lingkaran.
+
+**Lencana teknologi sebaris di kaki**, setinggi garis rambut, monokrom. Kalau
+ruangnya tidak cukup, buang lencananya — jangan mengecilkan diagram.
 
 **Tanpa bingkai ponsel gambar-sendiri** (gate 47). Tangkapan layar ditempel
 apa adanya dengan sudut membulat 36 px dan garis rambut 1 px. Jangan
@@ -351,7 +487,7 @@ Enam angka ini seluruhnya dapat ditunjuk asalnya:
 3    lapis batas medis
 17   layar pengasuh
 5    aturan adaptasi
-347  test otomatis · 112 pemeriksaan basis data
+353  test otomatis · 112 pemeriksaan basis data
 ```
 
 Set dalam IBM Plex Mono di sepanjang garis rambut. **Jangan menambahkan angka
@@ -387,6 +523,22 @@ oranye, abu-abu netral murni, dan gradien apa pun.
   Aksen krem   #6F5722   jalur manusia — maksimal 5% luas
   Bidang       #E4CEEC dan #EDDFBC — hanya latar, TIDAK PERNAH warna teks
 
+IKON — poster ini tidak boleh menjadi dinding teks, tetapi ikonnya harus
+tepat. Pakai HANYA Material Symbols Rounded, berat 400, outline, monokrom
+#6B5F73, satu ukuran optis. Jangan mencampur pustaka ikon. Jangan memakai
+emoji sebagai ikon. Setiap ikon berpasangan dengan label teks — tidak pernah
+berdiri sendiri.
+  Simpul lingkaran : person · calendar_month · edit_note · tune ·
+                     description · handshake, dan auto_awesome untuk simpul
+                     Tanya Dekap
+  Pipeline         : search (lapis 1) · auto_awesome (lapis 2) ·
+                     verified (lapis 3) · shield (cabang penolakan) ·
+                     article (jawaban bersumber)
+  Kategori         : chat_bubble · directions_run · blur_on ·
+                     accessibility_new · groups
+JANGAN menaruh ikon sebagai peluru di depan setiap baris teks, jangan di
+kolom MASALAH, jangan di baris angka.
+
 TIPOGRAFI — tepat dua rupa, tidak lebih.
   Lexend Deca  judul dan seluruh teks
   IBM Plex Mono  hanya di dua tempat: baris statistik dan nomor simpul
@@ -417,6 +569,12 @@ KOMPOSISI dari atas ke bawah
      BUKAN tiga kartu seragam.
   8. Baris angka dalam mono di sepanjang garis rambut, dengan tagar
      #ITC2026 #SOFTDEV.
+  9. Di kaki poster, SATU BARIS lencana tumpukan teknologi: Flutter,
+     Supabase, PostgreSQL, Deno, Gemini — dipisah titik tengah, tinggi
+     lambang 20 px, SEMUANYA MONOKROM #6B5F73. Jangan memakai warna merek
+     resmi: biru Flutter, hijau Supabase, dan gradien Gemini melanggar
+     palet. Di bawahnya satu baris mono: "pgvector · Drift · Riverpod ·
+     RRF k=60". Sebaris, bukan kotak, bukan kartu, bukan kisi.
 
 PROPORSI: dua diagram bersama-sama mendapat sekitar 45% tinggi poster.
 Bobot penilaian terbesar ada pada ilustrasi proses; jangan biarkan tangkapan
@@ -451,6 +609,11 @@ sensitivitas sensorik.
 - [ ] Tepat dua rupa huruf; mono hanya di dua tempat
 - [ ] Aksen ungu + krem bersama-sama ≤ 5% luas
 - [ ] Satu pustaka ikon; tidak ada emoji sebagai ikon
+- [ ] Setiap ikon diambil dari 52 ikon yang dipakai aplikasi, tidak dikarang
+- [ ] Ikon satu berat, satu ukuran optis, monokrom
+- [ ] Tidak ada ikon yang berdiri tanpa label teks
+- [ ] Lencana teknologi monokrom — tidak ada biru Flutter atau hijau Supabase
+- [ ] Lencana sebaris di kaki, bukan kisi kartu; lambang palsu tidak digambar
 - [ ] Semua jarak kelipatan 4
 - [ ] Setiap ornamen punya alasan
 
