@@ -35,11 +35,22 @@ AKAR = pathlib.Path(__file__).resolve().parent.parent
 PROMPT = AKAR / "scripts" / "prompt_uji.json"
 KONTAINER = os.environ.get("SUPABASE_DB_CONTAINER", "supabase_db_dekapautis")
 
+# Set DEKAP_DB_URL untuk mengukur konfigurasi produksi alih-alih stack lokal.
+# docs/06 meminta evaluasi dijalankan ulang pada konfigurasi sebenarnya sebelum
+# submit, karena perilaku dapat berbeda antar lingkungan.
+DB_URL = os.environ.get("DEKAP_DB_URL", "")
+
 
 def psql(sql: str) -> str:
+    perintah = (
+        ["docker", "run", "--rm", "-i", "postgres:17-alpine",
+         "psql", DB_URL, "-tAc", sql]
+        if DB_URL
+        else ["docker", "exec", "-i", KONTAINER,
+              "psql", "-U", "postgres", "-d", "postgres", "-tAc", sql]
+    )
     hasil = subprocess.run(
-        ["docker", "exec", "-i", KONTAINER,
-         "psql", "-U", "postgres", "-d", "postgres", "-tAc", sql],
+        perintah,
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -65,6 +76,7 @@ def main() -> int:
     print()
     print("Evaluasi keterlacakan - DekapAutis")
     print("=" * 52)
+    print(f"Konfigurasi           : {'PRODUKSI (remote)' if DB_URL else 'lokal'}")
     print(f"Dokumen di korpus     : {dokumen}")
     print(f"Potongan terindeks    : {potongan}")
     print(f"Potongan berembedding : {berembedding}")
