@@ -12,6 +12,7 @@ import '../../data/repositories/auth_repository.dart';
 import '../../shared/widgets/buttons.dart';
 import '../../shared/widgets/routine_card.dart';
 import '../../shared/widgets/states.dart';
+import 'kartu_adaptasi.dart';
 
 /// L.6 - the weekly plan.
 class RencanaScreen extends ConsumerStatefulWidget {
@@ -86,6 +87,9 @@ class _RencanaScreenState extends ConsumerState<RencanaScreen> {
                         _KartuPenjelasan(alasan: _alasanTerakhir!),
                         const SizedBox(height: DekapSpace.cardPadding),
                       ],
+                      // Rows out of adaptasi_log: which rule fired, which real
+                      // numbers moved, and a way to override each one.
+                      const DaftarPenjelasanAdaptasi(),
                       if (_kesalahan != null) ...[
                         Text(
                           _kesalahan!,
@@ -148,6 +152,11 @@ class _RencanaScreenState extends ConsumerState<RencanaScreen> {
       final alasan = await ref
           .read(rencanaRepositoryProvider)
           .buatRencana(profilAnakId);
+
+      // The five rules run here, against the notes the caregiver actually
+      // recorded, and write their reasons to adaptasi_log. Before this the
+      // engine was complete, tested, and never invoked.
+      await ref.read(adaptasiRepositoryProvider).jalankan(profilAnakId);
       if (!mounted) return;
       setState(() {
         _menyusun = false;
@@ -155,7 +164,8 @@ class _RencanaScreenState extends ConsumerState<RencanaScreen> {
       });
       ref
         ..invalidate(rencanaMingguanProvider)
-        ..invalidate(agendaHariIniProvider);
+        ..invalidate(agendaHariIniProvider)
+        ..invalidate(penjelasanAdaptasiProvider);
     } on KesalahanAuth catch (e) {
       if (!mounted) return;
       setState(() {

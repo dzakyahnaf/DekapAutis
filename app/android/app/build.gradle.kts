@@ -1,3 +1,17 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+// Kunci rilis dibaca dari key.properties, yang tidak pernah masuk Git.
+// Kalau berkasnya tidak ada - misalnya pada checkout bersih di CI - build
+// release jatuh kembali ke kunci debug dan tetap berjalan, alih-alih gagal
+// dengan pesan yang tidak menjelaskan apa pun.
+val keyProperties = Properties()
+val keyPropertiesFile = rootProject.file("key.properties")
+val adaKunciRilis = keyPropertiesFile.exists()
+if (adaKunciRilis) {
+    keyProperties.load(FileInputStream(keyPropertiesFile))
+}
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -34,12 +48,27 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (adaKunciRilis) {
+            create("release") {
+                keyAlias = keyProperties["keyAlias"] as String
+                keyPassword = keyProperties["keyPassword"] as String
+                storeFile = file(keyProperties["storeFile"] as String)
+                storePassword = keyProperties["storePassword"] as String
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // Replaced by the real release keystore in F11. Until then the debug
-            // key keeps `flutter run --release` working. The keystore and
-            // key.properties never enter Git - see .gitignore.
-            signingConfig = signingConfigs.getByName("debug")
+            // Kunci rilis sungguhan bila key.properties ada. Keystore-nya hidup
+            // di luar repositori, dan kehilangannya berarti tidak bisa lagi
+            // menerbitkan pembaruan dengan identitas aplikasi yang sama.
+            signingConfig = if (adaKunciRilis) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ import 'models/notifikasi.dart';
 import 'models/profesional_admin.dart';
 import 'models/profil_anak.dart';
 import 'models/pustaka.dart';
+import 'repositories/adaptasi_repository.dart';
 import 'repositories/admin_repository.dart';
 import 'repositories/akun_repository.dart';
 import 'repositories/auth_repository.dart';
@@ -308,4 +309,38 @@ final adalahDemoProvider = FutureProvider<bool>((ref) async {
   } on Object {
     return false;
   }
+});
+
+// -------------------------------------------------------- F4, dilengkapi --
+
+final adaptasiRepositoryProvider = Provider<AdaptasiRepository>(
+  (ref) => AdaptasiRepository(ref.watch(supabaseClientProvider)),
+);
+
+/// The active plan's id, needed before any adaptation row can be read or
+/// written. Null before the first plan is generated.
+final rencanaAktifIdProvider = FutureProvider<String?>((ref) async {
+  final anak = await ref.watch(anakAktifProvider.future);
+  if (anak == null) return null;
+  final rencana = await ref
+      .watch(penerapanSaranRepositoryProvider)
+      .rencanaAktif(anak.id);
+  return rencana?.id;
+});
+
+/// Adaptation reasons for the active plan, as the caregiver sees them.
+///
+/// Rows from rule D are filtered out here rather than in the query: they exist
+/// for the report and the professional's inbox, and the filter belongs next to
+/// the sentence explaining why.
+final penjelasanAdaptasiProvider = FutureProvider<List<BarisLogTersimpan>>((
+  ref,
+) async {
+  final rencanaId = await ref.watch(rencanaAktifIdProvider.future);
+  if (rencanaId == null) return const [];
+  final semua = await ref.watch(adaptasiRepositoryProvider).log(rencanaId);
+  return [
+    for (final b in semua)
+      if (b.tampilkanKePengasuh) b,
+  ];
 });
