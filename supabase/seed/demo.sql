@@ -52,9 +52,23 @@ delete from dokumen_pengetahuan where id::text like 'd0000000-%';
 -- Kata sandi di-hash dengan bcrypt lewat pgcrypto, sama seperti yang dilakukan
 -- GoTrue saat pendaftaran biasa, supaya tombol "Masuk sebagai demo" benar-benar
 -- melewati alur autentikasi yang sama dengan pengguna lain.
+-- Kolom token WAJIB berisi string kosong, bukan NULL.
+--
+-- GoTrue versi hosted membaca `confirmation_token`, `recovery_token`,
+-- `email_change*`, `phone_change*`, dan `reauthentication_token` ke dalam
+-- string Go yang tidak boleh nil. Baris yang meninggalkannya NULL membuat
+-- seluruh proses masuk gagal dengan "Database error querying schema" -
+-- tombol "Masuk sebagai demo" mati di perangkat juri, dan pesannya sama
+-- sekali tidak menunjuk ke penyebabnya.
+--
+-- Stack lokal memaafkannya; peladen produksi tidak. Ditemukan dengan mencoba
+-- masuk sungguhan ke remote, bukan dengan membaca ulang seed.
 insert into auth.users (
   instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
-  raw_app_meta_data, raw_user_meta_data, created_at, updated_at
+  raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+  confirmation_token, recovery_token, email_change, email_change_token_new,
+  email_change_token_current, phone_change, phone_change_token,
+  reauthentication_token
 )
 select
   '00000000-0000-0000-0000-000000000000',
@@ -67,7 +81,8 @@ select
   '{"provider":"email","providers":["email"]}'::jsonb,
   jsonb_build_object('peran', d.peran, 'nama', d.nama),
   now(),
-  now()
+  now(),
+  '', '', '', '', '', '', '', ''
 from (values
   ('d0000001-0000-4000-8000-000000000001', 'demo@dekapautis.id',
    'pengasuh', 'Rina Kartika'),
@@ -142,7 +157,10 @@ insert into profesional (
 -- `profesional_saya()`, dan kemudahan seed bukan alasan yang cukup untuk itu.
 insert into auth.users (
   instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
-  raw_app_meta_data, raw_user_meta_data, created_at, updated_at
+  raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+  confirmation_token, recovery_token, email_change, email_change_token_new,
+  email_change_token_current, phone_change, phone_change_token,
+  reauthentication_token
 )
 select
   '00000000-0000-0000-0000-000000000000',
@@ -155,7 +173,8 @@ select
   now(),
   '{"provider":"email","providers":["email"]}'::jsonb,
   jsonb_build_object('peran', 'profesional', 'nama', nama),
-  now(), now()
+  now(), now(),
+  '', '', '', '', '', '', '', ''
 from (values
   (1,  'Klinik Tumbuh Harmoni',      'Klinik',  'Terapis wicara',          'Terapi wicara',      '[{"hari":"Senin","jam":"09.00-11.00"}]',  -7.2575, 112.7521, 'Surabaya'),
   (2,  'Pusat Terapi Anak Melati',   'Pusat',   'Terapis okupasi',         'Terapi okupasi',     '[{"hari":"Selasa","jam":"13.00-15.00"}]', -7.2650, 112.7420, 'Surabaya'),

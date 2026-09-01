@@ -1,7 +1,7 @@
 DekapAutis — Implementasi Aplikasi
 Tim Fable 5 Enjoyer — Institut Teknologi Sepuluh Nopember
 
-APK (Google Drive) : <ISI TAUTAN GOOGLE DRIVE>
+APK (Google Drive) : https://drive.google.com/file/d/1HL3snBeFZ93py99Gv_GmH6Erk4i2KRpL/view?usp=sharing
 APK (GitHub Release, cadangan) :
   https://github.com/dzakyahnaf/DekapAutis/releases/download/v1.0.0/DekapAutis-v1.0.0.apk
 Repositori GitHub  : https://github.com/dzakyahnaf/DekapAutis
