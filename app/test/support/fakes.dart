@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dekapautis/data/local/database.dart';
 import 'package:dekapautis/data/models/profil_anak.dart';
 import 'package:dekapautis/data/providers.dart';
@@ -20,10 +22,34 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// passing against a stub that returned null.
 
 class FakeAuthRepository implements AuthRepository {
-  FakeAuthRepository({this.masuk_ = false, this.peran = Peran.pengasuh});
+  FakeAuthRepository({
+    this.masuk_ = false,
+    this.peran = Peran.pengasuh,
+    this.pancarkanSaatPeranDibaca = false,
+  });
 
   bool masuk_;
   Peran? peran;
+
+  /// Emits on the auth stream from inside `peranSaya()`, reproducing what the
+  /// real Supabase client does: signing in makes `onAuthStateChange` fire while
+  /// the splash is still awaiting. Any provider that watches `statusAuthProvider`
+  /// is invalidated at that moment and the future being awaited is discarded,
+  /// never completing. The default `Stream.empty()` below cannot reproduce that,
+  /// which is why the splash hang reached a release build unnoticed.
+  final bool pancarkanSaatPeranDibaca;
+
+  final _status = StreamController<AuthState>.broadcast();
+
+  void tutupStatus() => _status.close();
+
+  /// Fires what Supabase fires on sign-in. Public so a test can place the
+  /// emission at the one moment that matters: while a provider downstream of
+  /// `statusAuthProvider` is mid-computation.
+  void pancarkanMasuk() {
+    if (!_status.isClosed)
+      _status.add(AuthState(AuthChangeEvent.signedIn, null));
+  }
 
   @override
   bool get sudahMasuk => masuk_;
@@ -35,10 +61,17 @@ class FakeAuthRepository implements AuthRepository {
   User? get pengguna => null;
 
   @override
-  Stream<AuthState> get perubahanStatus => const Stream.empty();
+  Stream<AuthState> get perubahanStatus =>
+      pancarkanSaatPeranDibaca ? _status.stream : const Stream.empty();
 
   @override
-  Future<Peran?> peranSaya() async => peran;
+  Future<Peran?> peranSaya() async {
+    if (pancarkanSaatPeranDibaca) {
+      _status.add(AuthState(AuthChangeEvent.signedIn, null));
+      await Future<void>.delayed(Duration.zero);
+    }
+    return peran;
+  }
 
   @override
   Future<void> keluar() async => masuk_ = false;
@@ -63,12 +96,31 @@ class FakeAuthRepository implements AuthRepository {
 }
 
 class FakeProfilAnakRepository implements ProfilAnakRepository {
-  FakeProfilAnakRepository({List<ProfilAnak>? awal}) : anak = awal ?? [];
+  FakeProfilAnakRepository({List<ProfilAnak>? awal, this.saatMemuat})
+    : anak = awal ?? [];
 
   final List<ProfilAnak> anak;
 
+  /// Runs part-way through `daftarAnak()`, so a test can make the auth stream
+  /// emit while this call is still pending. That ordering is the whole bug:
+  /// the emission invalidates `daftarAnakProvider`, the in-flight future is
+  /// discarded, and whoever awaited it waits for ever.
+  final void Function()? saatMemuat;
+
+  bool _sudahMemancar = false;
+
   @override
-  Future<List<ProfilAnak>> daftarAnak() async => anak;
+  Future<List<ProfilAnak>> daftarAnak() async {
+    // Once only. A real sign-in emits once; firing on every call would make
+    // each recomputation trigger the next and the loop would never end.
+    if (saatMemuat != null && !_sudahMemancar) {
+      _sudahMemancar = true;
+      await Future<void>.delayed(Duration.zero);
+      saatMemuat!();
+      await Future<void>.delayed(Duration.zero);
+    }
+    return anak;
+  }
 
   @override
   Future<ProfilAnak> simpan(ProfilAnak profil) async {
