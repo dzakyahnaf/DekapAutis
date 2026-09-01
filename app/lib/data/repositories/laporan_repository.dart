@@ -60,6 +60,47 @@ class IzinBerbagi {
 /// receives them already finished and only writes sentences. Consent is
 /// per report and per action, and revoking it cuts access off through RLS
 /// rather than by hiding a row in the interface.
+/// Turns the rows of the report query into notes.
+///
+/// Pure and public so a test can feed it the exact JSON the server returns,
+/// which is the only thing that would have caught what went wrong here.
+///
+/// `catatan_respons` arrives as an OBJECT, not a list. PostgREST reads
+/// `satu_respons_per_jadwal unique (jadwal_aktivitas_id)` in migration 001,
+/// concludes the relationship is one-to-one, and embeds a single object -
+/// exactly as it should. The old code cast it to `List?`, which threw on the
+/// first row and left the whole report screen showing "Layanan sedang tidak
+/// dapat dihubungi". No test caught it because every test used fakes and the
+/// SQL checks query Postgres directly, so nothing ever went through PostgREST.
+///
+/// Both shapes are accepted deliberately: dropping that unique constraint
+/// would flip the embed back to a list, and this should not break again if
+/// anyone ever does.
+List<CatatanLaporan> catatanDariBaris(Iterable<Map<String, dynamic>> baris) {
+  final catatan = <CatatanLaporan>[];
+  for (final b in baris) {
+    final mentah = b['catatan_respons'];
+    final respons = switch (mentah) {
+      final Map<String, dynamic> m => m,
+      final List<dynamic> l when l.isNotEmpty => l.first as Map,
+      _ => null,
+    };
+    final nilai = respons == null
+        ? null
+        : NilaiRespons.fromDb(respons['nilai'] as String);
+    catatan.add(
+      CatatanLaporan(
+        kategori: Kategori.fromDb(
+          (b['aktivitas'] as Map)['kategori'] as String,
+        ),
+        tanggal: DateTime.parse(b['tanggal'] as String),
+        nilai: nilai,
+      ),
+    );
+  }
+  return catatan;
+}
+
 class LaporanRepository {
   LaporanRepository(this._client);
 
@@ -84,22 +125,7 @@ class LaporanRepository {
         .gte('tanggal', mulai.toIso8601String().split('T').first)
         .lte('tanggal', akhir.toIso8601String().split('T').first);
 
-    final catatan = <CatatanLaporan>[];
-    for (final b in baris) {
-      final respons = b['catatan_respons'] as List?;
-      final nilai = (respons == null || respons.isEmpty)
-          ? null
-          : NilaiRespons.fromDb((respons.first as Map)['nilai'] as String);
-      catatan.add(
-        CatatanLaporan(
-          kategori: Kategori.fromDb(
-            (b['aktivitas'] as Map)['kategori'] as String,
-          ),
-          tanggal: DateTime.parse(b['tanggal'] as String),
-          nilai: nilai,
-        ),
-      );
-    }
+    final catatan = catatanDariBaris(baris);
 
     // Categories rule D_tandai flagged, carried through from the most recent
     // report so a professional sees the same flag the engine raised.

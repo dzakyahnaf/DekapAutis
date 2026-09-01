@@ -176,11 +176,17 @@ Deno.serve(async (req: Request) => {
 
   // A regenerated week replaces the previous one rather than sitting beside it,
   // so the plan screen never shows two versions of the same day.
+  //
+  // Every active plan for this child is superseded, not just one starting on
+  // the same date. Matching on periode_mulai defeated the whole point: the new
+  // week is anchored to the current Monday, so a plan that began on any other
+  // weekday survived and sat beside the new one. Two active plans then made
+  // `ambilJadwal` - which filters on rencana.status alone - pull both sets, and
+  // the plan screen showed the overlapping days twice.
   await db
     .from('rencana')
     .update({ status: 'digantikan' })
     .eq('profil_anak_id', profil.id)
-    .eq('periode_mulai', mulai.toISOString().slice(0, 10))
     .eq('status', 'aktif');
 
   const { data: rencana, error: rencanaError } = await db

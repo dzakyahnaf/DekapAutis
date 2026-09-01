@@ -30,10 +30,23 @@ Deno.serve(async () => {
 
     if (error) throw error;
 
+    // Roll the demo window forward so it still ends today.
+    //
+    // The seed anchors its dates to the day it ran, so the data goes stale one
+    // day at a time while judging continues to 11 September. Doing it here
+    // rather than in a second cron costs nothing: this function already runs
+    // daily and already holds the service-role key. A failure is reported but
+    // not thrown - a stale demo is bad, a keep-alive that stops answering is
+    // worse, and this endpoint exists to keep the project awake.
+    const { data: demo, error: demoError } = await admin
+      .rpc('segarkan_tanggal_demo')
+      .maybeSingle();
+
     return new Response(
       JSON.stringify({
         status: 'bangun',
         aktivitas: count,
+        demo: demoError ? { gagal: demoError.message } : demo,
         ms: Date.now() - mulai,
         pada: new Date().toISOString(),
       }),
