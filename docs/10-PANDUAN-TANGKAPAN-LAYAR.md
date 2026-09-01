@@ -18,8 +18,14 @@ Buka salah satu di ponsel Android:
 - Cadangan: https://github.com/dzakyahnaf/DekapAutis/releases/download/v1.0.0/DekapAutis-v1.0.0.apk
 
 Drive akan menampilkan **"Google Drive tidak dapat memindai file ini dari
-virus"** — itu normal untuk berkas 67,5 MB, bukan tanda masalah. Tekan
+virus"** — itu normal untuk berkas 67,6 MB, bukan tanda masalah. Tekan
 **Download anyway / Tetap unduh**.
+
+> **Pastikan Anda memasang versi yang benar.** Berkas yang sah berukuran
+> **70.908.969 bita (67,6 MB)**. Kalau yang terunduh 70.794.281 bita, itu
+> versi lama yang menggantung di layar "Menyiapkan rencana hari ini…" setelah
+> menekan "Masuk sebagai demo". Copot pemasangannya dan unduh ulang.
+> Kalau ragu, pakai tautan GitHub Release — di sana sudah pasti versi terbaru.
 
 ### 1.2 Izinkan pemasangan
 
@@ -31,9 +37,10 @@ Lalu tekan berkasnya lagi → **Pasang**.
 
 ### 1.3 Periksa cepat
 
-Buka DekapAutis. Anda harus melihat layar pembuka lalu **layar Masuk**.
-Kalau berhenti di layar putih, periksa koneksi internet — aplikasi menghubungi
-peladen saat pertama dibuka.
+Buka DekapAutis. Anda harus melihat layar pembuka lalu **layar Masuk** dalam
+beberapa detik. Layar pembuka sekarang selalu berpindah: kalau peladen tidak
+menjawab, aplikasi tetap mendarat di beranda dengan data tersimpan, bukan
+menggantung. Kalau berhenti di layar putih, periksa koneksi internet.
 
 ---
 
@@ -222,6 +229,7 @@ Pemetaannya:
 | Gejala | Sebab dan tindakan |
 |---|---|
 | Layar putih setelah splash | Tidak ada internet. Aplikasi menghubungi peladen saat pertama dibuka |
+| Menggantung di "Menyiapkan rencana hari ini…" | Versi lama. Periksa ukuran berkas di 1.1 dan pasang ulang yang 70.908.969 bita |
 | "Masuk sebagai demo" gagal | Beri tahu saya — akun demo baru diperbaiki hari ini dan sudah diuji berhasil untuk ketiga peran |
 | Beranda kosong, tidak ada aktivitas | Tarik ke bawah untuk menyegarkan. Data demo empat minggu selalu berakhir hari ini |
 | Tanya Dekap menjawab "mode terbatas" | **Benar**, bukan galat. Kunci API model belum dipasang; sumbernya tetap nyata |
