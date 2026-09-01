@@ -148,11 +148,20 @@ select uji_cari.catat(
 );
 
 -- 8. The number shown on L.4 counts only what can actually be answered from.
---    Three documents exist; one is rejected, so two remain.
+--
+--    Asserted against the database rather than against a hardcoded figure. The
+--    old version expected 2 - true only while the corpus was empty and these
+--    three fixtures were the whole of it. A test that breaks the moment real
+--    documents arrive was testing the fixtures, not the function.
 select uji_cari.catat(
   '8. jumlah_dokumen_terindeks menghitung dari basis data, bukan 148',
-  jumlah_dokumen_terindeks() = 2,
-  'terhitung: ' || jumlah_dokumen_terindeks()
+  public.jumlah_dokumen_terindeks() = (
+    select count(*) from dokumen_pengetahuan d
+    where d.status_tinjauan <> 'ditolak'
+      and exists (select 1 from potongan_dokumen p where p.dokumen_id = d.id)
+  )
+  and public.jumlah_dokumen_terindeks() <> 148,
+  'terhitung: ' || public.jumlah_dokumen_terindeks()
 );
 
 -- 9. An empty question must not throw.

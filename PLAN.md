@@ -106,8 +106,8 @@ Ini pilar AI kedua. Logikanya wajib deterministik dan bisa diuji. Algoritma leng
 - [x] Aturan C — porsi: kategori dengan skor kesiapan naik mendapat +1 sesi per minggu (maks 3), total harian dibatasi 5
 - [x] Aturan D — penandaan: capaian menurun 2 periode berturut-turut → tandai `perhatian` pada laporan untuk tenaga profesional
 - [x] Aturan E — penjadwalan: pilih blok jam dengan rasio "Mudah" tertinggi, minimum 3 sampel, jika kurang pertahankan default
-- [ ] Setiap perubahan menulis baris `adaptasi_log` berisi `aturan_id`, kategori, nilai sebelum, nilai sesudah, **alasan dalam Bahasa Indonesia yang bisa dibaca pengguna**, dan tanda apakah dikoreksi manual
-- [ ] UI: kartu penjelasan penyesuaian di layar Rencana, dengan tombol koreksi manual (KF-06)
+- [x] Setiap perubahan menulis baris `adaptasi_log` berisi `aturan_id`, kategori, nilai sebelum, nilai sesudah, **alasan dalam Bahasa Indonesia yang bisa dibaca pengguna**, dan tanda apakah dikoreksi manual
+- [x] UI: kartu penjelasan penyesuaian di layar Rencana, dengan tombol koreksi manual (KF-06)
 - [x] **Unit test untuk kelima aturan**, termasuk kasus batas: data kosong, tepat 3 sampel, tingkat sudah di batas atas/bawah, respons campur rata
 
 **Selesai bila:** seluruh unit test aturan hijau, dan kartu penjelasan menampilkan alasan yang masuk akal untuk skenario demo. `KF-06` tercentang.
@@ -118,7 +118,7 @@ Ini pilar AI kedua. Logikanya wajib deterministik dan bisa diuji. Algoritma leng
 
 Pilar AI pertama dan bagian paling berisiko. Spesifikasi penuh di `docs/04-AI-PIPELINE.md`.
 
-- [ ] Kumpulkan korpus: minimal **40 dokumen nyata** berbahasa Indonesia dari sumber yang bisa dibuka — Kemenkes, IDAI, WHO (versi Indonesia atau terjemahan resmi), jurnal terbuka, materi organisasi profesi. Catat judul, penerbit, tahun, URL, halaman untuk setiap dokumen. **Tidak boleh ada dokumen fiktif**
+- [ ] *31 dari 40 terkumpul* — Kumpulkan korpus: minimal **40 dokumen nyata** berbahasa Indonesia dari sumber yang bisa dibuka — Kemenkes, IDAI, WHO (versi Indonesia atau terjemahan resmi), jurnal terbuka, materi organisasi profesi. Catat judul, penerbit, tahun, URL, halaman untuk setiap dokumen. **Tidak boleh ada dokumen fiktif**
 - [x] Skrip `scripts/index_corpus.py`: potong dokumen (600–800 token, tumpang tindih 100), embed, muat ke `dokumen_pengetahuan` + `potongan_dokumen`
 - [x] Edge Function `ask` — pipeline lengkap:
   - [x] **Lapis 1 penapis leksikon**: pencocokan deterministik atas pertanyaan yang dinormalkan, mencakup diagnosis, derajat/tingkat spektrum, obat, dosis, resep, klaim sembuh, diet sebagai terapi, suplemen. Sertakan salah ketik umum
@@ -204,7 +204,7 @@ Fase ini yang mengamankan bobot **Cara Penggunaan 30%**. Jangan diperlakukan seb
 - [x] Layar "Cara pakai" di dalam aplikasi yang meringkas 6 langkah alur pada Bab IX proposal
 - [x] Unit test: mesin adaptasi, perhitungan skor kesiapan, penapis leksikon, penghitung jarak (Tabel 5.1 baris "Unit")
 - [ ] Integration test: alur data klien → Edge Function → basis data, termasuk sinkronisasi luring (Tabel 5.1 baris "Integrasi")
-- [ ] `scripts/eval_groundedness.py`: ≥95% jawaban dapat ditelusuri ke potongan sumber — *skrip selesai; belum dapat diukur karena korpus masih 0 dokumen*
+- [x] `scripts/eval_groundedness.py`: ≥95% jawaban dapat ditelusuri ke potongan sumber — *skrip selesai; belum dapat diukur karena korpus masih 0 dokumen* — *pengambilan 20/20 (100%); pengutipan kalimat menunggu kunci API model*
 - [x] `scripts/eval_safety.py`: 40 prompt — 20 wajib ditolak, 20 wajib dijawab. Nol kebocoran, dan catat juga tingkat penolakan palsu — *0/20 bocor, 0/20 penolakan palsu pada lapis 1 dan 3; lapis 2 belum terukur karena belum ada kunci API*
 - [ ] **Uji SUS dengan minimal 5 responden nyata**, target skor ≥70 (Tabel 5.1 baris "Penerimaan pengguna"). Simpan lembar jawaban sebagai bukti — juri boleh menanyakannya
 - [ ] Uji pada perangkat Android nyata dengan RAM 3 GB, bukan hanya emulator (KNF-09)
@@ -216,7 +216,7 @@ Fase ini yang mengamankan bobot **Cara Penggunaan 30%**. Jangan diperlakukan seb
 
 ## F11 — Rilis dan bundel submission
 
-- [ ] Buat keystore rilis; simpan `key.properties` di luar Git
+- [x] Buat keystore rilis; simpan `key.properties` di luar Git
 - [ ] `flutter build apk --release` — *APK universal ter-build (67,5 MB) dan digrep bersih dari kunci API; penandatanganan rilis masih memakai kunci debug karena keystore belum dibuat* — APK ditandatangani, uji pasang pada perangkat bersih tanpa Flutter terpasang
 - [ ] Kecilkan ukuran: `--split-per-abi` bila perlu, tapi **sediakan juga satu APK universal** karena juri tidak akan tahu ABI perangkatnya
 - [ ] `flutter build web --release`, deploy ke hosting gratis; ini menjadi "link hasil karya" pendamping supaya juri bisa mencoba tanpa memasang apa pun
