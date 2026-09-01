@@ -47,8 +47,9 @@ class FakeAuthRepository implements AuthRepository {
   /// emission at the one moment that matters: while a provider downstream of
   /// `statusAuthProvider` is mid-computation.
   void pancarkanMasuk() {
-    if (!_status.isClosed)
+    if (!_status.isClosed) {
       _status.add(AuthState(AuthChangeEvent.signedIn, null));
+    }
   }
 
   @override

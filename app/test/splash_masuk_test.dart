@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:dekapautis/core/router/app_router.dart';
 import 'package:dekapautis/core/strings.dart';
 import 'package:dekapautis/data/models/profil_anak.dart';
-import 'package:dekapautis/data/repositories/auth_repository.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/fakes.dart';
