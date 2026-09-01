@@ -39,7 +39,7 @@ class DaftarPenjelasanAdaptasi extends ConsumerWidget {
                 ),
                 const SizedBox(height: DekapSpace.cardGap),
                 for (final b in daftar.take(5)) ...[
-                  KartuAdaptasi(baris: b),
+                  KartuAdaptasi(key: ValueKey(b.id), baris: b),
                   const SizedBox(height: DekapSpace.cardGap),
                 ],
               ],
@@ -157,7 +157,13 @@ class _KartuAdaptasiState extends ConsumerState<KartuAdaptasi> {
     });
 
     try {
-      final rencanaId = await ref.read(rencanaAktifIdProvider.future);
+      // The timeout guards a real hazard, not a slow network: this provider
+      // chains up to daftarAnakProvider, which watches the auth stream. An
+      // emission mid-await discards the future we are holding and it never
+      // completes, leaving the button reading "Menyimpan..." for good.
+      final rencanaId = await ref
+          .read(rencanaAktifIdProvider.future)
+          .timeout(const Duration(seconds: 12));
       if (rencanaId == null) {
         if (!mounted) return;
         setState(() {
@@ -175,6 +181,10 @@ class _KartuAdaptasiState extends ConsumerState<KartuAdaptasi> {
             alasan: alasan,
           );
       if (!mounted) return;
+      // Clearing this matters even though the list is about to rebuild: the
+      // card is keyed, so this State survives the rebuild rather than being
+      // discarded along with the flag.
+      setState(() => _sibuk = false);
       ref.invalidate(penjelasanAdaptasiProvider);
     } on Object catch (e) {
       if (!mounted) return;
