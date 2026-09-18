@@ -12,8 +12,16 @@ name: keep-alive
 
 on:
   schedule:
-    # 23.00 UTC = 06.00 WIB. Kalau gagal, masih ada satu hari penuh untuk
-    # menyadarinya sebelum batas tujuh hari terlampaui.
+    # Dua kali sehari. Fungsi ini sekarang juga menggeser data demo agar
+    # berakhir "hari ini" menurut WIB, jadi waktunya penting:
+    #
+    #   17.05 UTC = 00.05 WIB  data bergeser tepat setelah tanggal berganti,
+    #                          jadi beranda tidak pernah kosong di pagi hari
+    #   23.00 UTC = 06.00 WIB  cadangan: jadwal cron GitHub bisa molor atau
+    #                          terlewat saat antrean padat
+    #
+    # Fungsinya idempoten - panggilan kedua di hari yang sama menggeser 0.
+    - cron: '5 17 * * *'
     - cron: '0 23 * * *'
   workflow_dispatch:
 
