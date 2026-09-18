@@ -111,7 +111,7 @@ insert into profil_anak (
   'd0000001-0000-4000-8000-000000000001',
   'Bima', 6, 'beberapa_kata',
   array['suara_keras', 'cahaya_terang'],
-  array['komunikasi', 'kemandirian']
+  array['komunikasi_ekspresif', 'rutinitas_pagi']
 ) on conflict (id) do nothing;
 
 -- ============================================================== profesional ==
