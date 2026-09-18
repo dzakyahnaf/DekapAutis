@@ -507,3 +507,12 @@ values
 -- Korpus diisi lewat `scripts/index_corpus.py` dari daftar sumber nyata, atau
 -- satu per satu lewat layar admin `/admin/pengetahuan`. Sampai itu dilakukan,
 -- L.4 akan menampilkan "0 dokumen" - dan itu jujur.
+
+-- ========================================================== reset harian ==
+--
+-- The activity block above mints schedule ids at random. Production does not
+-- keep those: segarkan_tanggal_demo() (migration 20260919010016) wipes and
+-- re-plants the demo child's activity every night with ids derived from
+-- (week, category, day), anchored to today in WIB. Running it here makes a
+-- local `supabase db reset` end in exactly the rows production holds.
+select * from public.segarkan_tanggal_demo();
