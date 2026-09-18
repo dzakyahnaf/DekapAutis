@@ -43,6 +43,14 @@ class CacheJadwal extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+/// A response as the server holds it, pulled during a refresh.
+typedef ResponsPeladen = ({
+  String klienId,
+  String nilai,
+  String? catatan,
+  DateTime dicatatPada,
+});
+
 /// Response notes, written here first and pushed later (KNF-02).
 ///
 /// This is both the display source and the outbox: [tersinkron] false means the
@@ -147,6 +155,41 @@ class DekapDatabase extends _$DekapDatabase {
     await batch((b) => b.insertAllOnConflictUpdate(cacheJadwal, daftar));
   }
 
+  /// Drops cached schedule rows the server no longer has, inside the window
+  /// the server just answered for.
+  ///
+  /// The cache upserts by id and never deleted anything, so a superseded plan's
+  /// rows stayed on the device beside its replacement: after "Susun rencana"
+  /// the plan screen showed every overlapping day twice. [idAktif] is every
+  /// row of every active plan the server returned; [sejak] is the earliest date
+  /// among them. Rows older than that are history and are kept.
+  ///
+  /// Does nothing when [idAktif] is empty. An empty answer can mean "no active
+  /// plan", but wiping the cache on anything less than a positive answer would
+  /// break the offline guarantee the whole cache exists for.
+  Future<void> pangkasJadwal(Set<String> idAktif, DateTime sejak) async {
+    if (idAktif.isEmpty) return;
+    final awal = DateTime(sejak.year, sejak.month, sejak.day);
+    await transaction(() async {
+      final basi =
+          await (select(cacheJadwal)..where(
+                (t) =>
+                    t.id.isNotIn(idAktif) &
+                    t.tanggal.isBiggerOrEqualValue(awal),
+              ))
+              .get();
+      if (basi.isEmpty) return;
+      final idBasi = [for (final j in basi) j.id];
+      // A note still queued for an activity that no longer exists can never be
+      // accepted - its foreign key is gone - and would sit in the offline
+      // banner for good.
+      await (delete(
+        cacheRespons,
+      )..where((t) => t.jadwalAktivitasId.isIn(idBasi))).go();
+      await (delete(cacheJadwal)..where((t) => t.id.isIn(idBasi))).go();
+    });
+  }
+
   Future<List<CacheJadwalData>> jadwalPada(DateTime tanggal) {
     final awal = DateTime(tanggal.year, tanggal.month, tanggal.day);
     return (select(cacheJadwal)
@@ -181,6 +224,81 @@ class DekapDatabase extends _$DekapDatabase {
             ])
             ..limit(1))
           .getSingleOrNull();
+
+  /// Brings notes already synced in line with the server, and leaves notes
+  /// still queued on this device alone.
+  ///
+  /// [peladen] maps each activity the server returned to its response, or to
+  /// null when it has none. Activities missing from the map are not touched:
+  /// missing means "not asked", which is different from "no answer".
+  ///
+  /// Until this existed the app never read responses back, so it could not
+  /// see a response recorded on another device, a reset of the demo account
+  /// left rehearsal answers on the phone for good, and correcting an activity
+  /// the server already held under another client id collided with
+  /// satu_respons_per_jadwal and retried forever.
+  Future<void> selaraskanRespons(Map<String, ResponsPeladen?> peladen) async {
+    if (peladen.isEmpty) return;
+    await transaction(() async {
+      final lokal = await (select(
+        cacheRespons,
+      )..where((t) => t.jadwalAktivitasId.isIn(peladen.keys))).get();
+
+      final antre = <String, CacheResponsData>{};
+      for (final r in lokal) {
+        if (!r.tersinkron) {
+          antre[r.jadwalAktivitasId] = r;
+          continue;
+        }
+        // Synced here, but gone from the server or replaced there. The server
+        // is the record.
+        final s = peladen[r.jadwalAktivitasId];
+        if (s == null || s.klienId != r.klienId) {
+          await (delete(
+            cacheRespons,
+          )..where((t) => t.klienId.equals(r.klienId))).go();
+        }
+      }
+
+      for (final MapEntry(key: jadwalId, value: s) in peladen.entries) {
+        final tertunda = antre[jadwalId];
+        if (tertunda != null) {
+          // The queued note wins: the caregiver wrote it last. If the server
+          // already holds this activity under another client id, adopt that id
+          // so the push updates the row instead of colliding with it.
+          if (s != null && s.klienId != tertunda.klienId) {
+            await (delete(
+              cacheRespons,
+            )..where((t) => t.jadwalAktivitasId.equals(jadwalId))).go();
+            await into(cacheRespons).insert(
+              CacheResponsCompanion.insert(
+                klienId: s.klienId,
+                jadwalAktivitasId: jadwalId,
+                nilai: tertunda.nilai,
+                catatan: Value(tertunda.catatan),
+                dicatatPada: tertunda.dicatatPada,
+                tersinkron: const Value(false),
+                percobaan: const Value(0),
+              ),
+            );
+          }
+          continue;
+        }
+        if (s == null) continue;
+        await into(cacheRespons).insertOnConflictUpdate(
+          CacheResponsCompanion.insert(
+            klienId: s.klienId,
+            jadwalAktivitasId: jadwalId,
+            nilai: s.nilai,
+            catatan: Value(s.catatan),
+            dicatatPada: s.dicatatPada,
+            tersinkron: const Value(true),
+            percobaan: const Value(0),
+          ),
+        );
+      }
+    });
+  }
 
   Future<List<CacheResponsData>> responsMenunggu() =>
       (select(cacheRespons)..where((t) => t.tersinkron.equals(false))).get();

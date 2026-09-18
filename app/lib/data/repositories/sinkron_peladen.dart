@@ -48,7 +48,10 @@ class SupabaseSinkron implements SinkronPeladen {
         .from('jadwal_aktivitas')
         .select(
           'id, rencana_id, aktivitas_id, tanggal, waktu, urutan, durasi_menit, '
-          'tingkat_disesuaikan, rencana!inner(profil_anak_id, status)',
+          'tingkat_disesuaikan, rencana!inner(profil_anak_id, status), '
+          // Read back so the device can reconcile its notes with the server.
+          // One-to-one, so it arrives as an object or null - see tertanam.dart.
+          'catatan_respons(klien_id, nilai, catatan, dicatat_pada)',
         )
         .eq('rencana.profil_anak_id', profilAnakId)
         .eq('rencana.status', 'aktif');

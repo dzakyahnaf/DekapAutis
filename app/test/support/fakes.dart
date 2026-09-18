@@ -26,7 +26,11 @@ class FakeAuthRepository implements AuthRepository {
     this.masuk_ = false,
     this.peran = Peran.pengasuh,
     this.pancarkanSaatPeranDibaca = false,
+    this.denganAliranStatus = false,
   });
+
+  /// Exposes the controllable auth stream without emitting anything on its own.
+  final bool denganAliranStatus;
 
   bool masuk_;
   Peran? peran;
@@ -46,6 +50,14 @@ class FakeAuthRepository implements AuthRepository {
   /// Fires what Supabase fires on sign-in. Public so a test can place the
   /// emission at the one moment that matters: while a provider downstream of
   /// `statusAuthProvider` is mid-computation.
+  /// Fires what Supabase fires when the session ends. Used with
+  /// [denganAliranStatus] to prove a sign-out clears the device cache.
+  void pancarkanKeluar() {
+    if (!_status.isClosed) {
+      _status.add(AuthState(AuthChangeEvent.signedOut, null));
+    }
+  }
+
   void pancarkanMasuk() {
     if (!_status.isClosed) {
       _status.add(AuthState(AuthChangeEvent.signedIn, null));
@@ -63,7 +75,9 @@ class FakeAuthRepository implements AuthRepository {
 
   @override
   Stream<AuthState> get perubahanStatus =>
-      pancarkanSaatPeranDibaca ? _status.stream : const Stream.empty();
+      pancarkanSaatPeranDibaca || denganAliranStatus
+      ? _status.stream
+      : const Stream.empty();
 
   @override
   Future<Peran?> peranSaya() async {

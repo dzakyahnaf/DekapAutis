@@ -2,6 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/laporan/metrik_laporan.dart';
 import 'auth_repository.dart';
+import 'tertanam.dart';
 
 /// How far back a report looks (L.8).
 enum PeriodeLaporan {
@@ -79,12 +80,7 @@ class IzinBerbagi {
 List<CatatanLaporan> catatanDariBaris(Iterable<Map<String, dynamic>> baris) {
   final catatan = <CatatanLaporan>[];
   for (final b in baris) {
-    final mentah = b['catatan_respons'];
-    final respons = switch (mentah) {
-      final Map<String, dynamic> m => m,
-      final List<dynamic> l when l.isNotEmpty => l.first as Map,
-      _ => null,
-    };
+    final respons = satuTertanam(b['catatan_respons']);
     final nilai = respons == null
         ? null
         : NilaiRespons.fromDb(respons['nilai'] as String);

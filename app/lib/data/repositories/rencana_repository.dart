@@ -8,6 +8,7 @@ import '../models/item_rencana.dart';
 import '../models/response_level.dart';
 import 'auth_repository.dart';
 import 'sinkron_peladen.dart';
+import 'tertanam.dart';
 
 /// The plan, the activity catalogue, and the response notes (KF-03 to KF-05).
 ///
@@ -168,6 +169,34 @@ class RencanaRepository {
           tingkatDisesuaikan: (j['tingkat_disesuaikan'] as num).toInt(),
         ),
     ]);
+
+    if (jadwal.isEmpty) return;
+
+    final tanggal = [
+      for (final j in jadwal) DateTime.parse(j['tanggal'] as String),
+    ]..sort();
+    await _db.pangkasJadwal({
+      for (final j in jadwal) j['id'] as String,
+    }, tanggal.first);
+
+    await _db.selaraskanRespons({
+      for (final j in jadwal)
+        // A row without the key was not asked about its response - leave the
+        // device's notes for it alone rather than read that as "none".
+        if (j.containsKey('catatan_respons'))
+          j['id'] as String: _responsDari(j['catatan_respons']),
+    });
+  }
+
+  static ResponsPeladen? _responsDari(Object? mentah) {
+    final r = satuTertanam(mentah);
+    if (r == null) return null;
+    return (
+      klienId: r['klien_id'] as String,
+      nilai: r['nilai'] as String,
+      catatan: r['catatan'] as String?,
+      dicatatPada: DateTime.parse(r['dicatat_pada'] as String).toLocal(),
+    );
   }
 
   /// Asks the Edge Function for a fresh week (KF-03).
