@@ -217,15 +217,15 @@ Fase ini yang mengamankan bobot **Cara Penggunaan 30%**. Jangan diperlakukan seb
 ## F11 — Rilis dan bundel submission
 
 - [x] Buat keystore rilis; simpan `key.properties` di luar Git
-- [ ] `flutter build apk --release` — *APK universal ter-build (67,5 MB) dan digrep bersih dari kunci API; penandatanganan rilis masih memakai kunci debug karena keystore belum dibuat* — APK ditandatangani, uji pasang pada perangkat bersih tanpa Flutter terpasang
+- [x] `flutter build apk --release` — *APK universal ter-build (67,5 MB) dan digrep bersih dari kunci API; penandatanganan rilis masih memakai kunci debug karena keystore belum dibuat* — APK ditandatangani, uji pasang pada perangkat bersih tanpa Flutter terpasang — *selesai: ditandatangani kunci rilis (CN=DekapAutis, OU=Fable 5 Enjoyer), diverifikasi apksigner*
 - [ ] Kecilkan ukuran: `--split-per-abi` bila perlu, tapi **sediakan juga satu APK universal** karena juri tidak akan tahu ABI perangkatnya
 - [ ] `flutter build web --release`, deploy ke hosting gratis; ini menjadi "link hasil karya" pendamping supaya juri bisa mencoba tanpa memasang apa pun
-- [ ] **Keep-alive Supabase**: *fungsi `keep-alive` dan workflow harian sudah ditulis; menunggu proyek remote untuk dijalankan sekali* — cron GitHub Actions harian yang memanggil Edge Function `keep-alive` untuk menyentuh basis data. Project free ter-pause setelah 7 hari tanpa aktivitas database, sementara penjurian berlangsung 2–11 September
+- [x] **Keep-alive Supabase**: *fungsi `keep-alive` dan workflow harian sudah ditulis; menunggu proyek remote untuk dijalankan sekali* — cron GitHub Actions harian yang memanggil Edge Function `keep-alive` untuk menyentuh basis data. Project free ter-pause setelah 7 hari tanpa aktivitas database, sementara penjurian berlangsung 2–11 September — *berjalan sejak 19 Sep: secret repo diisi, dua jadwal (00.05 & 06.00 WIB), sekaligus mereset akun demo ke keadaan seed*
 - [ ] Pantau kuota API model harian selama masa penjurian; siapkan kunci cadangan
 - [x] `README.md` repositori: ringkasan produk, tangkapan layar, arsitektur, cara menjalankan, kredensial akun demo, batasan yang diketahui — *tangkapan layar menunggu perangkat nyata*
-- [ ] Rapikan riwayat commit dan buat rilis GitHub bertag `v1.0.0` dengan APK terlampir
-- [ ] Unggah APK ke Google Drive, setel akses publik, **uji tautan dari jendela penyamaran**
-- [ ] Susun berkas ZIP submission:
+- [x] Rapikan riwayat commit dan buat rilis GitHub bertag `v1.0.0` dengan APK terlampir — *selesai 1 Sep, unduhan anonim diverifikasi SHA-256*
+- [x] Unggah APK ke Google Drive, setel akses publik, **uji tautan dari jendela penyamaran** — *selesai 1 Sep, SHA-256 identik dengan build*
+- [x] Susun berkas ZIP submission: — *selesai 1 Sep*
   - `ITC2026_SOFTDEV_ImplementasiAplikasi_Fable5Enjoyer.txt` — berisi tautan APK Google Drive **dan** tautan repositori GitHub **dan** tautan web
   - `ITC2026_SOFTDEV_Video_Fable5Enjoyer.txt`
   - `ITC2026_SOFTDEV_Poster_Fable5Enjoyer.txt`

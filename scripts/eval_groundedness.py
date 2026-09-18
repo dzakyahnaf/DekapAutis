@@ -122,10 +122,12 @@ def main() -> int:
         for p in kosong:
             print(f"  {p['id']}  {p['teks']}")
 
-    punya_kunci = bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GROQ_API_KEY"))
+    # Only part 1 is measured here. The earlier version printed "DIUKUR" for
+    # part 2 whenever a key was set, although nothing below ever read an
+    # answer - a claim of a measurement that never happened.
     print()
-    print("Pengutipan kalimat jawaban : "
-          + ("DIUKUR" if punya_kunci else "TIDAK DIUKUR - tanpa kunci API model"))
+    print("Pengutipan kalimat jawaban : TIDAK DIUKUR skrip ini - butuh penilaian")
+    print("                             per kalimat terhadap potongan yang dirujuk")
     print("=" * 52)
     return 0 if persen >= 95 else 1
 
