@@ -39,6 +39,15 @@ abstract final class AppConfig {
 
   /// Deep link scheme registered in AndroidManifest.xml. Supabase hands control
   /// to an external browser for Google sign-in and comes back through this.
+  /// Whether this build offers "Masuk dengan Google".
+  ///
+  /// Off unless the build says otherwise. The hosted project has the Google
+  /// provider disabled, and the button then opened the system browser onto a
+  /// raw English JSON error from the auth server - in the middle of a demo.
+  /// Enable the provider in Supabase first, then build with
+  /// `--dart-define=GOOGLE_AKTIF=true`.
+  static const googleAktif = bool.fromEnvironment('GOOGLE_AKTIF');
+
   static const skemaTautan = 'dekapautis';
   static const redirectMasuk = '$skemaTautan://masuk';
 }

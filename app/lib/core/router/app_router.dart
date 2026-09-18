@@ -28,7 +28,6 @@ import '../../features/profile/sunting_anak_screen.dart';
 import '../../features/report/izin_berbagi_screen.dart';
 import '../../features/report/laporan_screen.dart';
 import '../../shared/widgets/app_shell.dart';
-import '../../shared/widgets/placeholder_screen.dart';
 import '../../shared/widgets/states.dart';
 import '../accessibility/accessibility_prefs.dart';
 import '../strings.dart';
@@ -100,23 +99,6 @@ CustomTransitionPage<void> _page(
         : FadeTransition(opacity: animation, child: child),
   );
 }
-
-GoRoute _stub(
-  String path,
-  String name,
-  String title, {
-  String? phase,
-  List<RouteBase> routes = const [],
-}) => GoRoute(
-  path: path,
-  name: name,
-  pageBuilder: (context, state) => _page(
-    context,
-    state,
-    PlaceholderScreen(title: title, route: state.uri.path, phase: phase),
-  ),
-  routes: routes,
-);
 
 GoRoute _layar(
   String path,
@@ -318,7 +300,14 @@ final appRouter = GoRouter(
                   R.laporan,
                   (_, _) => const LaporanScreen(),
                   routes: [
-                    _stub(':id', R.laporanDetail, S.titleLaporan, phase: 'F9'),
+                    // Nothing in the app links here, but a deep link could,
+                    // and a placeholder reading "F9" is not something a judge
+                    // should ever land on. The report screen holds the data.
+                    GoRoute(
+                      path: ':id',
+                      name: R.laporanDetail,
+                      redirect: (_, _) => '/profil/laporan',
+                    ),
                   ],
                 ),
                 _layar(

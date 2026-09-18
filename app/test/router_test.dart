@@ -27,6 +27,8 @@ void main() {
     '/profil/anak/abc',
     '/profil/aksesibilitas',
     '/profil/laporan',
+    // Redirects to the report screen rather than showing a placeholder.
+    '/profil/laporan/abc',
     '/profil/izin',
     // F7.
     '/notifikasi',

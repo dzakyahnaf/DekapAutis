@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../core/config/app_config.dart';
 import '../../core/strings.dart';
 import '../../core/theme/tokens.dart';
 import '../../data/models/profil_anak.dart';
@@ -205,24 +206,27 @@ class _MasukScreenState extends ConsumerState<MasukScreen> {
               label: _sibuk ? 'Sedang masuk…' : 'Masuk',
               onPressed: _sibuk ? null : _masuk,
             ),
-            const SizedBox(height: DekapSpace.cardPadding),
-            Row(
-              children: [
-                const Expanded(child: Divider()),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: DekapSpace.cardGap,
+            // Only when this build enables it - see AppConfig.googleAktif.
+            if (AppConfig.googleAktif) ...[
+              const SizedBox(height: DekapSpace.cardPadding),
+              Row(
+                children: [
+                  const Expanded(child: Divider()),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: DekapSpace.cardGap,
+                    ),
+                    child: Text('atau', style: text.bodySmall),
                   ),
-                  child: Text('atau', style: text.bodySmall),
-                ),
-                const Expanded(child: Divider()),
-              ],
-            ),
-            const SizedBox(height: DekapSpace.cardPadding),
-            SecondaryButton(
-              label: 'Masuk dengan Google',
-              onPressed: _sibuk ? null : _google,
-            ),
+                  const Expanded(child: Divider()),
+                ],
+              ),
+              const SizedBox(height: DekapSpace.cardPadding),
+              SecondaryButton(
+                label: 'Masuk dengan Google',
+                onPressed: _sibuk ? null : _google,
+              ),
+            ],
 
             // A judge should not have to register to see the product. The
             // button fills the demo credentials and signs in through the same

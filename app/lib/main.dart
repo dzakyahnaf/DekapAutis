@@ -11,6 +11,7 @@ import 'core/router/app_router.dart';
 import 'core/strings.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/calm.dart';
+import 'data/providers.dart';
 import 'data/supabase/secure_session_storage.dart';
 import 'shared/widgets/app_status_strip.dart';
 
@@ -42,6 +43,17 @@ class DekapAutisApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Signing out must not leave one account's child, plan and notes readable
+    // by the next account on the same phone. DekapDatabase.kosongkan() was
+    // written for exactly this and never called. Listening to the auth stream
+    // catches every way out - the button, an expired session, a deleted
+    // account - instead of only the one screen that has a button.
+    ref.listen(statusAuthProvider, (_, next) {
+      if (next.value?.event == AuthChangeEvent.signedOut) {
+        ref.read(databaseProvider).kosongkan();
+      }
+    });
+
     final prefs = ref.watch(accessibilityProvider);
 
     return MaterialApp.router(
