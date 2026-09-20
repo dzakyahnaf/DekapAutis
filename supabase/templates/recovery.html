@@ -1,0 +1,62 @@
+<!--
+  Atur ulang kata sandi.
+
+  Templat bawaan Supabase berbahasa Inggris ("Reset your password. We received a
+  request..."), dan aturan 3 CLAUDE.md mewajibkan seluruh teks yang dilihat
+  pengguna 100% Bahasa Indonesia - email termasuk, karena ia justru dibaca di
+  luar aplikasi tempat pengguna paling mudah curiga.
+
+  Nada mengikuti aturan yang sama dengan UI: sapaan "Anda", tanpa permintaan
+  maaf, dan menjelaskan langkah berikutnya alih-alih menyalahkan. Gaya ditulis
+  sebaris karena klien email membuang <style> di bagian kepala.
+-->
+<div style="margin:0;padding:24px;background:#F2E8F6;font-family:'Lexend Deca',Segoe UI,Helvetica,Arial,sans-serif;color:#4A2657;">
+  <div style="max-width:520px;margin:0 auto;background:#FFFFFF;border:1px solid #D8C6E0;border-radius:20px;padding:32px;">
+
+    <p style="margin:0 0 4px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#6B5F73;">
+      DekapAutis
+    </p>
+
+    <h1 style="margin:0 0 16px;font-size:24px;line-height:1.25;font-weight:600;color:#4A2657;">
+      Atur ulang kata sandi Anda
+    </h1>
+
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#4A2657;">
+      Kami menerima permintaan untuk mengatur ulang kata sandi akun
+      <strong>{{ .Email }}</strong>. Tekan tombol di bawah untuk memilih kata
+      sandi baru.
+    </p>
+
+    <p style="margin:0 0 24px;">
+      <a href="{{ .ConfirmationURL }}"
+         style="display:inline-block;background:#4A2657;color:#F2E8F6;text-decoration:none;
+                font-size:16px;font-weight:600;padding:14px 24px;border-radius:999px;">
+        Pilih kata sandi baru
+      </a>
+    </p>
+
+    <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#6B5F73;">
+      Tautan ini berlaku satu jam dan hanya dapat dipakai sekali. Bila sudah
+      kedaluwarsa, mintalah tautan baru dari layar Masuk.
+    </p>
+
+    <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#6B5F73;">
+      Jika Anda tidak meminta pengaturan ulang ini, abaikan saja email ini.
+      Kata sandi Anda tidak berubah selama tautan di atas tidak dibuka.
+    </p>
+
+    <hr style="border:0;border-top:1px solid #D8C6E0;margin:0 0 16px;">
+
+    <p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#6B5F73;">
+      Bila tombol tidak dapat ditekan, salin alamat berikut ke peramban Anda:
+    </p>
+    <p style="margin:0 0 16px;font-size:12px;line-height:1.5;color:#6B5F73;word-break:break-all;font-family:'IBM Plex Mono',Consolas,monospace;">
+      {{ .ConfirmationURL }}
+    </p>
+
+    <p style="margin:0;font-size:13px;line-height:1.6;color:#6B5F73;">
+      DekapAutis — pendamping untuk orang tua dan pengasuh anak dengan spektrum
+      autisme. Email ini dikirim otomatis dan tidak perlu dibalas.
+    </p>
+  </div>
+</div>
