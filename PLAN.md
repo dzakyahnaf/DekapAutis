@@ -221,7 +221,7 @@ Fase ini yang mengamankan bobot **Cara Penggunaan 30%**. Jangan diperlakukan seb
 - [ ] Kecilkan ukuran: `--split-per-abi` bila perlu, tapi **sediakan juga satu APK universal** karena juri tidak akan tahu ABI perangkatnya
 - [ ] `flutter build web --release`, deploy ke hosting gratis; ini menjadi "link hasil karya" pendamping supaya juri bisa mencoba tanpa memasang apa pun
 - [x] **Keep-alive Supabase**: *fungsi `keep-alive` dan workflow harian sudah ditulis; menunggu proyek remote untuk dijalankan sekali* — cron GitHub Actions harian yang memanggil Edge Function `keep-alive` untuk menyentuh basis data. Project free ter-pause setelah 7 hari tanpa aktivitas database, sementara penjurian berlangsung 2–11 September — *berjalan sejak 19 Sep: secret repo diisi, dua jadwal (00.05 & 06.00 WIB), sekaligus mereset akun demo ke keadaan seed*
-- [ ] Pantau kuota API model harian selama masa penjurian; siapkan kunci cadangan
+- [x] Pantau kuota API model harian selama masa penjurian; siapkan kunci cadangan — *Gemini dan Groq terpasang 20 Sep; failover terbukti dengan mematikan model utama*
 - [x] `README.md` repositori: ringkasan produk, tangkapan layar, arsitektur, cara menjalankan, kredensial akun demo, batasan yang diketahui — *tangkapan layar menunggu perangkat nyata*
 - [x] Rapikan riwayat commit dan buat rilis GitHub bertag `v1.0.0` dengan APK terlampir — *selesai 1 Sep, unduhan anonim diverifikasi SHA-256*
 - [x] Unggah APK ke Google Drive, setel akses publik, **uji tautan dari jendela penyamaran** — *selesai 1 Sep, SHA-256 identik dengan build*
