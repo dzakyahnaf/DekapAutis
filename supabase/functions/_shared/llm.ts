@@ -43,9 +43,21 @@ export class SemuaPenyediaGagal extends Error {
   }
 }
 
-/** 429 and 5xx are worth failing over. A 400 is our bug and will fail again. */
+/**
+ * Whether the next provider is worth trying.
+ *
+ * Rate limits (429) and outages (5xx) were always covered. Two more belong
+ * here, and both were found the hard way on 2026-09-20: a retired model
+ * answers 404 - llama-3.3-70b-versatile had been dead on Groq for some time -
+ * and a rejected key answers 401 or 403. Neither says anything about the other
+ * provider, yet both used to stop the chain before it ever reached it, which
+ * turned "failover otomatis" into a claim that only held for outages.
+ *
+ * Only a malformed request (400, 422) is ours: it would fail the same way
+ * everywhere, so failing over would just cost another round trip.
+ */
 function layakDicoba(status: number): boolean {
-  return status === 429 || status >= 500;
+  return status !== 400 && status !== 422;
 }
 
 async function ambil(
@@ -61,10 +73,23 @@ async function ambil(
 export class GeminiProvider implements LlmProvider {
   readonly nama = 'gemini';
 
+  // Measured against the project's own key on 2026-09-20:
+  //
+  //   gemini-2.5-flash        404 "no longer available to new users"
+  //   gemini-2.5-flash-lite   404, same
+  //   gemini-3.8/3.7-flash    503, free tier saturated
+  //   gemini-3.5-flash        200 but 14.5s - past the 12s budget below
+  //   gemini-flash-lite-latest 200 in 1.3s, JSON mode included
+  //
+  // An alias rather than a pinned version: a pinned one answers 404 the day it
+  // is retired, and the judging demo is live. Overridable by secret so a model
+  // that starts failing can be swapped without a redeploy.
   constructor(
     private readonly kunci: string,
-    private readonly modelChat = 'gemini-2.5-flash',
-    private readonly modelEmbed = 'gemini-embedding-001',
+    private readonly modelChat = Deno.env.get('GEMINI_MODEL') ??
+      'gemini-flash-lite-latest',
+    private readonly modelEmbed = Deno.env.get('GEMINI_EMBED_MODEL') ??
+      'gemini-embedding-001',
   ) {}
 
   async chat(pesan: Pesan[], opsi: OpsiChat = {}): Promise<string> {
@@ -141,9 +166,14 @@ export class GeminiProvider implements LlmProvider {
 export class GroqProvider implements LlmProvider {
   readonly nama = 'groq';
 
+  // llama-3.3-70b-versatile answers 404 on Groq as of 2026-09-20: retired. The
+  // fallback had therefore been dead the whole time, which only shows when the
+  // primary fails - exactly when it is needed. qwen3.8-27b answered in 0.5s and
+  // is the one candidate that held to JSON mode; the gpt-oss models failed
+  // Groq's JSON validation, which the intent classifier depends on.
   constructor(
     private readonly kunci: string,
-    private readonly model = 'llama-3.3-70b-versatile',
+    private readonly model = Deno.env.get('GROQ_MODEL') ?? 'qwen/qwen3.8-27b',
   ) {}
 
   async chat(pesan: Pesan[], opsi: OpsiChat = {}): Promise<string> {
