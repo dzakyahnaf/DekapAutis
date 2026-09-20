@@ -49,8 +49,17 @@ class DekapAutisApp extends ConsumerWidget {
     // catches every way out - the button, an expired session, a deleted
     // account - instead of only the one screen that has a button.
     ref.listen(statusAuthProvider, (_, next) {
-      if (next.value?.event == AuthChangeEvent.signedOut) {
-        ref.read(databaseProvider).kosongkan();
+      switch (next.value?.event) {
+        case AuthChangeEvent.signedOut:
+          ref.read(databaseProvider).kosongkan();
+        case AuthChangeEvent.passwordRecovery:
+          // The recovery link has reopened the app and supabase_flutter has
+          // exchanged it for a session. Without this the person lands on the
+          // home screen signed in, the old password still in force, and
+          // nothing ever asks them for a new one.
+          appRouter.go('/sandi-baru');
+        case _:
+          break;
       }
     });
 

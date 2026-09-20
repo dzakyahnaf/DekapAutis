@@ -52,6 +52,13 @@ class FakeAuthRepository implements AuthRepository {
   /// `statusAuthProvider` is mid-computation.
   /// Fires what Supabase fires when the session ends. Used with
   /// [denganAliranStatus] to prove a sign-out clears the device cache.
+  /// What supabase_flutter raises once a recovery link has reopened the app.
+  void pancarkanPemulihanSandi() {
+    if (!_status.isClosed) {
+      _status.add(AuthState(AuthChangeEvent.passwordRecovery, null));
+    }
+  }
+
   void pancarkanKeluar() {
     if (!_status.isClosed) {
       _status.add(AuthState(AuthChangeEvent.signedOut, null));
@@ -87,6 +94,13 @@ class FakeAuthRepository implements AuthRepository {
     }
     return peran;
   }
+
+  /// The last password handed to [gantiSandi], so a test can tell "saved" from
+  /// "looked saved".
+  String? sandiTersimpan;
+
+  @override
+  Future<void> gantiSandi(String sandiBaru) async => sandiTersimpan = sandiBaru;
 
   @override
   Future<void> keluar() async => masuk_ = false;

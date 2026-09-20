@@ -39,6 +39,7 @@ abstract final class R {
   static const splash = 'splash';
   static const masuk = 'masuk';
   static const daftar = 'daftar';
+  static const sandiBaru = 'sandi-baru';
   static const onboarding = 'onboarding';
 
   static const beranda = 'beranda';
@@ -162,6 +163,7 @@ final appRouter = GoRouter(
     _layar('/splash', R.splash, (_, _) => const SplashScreen()),
     _layar('/masuk', R.masuk, (_, _) => const MasukScreen()),
     _layar('/daftar', R.daftar, (_, _) => const DaftarScreen()),
+    _layar('/sandi-baru', R.sandiBaru, (_, _) => const SandiBaruScreen()),
     _layar(
       '/onboarding/:langkah',
       R.onboarding,

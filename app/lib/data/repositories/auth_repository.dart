@@ -81,6 +81,16 @@ class AuthRepository {
     );
   });
 
+  /// Sets a new password for the session opened by a recovery link.
+  ///
+  /// `kirimTautanAturUlangSandi` only ever sent the mail. Opening the link
+  /// signed the person in and dropped them on the home screen with the old
+  /// password still in force, so "Lupa kata sandi" on L.14 quietly did nothing
+  /// it promised. This is the other half.
+  Future<void> gantiSandi(String sandiBaru) => _jalankan(() async {
+    await _client.auth.updateUser(UserAttributes(password: sandiBaru));
+  });
+
   Future<void> keluar() => _jalankan(() async {
     await _client.auth.signOut();
   });

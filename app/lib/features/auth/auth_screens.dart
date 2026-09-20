@@ -323,6 +323,136 @@ class _MasukScreenState extends ConsumerState<MasukScreen> {
   }
 }
 
+/// L.14b - chooses a new password after a recovery link.
+///
+/// Reached only from the `passwordRecovery` event, which supabase_flutter
+/// raises once the link in the email has opened the app through the
+/// dekapautis:// deep link. There is no way to navigate here by hand, and
+/// that is deliberate: without a recovery session the update below would
+/// change the password of whoever happens to be signed in.
+class SandiBaruScreen extends ConsumerStatefulWidget {
+  const SandiBaruScreen({super.key});
+
+  @override
+  ConsumerState<SandiBaruScreen> createState() => _SandiBaruScreenState();
+}
+
+class _SandiBaruScreenState extends ConsumerState<SandiBaruScreen> {
+  final _sandi = TextEditingController();
+  final _ulang = TextEditingController();
+  bool _lihat = false;
+  bool _sibuk = false;
+  String? _kesalahan;
+
+  /// Matches `minimum_password_length` in supabase/config.toml. A stricter rule
+  /// here would reject a password the server would have accepted, and a looser
+  /// one would fail at the server with a message we did not write.
+  static const _minimal = 6;
+
+  @override
+  void dispose() {
+    _sandi.dispose();
+    _ulang.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Kata sandi baru')),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(DekapSpace.screenPadding),
+          children: [
+            Text(
+              'Pilih kata sandi baru untuk akun Anda. Setelah disimpan, Anda '
+              'langsung masuk dengan kata sandi itu.',
+              style: text.bodyMedium,
+            ),
+            const SizedBox(height: DekapSpace.screenPadding),
+
+            TextField(
+              controller: _sandi,
+              obscureText: !_lihat,
+              autofillHints: const [AutofillHints.newPassword],
+              decoration: InputDecoration(
+                hintText: 'Kata sandi baru',
+                suffixIcon: IconButton(
+                  onPressed: () => setState(() => _lihat = !_lihat),
+                  icon: Icon(_lihat ? Icons.visibility_off : Icons.visibility),
+                  tooltip: _lihat
+                      ? 'Sembunyikan kata sandi'
+                      : 'Tampilkan kata sandi',
+                ),
+              ),
+            ),
+            const SizedBox(height: DekapSpace.cardGap),
+            TextField(
+              controller: _ulang,
+              obscureText: !_lihat,
+              autofillHints: const [AutofillHints.newPassword],
+              decoration: const InputDecoration(
+                hintText: 'Ulangi kata sandi baru',
+              ),
+            ),
+            const SizedBox(height: DekapSpace.cardGap / 2),
+            Text('Minimal $_minimal karakter.', style: text.bodySmall),
+
+            if (_kesalahan != null) ...[
+              const SizedBox(height: DekapSpace.cardGap),
+              Text(
+                _kesalahan!,
+                style: text.bodyMedium?.copyWith(color: DekapColors.boundary),
+              ),
+            ],
+
+            const SizedBox(height: DekapSpace.cardPadding),
+            PrimaryButton(
+              label: _sibuk ? 'Menyimpan…' : 'Simpan kata sandi',
+              onPressed: _sibuk ? null : _simpan,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _simpan() async {
+    final sandi = _sandi.text;
+    if (sandi.length < _minimal) {
+      setState(
+        () => _kesalahan = 'Kata sandi baru minimal $_minimal karakter.',
+      );
+      return;
+    }
+    if (sandi != _ulang.text) {
+      setState(
+        () => _kesalahan = 'Kedua isian belum sama. Periksa lagi ketikan Anda.',
+      );
+      return;
+    }
+
+    setState(() {
+      _sibuk = true;
+      _kesalahan = null;
+    });
+    try {
+      await ref.read(authRepositoryProvider).gantiSandi(sandi);
+      if (!mounted) return;
+      // The recovery session is a real session, so the splash routes onwards
+      // by role exactly as it does after an ordinary sign-in.
+      context.go('/splash');
+    } on KesalahanAuth catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _sibuk = false;
+        _kesalahan = e.pesan;
+      });
+    }
+  }
+}
+
 /// Sign-up, including the role choice that KF-01 asks for.
 class DaftarScreen extends ConsumerStatefulWidget {
   const DaftarScreen({super.key});
