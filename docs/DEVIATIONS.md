@@ -43,3 +43,5 @@ Kalau salah satu dari ini muncul, hentikan dan pikirkan ulang — bukan catat la
 - Memindahkan kunci API ke sisi klien
 - Mengganti palet dua keluarga warna
 - Menambahkan animasi berulang
+| 2026-09-19 | Layar L.14 — Masuk | Tombol "Masuk dengan Google" | Tombol disembunyikan kecuali build memakai `--dart-define=GOOGLE_AKTIF=true` | Penyedia Google belum diaktifkan di proyek Supabase, sehingga menekan tombol membuka peramban ke galat JSON berbahasa Inggris dari peladen auth. Menyembunyikan lebih jujur daripada menampilkan tombol yang pasti gagal. **Dapat dikembalikan tanpa biaya**: buat OAuth Client ID di Google Cloud (gratis, tanpa billing), isi di Supabase, lalu build ulang dengan flag di atas |
+| 2026-09-19 | Layar L.14 — Masuk | "Lupa kata sandi" | Tombol ada dan memanggil peladen, tetapi email hanya sampai ke alamat anggota tim proyek | Proyek memakai layanan email bawaan Supabase yang dibatasi demikian. **Dapat diselesaikan tanpa biaya**: pasang SMTP sendiri (Gmail App Password, batas ~500 email/hari) di Authentication → Emails → SMTP Settings |

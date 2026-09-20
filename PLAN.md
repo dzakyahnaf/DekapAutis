@@ -51,7 +51,7 @@ Tujuan: kerangka yang bisa di-build, bertema benar, dan aman secara rahasia seja
 
 Tujuan: 12 entitas hidup dengan RLS yang benar, dan pengguna bisa masuk.
 
-- [ ] Buat project Supabase; catat URL dan anon key ke `.env` lokal (tidak di-commit)
+- [x] Buat project Supabase; catat URL dan anon key ke `.env` lokal (tidak di-commit) — *selesai; ref jeuabuvqpvcqitcqnvtx, kunci di `.env` yang tidak di-commit*
 - [x] Aktifkan ekstensi `vector` dan verifikasi konfigurasi teks penuh Bahasa Indonesia: `SELECT cfgname FROM pg_ts_config WHERE cfgname='indonesian';`
 - [x] Migrasi 001: 12 entitas sesuai `docs/03-DATA-MODEL.md` (`pengguna`, `profil_anak`, `rencana`, `jadwal_aktivitas`, `aktivitas`, `catatan_respons`, `catatan_pengasuh`, `laporan`, `dokumen_pengetahuan`, `potongan_dokumen`, `profesional`, `izin_berbagi`)
 - [x] Migrasi 002: tabel pendukung — `adaptasi_log`, `log_batas_aman`, `postingan_komunitas`, `balasan_komunitas`, `notifikasi`, `versi_basis_pengetahuan`, `tanggapan_profesional`
@@ -203,7 +203,7 @@ Fase ini yang mengamankan bobot **Cara Penggunaan 30%**. Jangan diperlakukan seb
 - [x] Tur pertama kali: 4 sorotan singkat pada beranda, bisa dilewati, hanya sekali
 - [x] Layar "Cara pakai" di dalam aplikasi yang meringkas 6 langkah alur pada Bab IX proposal
 - [x] Unit test: mesin adaptasi, perhitungan skor kesiapan, penapis leksikon, penghitung jarak (Tabel 5.1 baris "Unit")
-- [ ] Integration test: alur data klien → Edge Function → basis data, termasuk sinkronisasi luring (Tabel 5.1 baris "Integrasi")
+- [ ] Integration test: alur data klien → Edge Function → basis data, termasuk sinkronisasi luring (Tabel 5.1 baris "Integrasi") — *sebagian: `scripts/e2e_produksi.py` menyusuri 43 langkah lewat API yang sama dengan klien (PostgREST + Edge Function + RLS + model), tetapi belum dijalankan DARI klien Flutter; antrean luring diuji terpisah di `antrean_luring_test.dart`*
 - [x] `scripts/eval_groundedness.py`: ≥95% jawaban dapat ditelusuri ke potongan sumber — *skrip selesai; belum dapat diukur karena korpus masih 0 dokumen* — *pengambilan 20/20 (100%); pengutipan kalimat menunggu kunci API model*
 - [x] `scripts/eval_safety.py`: 40 prompt — 20 wajib ditolak, 20 wajib dijawab. Nol kebocoran, dan catat juga tingkat penolakan palsu — *0/20 bocor, 0/20 penolakan palsu pada lapis 1 dan 3; lapis 2 belum terukur karena belum ada kunci API*
 - [ ] **Uji SUS dengan minimal 5 responden nyata**, target skor ≥70 (Tabel 5.1 baris "Penerimaan pengguna"). Simpan lembar jawaban sebagai bukti — juri boleh menanyakannya
