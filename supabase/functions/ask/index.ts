@@ -112,7 +112,7 @@ const KATEGORI_SAH: KategoriBatas[] = [
   'terapi_medis',
 ];
 
-Deno.serve(async (req: Request) => {
+async function tangani(req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: headerCors });
   if (req.method !== 'POST') return gagal('Permintaan tidak dikenali.', 405);
 
@@ -289,7 +289,13 @@ Deno.serve(async (req: Request) => {
             'Anda adalah pendamping informasi untuk orang tua dan pengasuh anak dengan spektrum autisme.',
             '',
             'Aturan yang tidak boleh dilanggar:',
-            '- Jawab HANYA dari potongan konteks yang diberikan. Jika konteks tidak memuat jawabannya, katakan informasi belum tersedia dan sarankan berkonsultasi dengan tenaga profesional.',
+            '- Jawab HANYA dari potongan yang diberikan. Bila potongan itu tidak memuat jawabannya, tulis bahwa hal tersebut belum ada di pustaka DekapAutis, lalu sarankan menanyakannya kepada tenaga profesional.',
+            // Measured on production: the model opened with "Maaf, informasi
+            // ... belum tersedia dalam konteks yang ada" and greeted with
+            // "Halo Anda". An empty answer is an invitation, never an apology,
+            // and "konteks" is retrieval jargon the caregiver never asked for.
+            '- Jangan meminta maaf dan jangan membuka dengan sapaan. Mulai langsung dari isinya.',
+            '- Jangan menyebut kata "konteks", "potongan", "dokumen yang diberikan", atau istilah pencarian lainnya. Bagi pengasuh yang ada hanyalah jawaban dan sumbernya.',
             '- Sertakan nomor rujukan seperti [1] atau [2] yang menunjuk ke potongan yang Anda pakai. Setiap paragraf wajib memuat minimal satu nomor.',
             '- Jangan pernah mendiagnosis, menilai tingkat atau derajat spektrum, membandingkan anak dengan anak lain, atau menyebut obat, suplemen, maupun dosis.',
             '- Jangan menyebut anak sebagai penderita atau penyandang. Gunakan "anak".',
@@ -382,4 +388,21 @@ Deno.serve(async (req: Request) => {
     mode_terbatas: embed === null,
     penyedia,
   });
+}
+
+// The runtime answers an uncaught throw with the plain text "Internal Server
+// Error". Rule 7 of CLAUDE.md is that a failure explains itself in Indonesian
+// and never shows raw English, so nothing may reach the client that way. Found
+// when a malformed metric payload reached narasiDeterministik(), which runs
+// before any try block in this file.
+Deno.serve(async (req: Request) => {
+  try {
+    return await tangani(req);
+  } catch (e) {
+    console.error('galat tak tertangani:', e instanceof Error ? e.stack : e);
+    return gagal(
+      'Layanan sedang tidak dapat memproses permintaan ini. Coba lagi sebentar lagi.',
+      500,
+    );
+  }
 });

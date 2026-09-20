@@ -12,6 +12,7 @@
 // it is the same facts in slightly plainer words.
 
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { rantaiDariEnv } from '../_shared/llm.ts';
 import {
   alasanDeterministik,
   type Aktivitas,
@@ -55,52 +56,52 @@ function awalMinggu(d: Date): Date {
  * introduce a fact because it is never given the raw data to invent one from.
  */
 async function haluskanNarasi(alasan: string): Promise<string> {
-  const kunci = Deno.env.get('GEMINI_API_KEY');
-  if (!kunci) return alasan;
+  // Through the provider chain rather than a pinned Gemini URL. This called
+  // gemini-2.5-flash directly, which answers 404 for keys created after Google
+  // closed that model to new users - and since every failure here is swallowed
+  // and the plain sentence returned, nobody would ever have seen it fail. The
+  // chain also gives this the Groq fallback the rest of the app has.
+  const rantai = rantaiDariEnv();
+  if (rantai.kosong) return alasan;
 
   const angkaAsli = new Set(alasan.match(/\d+/g) ?? []);
 
   try {
-    const res = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': kunci },
-        body: JSON.stringify({
-          systemInstruction: {
-            parts: [{
-              text: [
-                'Anda menulis ulang satu paragraf Bahasa Indonesia agar terasa hangat dan mudah dibaca.',
-                'Aturan mutlak:',
-                '- Jangan menambah, mengubah, atau menghilangkan satu pun angka.',
-                '- Jangan menambah fakta baru, saran, atau penilaian apa pun tentang anak.',
-                '- Jangan menyebut diagnosis, tingkat spektrum, obat, atau dosis.',
-                '- Jangan menyebut anak sebagai penderita atau penyandang.',
-                '- Sapa pembaca dengan Anda. Maksimal tiga kalimat.',
-                'Keluarkan hanya paragrafnya, tanpa pembuka dan tanpa pagar kode.',
-              ].join('\n'),
-            }],
-          },
-          contents: [{ role: 'user', parts: [{ text: alasan }] }],
-          generationConfig: { temperature: 0.3, maxOutputTokens: 300 },
-        }),
-        signal: AbortSignal.timeout(8000),
-      },
+    const hasil = await rantai.chat(
+      [
+        {
+          peran: 'system',
+          teks: [
+            'Anda menulis ulang satu paragraf Bahasa Indonesia agar terasa hangat dan mudah dibaca.',
+            'Aturan mutlak:',
+            '- Jangan menambah, mengubah, atau menghilangkan satu pun angka.',
+            '- Jangan menambah fakta baru, saran, atau penilaian apa pun tentang anak.',
+            '- Jangan menyebut diagnosis, tingkat spektrum, obat, atau dosis.',
+            '- Jangan menyebut anak sebagai penderita atau penyandang.',
+            '- Sapa pembaca dengan Anda. Maksimal tiga kalimat.',
+            'Keluarkan hanya paragrafnya, tanpa pembuka dan tanpa pagar kode.',
+          ].join('\n'),
+        },
+        { peran: 'user', teks: alasan },
+      ],
+      { suhu: 0.3, maksToken: 300, batasMs: 8000 },
     );
-    if (!res.ok) return alasan;
 
-    const data = await res.json();
-    const teks: string | undefined =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    const teks = hasil.teks.trim();
     if (!teks) return alasan;
 
     // A number that was not in the input is an invented fact. Discard the whole
     // rewrite rather than trying to repair it.
-    const angkaBaru = (teks.match(/\d+/g) ?? []).filter((n: string) => !angkaAsli.has(n));
+    const angkaBaru = (teks.match(/\d+/g) ?? []).filter((n: string) =>
+      !angkaAsli.has(n)
+    );
     if (angkaBaru.length > 0) return alasan;
 
     if (teks.length > alasan.length * 2) return alasan;
-    if (/\b(diagnos|autis berat|autis ringan|level|obat|dosis|penderita|penyandang)/i.test(teks)) {
+    if (
+      /(diagnos|autis berat|autis ringan|level|obat|dosis|penderita|penyandang)/i
+        .test(teks)
+    ) {
       return alasan;
     }
     return teks;
@@ -109,7 +110,7 @@ async function haluskanNarasi(alasan: string): Promise<string> {
   }
 }
 
-Deno.serve(async (req: Request) => {
+async function tangani(req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: headerCors });
   if (req.method !== 'POST') return gagal('Permintaan tidak dikenali.', 405);
 
@@ -231,4 +232,21 @@ Deno.serve(async (req: Request) => {
     porsi,
     alasan: await haluskanNarasi(alasan),
   });
+}
+
+// The runtime answers an uncaught throw with the plain text "Internal Server
+// Error". Rule 7 of CLAUDE.md is that a failure explains itself in Indonesian
+// and never shows raw English, so nothing may reach the client that way. Found
+// when a malformed metric payload reached narasiDeterministik(), which runs
+// before any try block in this file.
+Deno.serve(async (req: Request) => {
+  try {
+    return await tangani(req);
+  } catch (e) {
+    console.error('galat tak tertangani:', e instanceof Error ? e.stack : e);
+    return gagal(
+      'Layanan sedang tidak dapat memproses permintaan ini. Coba lagi sebentar lagi.',
+      500,
+    );
+  }
 });

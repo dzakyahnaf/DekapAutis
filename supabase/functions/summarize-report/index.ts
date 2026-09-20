@@ -38,7 +38,7 @@ function gagal(pesan: string, status: number): Response {
   return jawab({ pesan }, status);
 }
 
-Deno.serve(async (req: Request) => {
+async function tangani(req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: headerCors });
   if (req.method !== 'POST') return gagal('Permintaan tidak dikenali.', 405);
 
@@ -163,4 +163,21 @@ Deno.serve(async (req: Request) => {
     sumber_narasi: sumberNarasi,
     alasan_tolak: alasanTolak,
   });
+}
+
+// The runtime answers an uncaught throw with the plain text "Internal Server
+// Error". Rule 7 of CLAUDE.md is that a failure explains itself in Indonesian
+// and never shows raw English, so nothing may reach the client that way. Found
+// when a malformed metric payload reached narasiDeterministik(), which runs
+// before any try block in this file.
+Deno.serve(async (req: Request) => {
+  try {
+    return await tangani(req);
+  } catch (e) {
+    console.error('galat tak tertangani:', e instanceof Error ? e.stack : e);
+    return gagal(
+      'Layanan sedang tidak dapat memproses permintaan ini. Coba lagi sebentar lagi.',
+      500,
+    );
+  }
 });
