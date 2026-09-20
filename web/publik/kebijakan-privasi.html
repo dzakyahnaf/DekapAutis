@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kebijakan Privasi — DekapAutis</title>
+<meta name="description" content="Data apa yang disimpan DekapAutis, di mana, siapa yang dapat melihatnya, dan bagaimana menghapusnya.">
+<style>
+  :root {
+    --kertas: #F2E8F6; --permukaan: #FFFFFF; --rambut: #D8C6E0;
+    --tinta: #4A2657; --tinta-2: #6B5F73; --ungu: #7B4490; --krem: #EDDFBC;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--kertas); color: var(--tinta);
+    font-family: "Lexend Deca", system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.65;
+  }
+  .bungkus { max-width: 44rem; margin: 0 auto; padding: 48px 20px 80px; }
+  .eyebrow {
+    font-size: .75rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--tinta-2); margin: 0 0 12px;
+  }
+  h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); line-height: 1.15; margin: 0 0 8px; }
+  .tanggal { color: var(--tinta-2); margin: 0 0 28px; font-size: .95rem; }
+  h2 { font-size: 1.15rem; margin: 32px 0 10px; }
+  p { margin: 0 0 12px; }
+  ul { margin: 0 0 12px; padding-left: 1.2rem; }
+  li { margin-bottom: 8px; }
+  a { color: var(--ungu); }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 12px; font-size: .95rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--rambut); vertical-align: top; }
+  th { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-2); font-weight: 500; }
+  .sorot { background: var(--krem); border-radius: 14px; padding: 18px 20px; margin: 0 0 12px; }
+  footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--rambut); color: var(--tinta-2); font-size: .9rem; }
+</style>
+</head>
+<body>
+<div class="bungkus">
+  <p class="eyebrow"><a href="./index.html">DekapAutis</a></p>
+  <h1>Kebijakan Privasi</h1>
+  <p class="tanggal">Berlaku sejak 20 September 2026.</p>
+
+  <p>
+    DekapAutis dikembangkan oleh Tim Fable 5 Enjoyer, Institut Teknologi
+    Sepuluh Nopember, sebagai purwarupa untuk kompetisi IT CONVERT 2026.
+    Halaman ini menjelaskan data apa yang benar-benar disimpan aplikasi, di
+    mana, siapa yang dapat melihatnya, dan bagaimana menghapusnya.
+  </p>
+
+  <div class="sorot">
+    <p style="margin:0">
+      <strong>Akun yang memakai aplikasi ini adalah akun orang dewasa.</strong>
+      Anak tidak membuat akun dan tidak memakai aplikasi ini sendiri. Data
+      tentang anak dimasukkan oleh orang tua atau pengasuhnya.
+    </p>
+  </div>
+
+  <h2>Data yang disimpan</h2>
+  <table>
+    <thead><tr><th>Kelompok</th><th>Isi</th></tr></thead>
+    <tbody>
+      <tr><td>Akun</td><td>Alamat email, nama yang Anda isi, dan peran (pengasuh, tenaga profesional, atau administrator).</td></tr>
+      <tr><td>Profil anak</td><td>Nama panggilan, usia, kemampuan komunikasi, sensitivitas sensorik, dan fokus perkembangan yang Anda pilih.</td></tr>
+      <tr><td>Kegiatan</td><td>Rencana mingguan, jadwal aktivitas, dan respons yang Anda catat: Mudah, Pas, atau Sulit.</td></tr>
+      <tr><td>Kondisi pengasuh</td><td>Skala harian yang Anda isi tentang kondisi Anda sendiri.</td></tr>
+      <tr><td>Laporan</td><td>Laporan perkembangan yang Anda buat, izin berbagi, dan tanggapan dari tenaga profesional.</td></tr>
+      <tr><td>Komunitas</td><td>Tulisan dan balasan yang Anda kirim, termasuk penanda apakah Anda memilih anonim.</td></tr>
+      <tr><td>Lainnya</td><td>Pengajuan jadwal konsultasi, notifikasi, dan laporan penyalahgunaan yang Anda kirim.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Aplikasi tidak meminta nama lengkap anak, alamat, nomor telepon, data
+    biometrik, maupun rekam medis. Tidak ada pelacak iklan dan tidak ada
+    analitik pihak ketiga di dalam aplikasi.
+  </p>
+
+  <h2>Di mana data disimpan</h2>
+  <p>
+    Data disimpan pada basis data PostgreSQL yang dikelola Supabase di wilayah
+    <strong>ap-southeast-1 (Singapura)</strong>. Sebagian data juga disimpan di
+    perangkat Anda agar aplikasi tetap dapat dibuka tanpa jaringan; salinan di
+    perangkat itu dihapus ketika Anda keluar dari akun.
+  </p>
+
+  <h2>Siapa yang dapat melihat data Anda</h2>
+  <ul>
+    <li>
+      <strong>Anda sendiri.</strong> Aturan akses di basis data menolak segala
+      permintaan secara bawaan, lalu hanya mengizinkan baris milik akun yang
+      meminta.
+    </li>
+    <li>
+      <strong>Tenaga profesional, hanya bila Anda mengizinkan.</strong> Izin
+      diberikan per laporan, bukan sekali untuk selamanya, dan dapat dicabut
+      kapan saja. Pencabutan memutus akses di sisi peladen, bukan sekadar
+      menyembunyikannya di layar. Tenaga profesional <strong>tidak pernah</strong>
+      dapat melihat catatan harian mentah anak Anda.
+    </li>
+    <li>
+      <strong>Pengguna lain di komunitas</strong> hanya melihat tulisan yang
+      Anda kirim. Bila Anda memilih anonim, identitas Anda disembunyikan di
+      sisi peladen: kolom nama tidak pernah dikirim ke aplikasi sama sekali.
+    </li>
+  </ul>
+
+  <h2>Kecerdasan artifisial</h2>
+  <p>
+    Ketika Anda memakai fitur Tanya Dekap, <strong>hanya teks pertanyaan
+    Anda</strong> yang dikirim ke penyedia model bahasa — Google Gemini,
+    dengan Groq sebagai cadangan otomatis — bersama kutipan dokumen sumber yang
+    dipakai untuk menyusun jawaban. Profil anak, catatan harian, dan laporan
+    Anda tidak dikirim ke penyedia model.
+  </p>
+  <p>
+    Bila sebuah pertanyaan menyentuh batas medis dan ditolak aplikasi, teks
+    pertanyaan itu dicatat pada log internal bersama pengenal akun Anda. Catatan
+    itu dipakai untuk memastikan mekanisme pengamannya bekerja, dan tidak
+    dipakai untuk keperluan lain.
+  </p>
+
+  <h2>Akun demo</h2>
+  <p>
+    Akun demo berisi data sintetis. "Rina Kartika" dan "Bima" adalah persona
+    contoh, bukan orang sungguhan, dan aplikasi menandainya sebagai akun demo di
+    dalam antarmuka. Data akun demo dikembalikan ke keadaan awalnya setiap hari.
+  </p>
+
+  <h2>Menghapus data Anda</h2>
+  <p>
+    Buka <strong>Profil → Hapus akun</strong> di dalam aplikasi. Akun Anda dan
+    seluruh data yang terkait dengannya — profil anak, rencana, catatan,
+    laporan, izin berbagi, dan tulisan komunitas — dihapus permanen, bukan
+    ditandai terhapus. Anda juga dapat mengunduh salinan data Anda dari layar
+    Profil sebelum menghapusnya.
+  </p>
+
+  <h2>Batas medis</h2>
+  <p>
+    DekapAutis tidak mendiagnosis, tidak menilai tingkat atau derajat spektrum,
+    dan tidak menganjurkan obat, suplemen, maupun dosis. Aplikasi ini bukan
+    layanan kesehatan dan bukan pengganti pemeriksaan oleh tenaga profesional.
+  </p>
+
+  <h2>Perubahan dan kontak</h2>
+  <p>
+    Bila kebijakan ini berubah, tanggal berlaku di atas ikut diperbarui.
+    Pertanyaan tentang data Anda dapat dikirim ke
+    <a href="mailto:dzakyahnf@gmail.com">dzakyahnf@gmail.com</a>.
+  </p>
+
+  <footer>
+    <p>
+      Tim Fable 5 Enjoyer — Institut Teknologi Sepuluh Nopember, Surabaya.<br>
+      <a href="./index.html">Beranda</a> ·
+      <a href="./ketentuan-layanan.html">Ketentuan Layanan</a>
+    </p>
+  </footer>
+</div>
+</body>
+</html>

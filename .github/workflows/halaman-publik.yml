@@ -1,0 +1,43 @@
+name: halaman-publik
+
+# Menerbitkan tiga halaman di web/publik ke GitHub Pages.
+#
+# Google Auth Platform menolak menerbitkan aplikasi ke Production sebelum
+# halaman Branding memuat tautan beranda, kebijakan privasi, dan ketentuan
+# layanan. Domain Supabase tidak bisa dipakai: gerbangnya menulis ulang
+# Content-Type text/html menjadi text/plain, baik dari Storage maupun Edge
+# Function, sehingga peramban menampilkan kode alih-alih halaman.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/publik/**'
+      - '.github/workflows/halaman-publik.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Satu penerbitan pada satu waktu, dan jangan membatalkan yang sedang jalan:
+# penerbitan yang terpotong meninggalkan situs pada keadaan setengah.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  terbitkan:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.terbit.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/publik
+      - id: terbit
+        uses: actions/deploy-pages@v4
