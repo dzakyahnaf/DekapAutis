@@ -353,6 +353,22 @@ max_frequency = "5s"
 # Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
 # `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
 # `twitter`, `x`, `slack`, `spotify`, `workos`, `zoom`.
+# Screen L.14 in docs/05 specifies a "Masuk dengan Google" button, and it was
+# hidden because the provider was off - tapping it opened the system browser
+# onto a raw English JSON error from the auth server. An OAuth client costs
+# nothing and needs no billing, so the deviation is closed rather than kept.
+#
+# Only a Web client is needed: the app opens the system browser and returns
+# through the dekapautis:// deep link, which is already on the redirect allow
+# list. A native Android client with a SHA-1 fingerprint would only be required
+# for the Google Sign-In SDK, which this app does not use.
+#
+# The secret is read from the environment at push time, never written here.
+[auth.external.google]
+enabled = true
+client_id = "env(GOOGLE_CLIENT_ID)"
+secret = "env(GOOGLE_SECRET)"
+
 [auth.external.apple]
 enabled = false
 client_id = ""
