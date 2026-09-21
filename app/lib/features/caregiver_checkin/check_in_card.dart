@@ -26,7 +26,7 @@ class CheckInCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final terpilih = ref.watch(checkInHariIniProvider).value;
+    final terpilih = ref.watch(checkInHariIniProvider).valueOrNull;
     final text = Theme.of(context).textTheme;
 
     return Container(

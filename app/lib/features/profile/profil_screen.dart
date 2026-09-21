@@ -44,7 +44,7 @@ class ProfilScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(DekapSpace.screenPadding),
         children: [
           Text(auth.pengguna?.email ?? 'Belum masuk', style: text.titleMedium),
-          if (ref.watch(adalahDemoProvider).value ?? false) ...[
+          if (ref.watch(adalahDemoProvider).valueOrNull ?? false) ...[
             const SizedBox(height: DekapSpace.cardGap),
             const KepingAkunDemo(),
           ],

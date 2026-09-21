@@ -31,7 +31,7 @@ class _RencanaScreenState extends ConsumerState<RencanaScreen> {
   Widget build(BuildContext context) {
     final mingguan = ref.watch(rencanaMingguanProvider);
     final terpilih = ref.watch(hariTerpilihProvider);
-    final anak = ref.watch(anakAktifProvider).value;
+    final anak = ref.watch(anakAktifProvider).valueOrNull;
     final awal = awalMinggu(terpilih);
     final text = Theme.of(context).textTheme;
 

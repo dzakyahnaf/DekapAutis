@@ -22,7 +22,7 @@ class DetailAktivitasScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final anak = ref.watch(anakAktifProvider).value;
+    final anak = ref.watch(anakAktifProvider).valueOrNull;
     final item = ref.watch(detailAktivitasProvider(jadwalId));
 
     return Scaffold(

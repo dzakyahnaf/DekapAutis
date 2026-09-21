@@ -60,7 +60,7 @@ class _Isi extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final text = Theme.of(context).textTheme;
-    final anak = ref.watch(anakAktifProvider).value;
+    final anak = ref.watch(anakAktifProvider).valueOrNull;
 
     return Column(
       children: [
@@ -258,7 +258,7 @@ class _AksiBawahState extends ConsumerState<_AksiBawah> {
             // Generated here so a retry from the offline queue lands on the
             // same row instead of booking the practice twice.
             klienId: const Uuid().v4(),
-            anakId: ref.read(anakAktifProvider).value?.id,
+            anakId: ref.read(anakAktifProvider).valueOrNull?.id,
           );
       if (!mounted) return;
       _kabari(

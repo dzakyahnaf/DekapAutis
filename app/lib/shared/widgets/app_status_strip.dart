@@ -26,7 +26,7 @@ class AppStatusStrip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final calm = ref.watch(calmModeProvider);
-    final menunggu = ref.watch(menungguSinkronProvider).value ?? 0;
+    final menunggu = ref.watch(menungguSinkronProvider).valueOrNull ?? 0;
 
     // Nothing to say: stay out of the tree entirely rather than adding an
     // empty Column that would shift every screen down by a hairline.

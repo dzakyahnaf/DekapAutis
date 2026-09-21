@@ -41,9 +41,13 @@ class _BerandaScreenState extends ConsumerState<BerandaScreen> {
   /// caregiver sees, which is exactly the intended offline behaviour, so there
   /// is nothing here worth interrupting them about.
   Future<void> unawaitedSegarkan() async {
-    final anak = await ref.read(anakAktifProvider.future);
-    if (anak == null || !mounted) return;
     try {
+      // Reading the child has to be inside the try as well. It is a network
+      // call like any other, and when it failed the throw escaped into the
+      // post-frame callback, where nothing was waiting to catch it: on a phone
+      // that meant an unhandled exception at every launch without a signal.
+      final anak = await ref.read(anakAktifProvider.future);
+      if (anak == null || !mounted) return;
       await ref.read(rencanaRepositoryProvider).segarkan(anak.id);
     } catch (_) {
       return;
@@ -57,12 +61,12 @@ class _BerandaScreenState extends ConsumerState<BerandaScreen> {
   @override
   Widget build(BuildContext context) {
     final agenda = ref.watch(agendaHariIniProvider);
-    final anak = ref.watch(anakAktifProvider).value;
+    final anak = ref.watch(anakAktifProvider).valueOrNull;
     final text = Theme.of(context).textTheme;
 
     // Defaults to "seen" while the read is in flight, so the tour never flashes
     // over the screen for one frame on every launch.
-    final sudahTur = ref.watch(turSudahDilihatProvider).value ?? true;
+    final sudahTur = ref.watch(turSudahDilihatProvider).valueOrNull ?? true;
 
     return Scaffold(
       body: Stack(

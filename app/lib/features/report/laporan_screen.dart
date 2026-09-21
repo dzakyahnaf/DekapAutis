@@ -57,7 +57,7 @@ class _LaporanScreenState extends ConsumerState<LaporanScreen> {
   @override
   Widget build(BuildContext context) {
     final metrik = ref.watch(metrikLaporanProvider);
-    final anak = ref.watch(anakAktifProvider).value;
+    final anak = ref.watch(anakAktifProvider).valueOrNull;
     final text = Theme.of(context).textTheme;
 
     return Scaffold(
