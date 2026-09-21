@@ -12,17 +12,29 @@ name: keep-alive
 
 on:
   schedule:
-    # Dua kali sehari. Fungsi ini sekarang juga menggeser data demo agar
-    # berakhir "hari ini" menurut WIB, jadi waktunya penting:
+    # Tiap tiga jam. Fungsi ini juga menggeser data demo agar berakhir "hari
+    # ini" menurut WIB, jadi waktunya menentukan apakah beranda demo berisi.
     #
-    #   17.05 UTC = 00.05 WIB  data bergeser tepat setelah tanggal berganti,
-    #                          jadi beranda tidak pernah kosong di pagi hari
-    #   23.00 UTC = 06.00 WIB  cadangan: jadwal cron GitHub bisa molor atau
-    #                          terlewat saat antrean padat
+    # Dua kali sehari ternyata tidak cukup. Cron GitHub dijadwalkan, bukan
+    # dijamin: jalan-jalan sebelumnya molor sekitar dua jam setiap kali
+    # (17.05 UTC baru berjalan 19.15 UTC), dan pada antrean padat sebuah
+    # jadwal bisa dilewati sama sekali. Akibatnya nyata dan terlihat - pada
+    # 22 September pukul 00.10 WIB beranda demo kosong, karena tanggal WIB
+    # sudah berganti sementara penggesernya belum berjalan.
     #
-    # Fungsinya idempoten - panggilan kedua di hari yang sama menggeser 0.
+    #   17.05 UTC = 00.05 WIB  tepat setelah tanggal WIB berganti
+    #   20.00 UTC = 03.00 WIB  menutup molornya jadwal pertama
+    #   23.00 UTC = 06.00 WIB
+    #   02.00 UTC = 09.00 WIB  jam-jam penjurian
+    #   05.00 UTC = 12.00 WIB
+    #
+    # Fungsinya idempoten - panggilan kedua di hari yang sama menggeser 0,
+    # jadi menambah jadwal tidak menambah risiko apa pun.
     - cron: '5 17 * * *'
+    - cron: '0 20 * * *'
     - cron: '0 23 * * *'
+    - cron: '0 2 * * *'
+    - cron: '0 5 * * *'
   workflow_dispatch:
 
 jobs:
