@@ -41,6 +41,15 @@ class _BerandaScreenState extends ConsumerState<BerandaScreen> {
   /// caregiver sees, which is exactly the intended offline behaviour, so there
   /// is nothing here worth interrupting them about.
   Future<void> unawaitedSegarkan() async {
+    // Riverpod keeps a failed future and hands the same failure back to every
+    // later read. Reading it again is therefore not a retry, and "Coba lagi"
+    // on the error state below could never recover: one failed lookup left the
+    // home screen - and the plan and profile screens, which share this
+    // provider - broken until the app was closed and reopened. Ask for the
+    // child again rather than for the answer that already failed. Every other
+    // screen in the app already invalidates before retrying; this was the one
+    // that did not.
+    ref.invalidate(daftarAnakProvider);
     try {
       // Reading the child has to be inside the try as well. It is a network
       // call like any other, and when it failed the throw escaped into the
@@ -126,8 +135,14 @@ class _BerandaScreenState extends ConsumerState<BerandaScreen> {
                         agenda.when(
                           loading: () =>
                               const LoadingText(message: S.memuatRencana),
-                          error: (_, _) => ErrorState(
-                            message: S.gagalLayanan,
+                          // pesanKesalahan, like every other screen: a
+                          // blanket "the service is unreachable" was shown
+                          // even when the service had answered and something
+                          // else had gone wrong, which sent the reader looking
+                          // at their signal bars for a fault that was not
+                          // there.
+                          error: (e, _) => ErrorState(
+                            message: pesanKesalahan(e),
                             onRetry: unawaitedSegarkan,
                           ),
                           data: (daftar) => daftar.isEmpty
