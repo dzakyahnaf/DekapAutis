@@ -9,6 +9,7 @@ import 'core/accessibility/accessibility_prefs.dart';
 import 'core/config/app_config.dart';
 import 'core/router/app_router.dart';
 import 'core/strings.dart';
+import 'core/theme/tokens.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/calm.dart';
 import 'data/providers.dart';
@@ -17,25 +18,158 @@ import 'shared/widgets/app_status_strip.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  runApp(await _akar());
+}
 
-  // Indonesian date names. Without this, DateFormat throws on the first screen
-  // that shows a date - which is the home screen.
-  await initializeDateFormatting('id_ID');
+/// Whatever happens during setup, something is drawn.
+///
+/// Both awaits below used to sit between `ensureInitialized` and `runApp` with
+/// nothing catching them. A phone whose keystore refused to decrypt, or a
+/// locale load that never returned, left the person holding a white screen
+/// that could not be tapped: no dialog, no message, no way back, and nothing
+/// to report to us either. Rule 7 asks for graceful degradation, and a screen
+/// that never appears is the least graceful failure there is.
+Future<Widget> _akar() async {
+  final gagal = await _siapkan();
+  if (gagal != null) return LayarGagalMulai(rincian: gagal);
+  return const ProviderScope(child: DekapAutisApp());
+}
 
-  await Supabase.initialize(
-    url: AppConfig.supabaseUrl,
-    publishableKey: AppConfig.supabasePublishableKey,
-    authOptions: FlutterAuthClientOptions(
-      // The session is a bearer token for a child's records, so it lives in the
-      // platform keystore rather than in SharedPreferences.
-      localStorage: SecureSessionStorage(),
-      // Google sign-in hands control to an external browser and comes back
-      // through the dekapautis:// deep link registered in AndroidManifest.
-      authFlowType: AuthFlowType.pkce,
+/// Returns null when the app is ready, or the technical detail when it is not.
+Future<String?> _siapkan() async {
+  try {
+    // Indonesian date names. Without this, DateFormat throws on the first
+    // screen that shows a date - which is the home screen.
+    await initializeDateFormatting(
+      'id_ID',
+    ).timeout(const Duration(seconds: 15));
+  } on Object catch (e) {
+    return 'Nama tanggal Bahasa Indonesia: $e';
+  }
+
+  try {
+    await Supabase.initialize(
+      url: AppConfig.supabaseUrl,
+      publishableKey: AppConfig.supabasePublishableKey,
+      authOptions: FlutterAuthClientOptions(
+        // The session is a bearer token for a child's records, so it lives in
+        // the platform keystore rather than in SharedPreferences. Keystore
+        // failures fall back to memory inside the storage itself.
+        localStorage: SecureSessionStorage(),
+        // Google sign-in hands control to an external browser and comes back
+        // through the dekapautis:// deep link registered in AndroidManifest.
+        authFlowType: AuthFlowType.pkce,
+      ),
+      // A device with no network must still reach the sign-in screen rather
+      // than wait here forever.
+    ).timeout(const Duration(seconds: 20));
+  } on Object catch (e) {
+    return 'Menyiapkan layanan: $e';
+  }
+  return null;
+}
+
+/// Shown instead of a blank screen when setup fails.
+///
+/// Deliberately depends on nothing: no providers, no theme extension, no
+/// router. Whatever broke, this still has to render.
+class LayarGagalMulai extends StatefulWidget {
+  const LayarGagalMulai({required this.rincian, super.key});
+
+  final String rincian;
+
+  @override
+  State<LayarGagalMulai> createState() => _LayarGagalMulaiState();
+}
+
+class _LayarGagalMulaiState extends State<LayarGagalMulai> {
+  bool _sibuk = false;
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Scaffold(
+      backgroundColor: DekapColors.background,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'DekapAutis belum dapat dimulai',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: DekapColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Periksa koneksi internet Anda, lalu coba lagi. Bila tetap '
+                  'gagal, tutup aplikasi dan buka kembali.',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: DekapColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: DekapColors.surface,
+                    border: Border.all(color: DekapColors.border),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Rincian teknis',
+                        style: TextStyle(
+                          fontSize: 12,
+                          letterSpacing: 1.2,
+                          color: DekapColors.textSecondary,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      SelectableText(
+                        widget.rincian,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: DekapColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: DekapColors.purple700,
+                      minimumSize: const Size.fromHeight(52),
+                    ),
+                    onPressed: _sibuk ? null : _ulangi,
+                    child: Text(_sibuk ? 'Mencoba…' : 'Coba lagi'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     ),
   );
 
-  runApp(const ProviderScope(child: DekapAutisApp()));
+  Future<void> _ulangi() async {
+    setState(() => _sibuk = true);
+    runApp(await _akar());
+  }
 }
 
 class DekapAutisApp extends ConsumerWidget {
