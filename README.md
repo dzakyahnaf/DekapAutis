@@ -63,8 +63,15 @@ remote:
 ```bash
 flutter build apk --release \
   --dart-define=SUPABASE_URL=https://<proyek>.supabase.co \
-  --dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+  --dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_... \
+  --dart-define=GOOGLE_AKTIF=true
 ```
+
+`GOOGLE_AKTIF` menentukan apakah tombol **Masuk dengan Google** ikut dibangun.
+Nilai bawaannya `false`: tanpa flag ini tombol itu tidak ada di APK. Nyalakan
+hanya setelah penyedia Google benar-benar aktif di proyek Supabase tujuan,
+karena tombol yang menunjuk penyedia mati membuka peramban ke JSON galat
+berbahasa Inggris.
 
 Kunci model bahasa (Gemini, Groq) **tidak pernah** ada di klien. Keduanya hidup
 hanya sebagai secret Edge Function. Ini diverifikasi dengan mengekstrak APK dan
