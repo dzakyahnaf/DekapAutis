@@ -124,10 +124,43 @@ GoRoute _layar(
 /// on whoever types the link to remember a third slash.
 String? normaliseDeepLink(Uri uri) {
   if (uri.scheme != 'dekapautis' || uri.host.isEmpty) return null;
+  if (tautanCallbackAuth(uri)) return '/splash';
   final path = uri.path == '/' ? '' : uri.path;
   final target = '/${uri.host}$path';
   return uri.hasQuery ? '$target?${uri.query}' : target;
 }
+
+/// Parameters GoTrue puts on the callback it sends back to `dekapautis://`.
+const _parameterAuth = {
+  'code',
+  'access_token',
+  'error',
+  'error_code',
+  'error_description',
+};
+
+/// Whether this link is GoTrue handing a sign-in back, rather than a request
+/// to open a screen.
+///
+/// `redirectTo` is `dekapautis://masuk`, so the callback arrives with `masuk`
+/// as its host and used to be routed by that host - straight back to the
+/// sign-in screen the person had just left, while supabase_flutter exchanged
+/// the code in the background. The session was created and the screen never
+/// moved, which looked exactly like Google sign-in doing nothing at all.
+///
+/// These go to the splash screen instead, which asks who is signed in and
+/// routes onwards, and the parameters are dropped: a single-use auth code has
+/// no business being carried around inside a route.
+bool tautanCallbackAuth(Uri uri) {
+  final fragmen = Uri.splitQueryString(uri.fragment);
+  return _parameterAuth.any(
+    (k) => uri.queryParameters.containsKey(k) || fragmen.containsKey(k),
+  );
+}
+
+/// Lets the root widget put a message in front of the person from outside any
+/// screen's build. Auth failures arrive on a stream, not from a button.
+final pesanKunci = GlobalKey<ScaffoldMessengerState>(debugLabel: 'pesan');
 
 /// Shown when a route does not exist.
 ///

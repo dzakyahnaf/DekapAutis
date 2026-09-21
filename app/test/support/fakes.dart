@@ -71,6 +71,15 @@ class FakeAuthRepository implements AuthRepository {
     }
   }
 
+  /// What supabase_flutter raises when it cannot turn a callback into a
+  /// session - a missing code verifier, an expired flow state, a provider
+  /// error handed back in the redirect.
+  void pancarkanGalat() {
+    if (!_status.isClosed) {
+      _status.addError(const AuthException('Code verifier could not be found'));
+    }
+  }
+
   @override
   bool get sudahMasuk => masuk_;
 

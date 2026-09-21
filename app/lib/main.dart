@@ -183,9 +183,27 @@ class DekapAutisApp extends ConsumerWidget {
     // catches every way out - the button, an expired session, a deleted
     // account - instead of only the one screen that has a button.
     ref.listen(statusAuthProvider, (_, next) {
-      switch (next.value?.event) {
+      if (next.hasError) {
+        // supabase_flutter pushes a failed callback exchange onto this stream
+        // and nothing was reading it, so "Masuk dengan Google" could fail in
+        // total silence - no screen change, no message, nothing to report.
+        pesanKunci.currentState
+          ?..hideCurrentSnackBar()
+          ..showSnackBar(const SnackBar(content: Text(S.gagalMasukLuar)));
+        return;
+      }
+      // valueOrNull, not value: value rethrows whenever this stream is in its
+      // error state, and the throw would land inside this listener.
+      switch (next.valueOrNull?.event) {
         case AuthChangeEvent.signedOut:
           ref.read(databaseProvider).kosongkan();
+        case AuthChangeEvent.signedIn:
+          // Signing in with an email navigates from the button that started
+          // it. Google sign-in hands control to the browser and comes back
+          // through the deep link long after that button returned, so this is
+          // the only thing that can move the person off the sign-in screen.
+          // The splash asks who is signed in and routes onwards from there.
+          appRouter.go('/splash');
         case AuthChangeEvent.passwordRecovery:
           // The recovery link has reopened the app and supabase_flutter has
           // exchanged it for a session. Without this the person lands on the
@@ -201,6 +219,7 @@ class DekapAutisApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: S.appName,
+      scaffoldMessengerKey: pesanKunci,
       debugShowCheckedModeBanner: false,
       // Calm Mode must arrive the instant it is switched on. Material's
       // default 200ms theme cross-fade would fade the five effects in, which

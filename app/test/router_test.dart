@@ -160,10 +160,25 @@ void main() {
       );
     });
 
-    test('the OAuth callback keeps its query string', () {
+    // This test used to assert the opposite - that the callback kept its
+    // query and was routed by its host, to '/masuk?code=...'. That is what
+    // made "Masuk dengan Google" appear to do nothing: the callback put the
+    // person back on the sign-in screen they had just left, while
+    // supabase_flutter exchanged the code in the background. The session was
+    // real and the screen never moved. Verified on an emulator by handing the
+    // app a genuine session through this link: reopening the app landed on
+    // the home screen, so only the navigation was ever missing.
+    test('the OAuth callback is not a request to open the sign-in screen', () {
       expect(
         normaliseDeepLink(Uri.parse('dekapautis://masuk?code=abc123&x=1')),
-        '/masuk?code=abc123&x=1',
+        '/splash',
+      );
+    });
+
+    test('a query that is not an auth callback is still carried through', () {
+      expect(
+        normaliseDeepLink(Uri.parse('dekapautis://rencana?hari=2')),
+        '/rencana?hari=2',
       );
     });
 

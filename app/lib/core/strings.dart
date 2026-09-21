@@ -82,6 +82,12 @@ abstract final class S {
   static const gagalLayanan =
       'Layanan sedang tidak dapat dihubungi. Data yang sudah tersimpan tetap bisa Anda buka.';
 
+  /// Shown when an auth callback comes back unusable. GoTrue's own message is
+  /// English and mentions a code verifier, which means nothing to the person
+  /// holding the phone.
+  static const gagalMasukLuar =
+      'Masuk belum berhasil diselesaikan. Coba tekan tombolnya sekali lagi.';
+
   // Offline -----------------------------------------------------------------
   static const luringAktif = 'Mode luring';
   static String luringMenunggu(int jumlah) =>
