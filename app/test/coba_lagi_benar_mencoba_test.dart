@@ -50,6 +50,11 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    // The first-run tour covers the home screen, deliberately: it is modal.
+    // Nothing behind it can be tapped until it is out of the way.
+    await tester.tap(find.text('Lewati'));
+    await tester.pumpAndSettle();
+
     final tombol = find.widgetWithText(SecondaryButton, S.aksiCobaLagi);
     expect(
       tombol,

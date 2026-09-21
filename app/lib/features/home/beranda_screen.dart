@@ -183,9 +183,19 @@ class _BerandaScreenState extends ConsumerState<BerandaScreen> {
           // The tour sits over the home screen rather than replacing it, so the
           // first thing a caregiver sees behind the card is their own plan, not
           // an empty scrim.
+          //
+          // Positioned.fill, because a Stack hands an unpositioned child loose
+          // constraints: the tour shrank to the height of its own card and sat
+          // in the top corner, so the scrim dimmed nothing, the card covered
+          // the greeting instead of sitting below the plan it describes, and
+          // the screen behind it stayed live to touch. Everything the tour
+          // does to place itself - bottom alignment, scrolling when the text
+          // is scaled up - assumes it was given the screen.
           if (!sudahTur)
-            TurPertama(
-              onSelesai: () => ref.invalidate(turSudahDilihatProvider),
+            Positioned.fill(
+              child: TurPertama(
+                onSelesai: () => ref.invalidate(turSudahDilihatProvider),
+              ),
             ),
         ],
       ),
