@@ -62,3 +62,10 @@ QueryExecutor bukaDatabaseMemori() {
 
 /// True when this build keeps the cache after the app is closed.
 const menyimpanPermanen = false;
+
+/// The browser build never persists anything, so the keystore failure the
+/// native build recovers from cannot happen here. The symbol exists because
+/// the conditional export has to type-check on both sides.
+bool get cacheTidakPermanen => true;
+
+void lupakanKegagalanCache() {}

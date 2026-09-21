@@ -15,8 +15,21 @@
         android:name="android.hardware.location"
         android:required="false" />
 
+    <!--
+      No automatic backup, for two reasons that point the same way.
+
+      Auto-backup copies app_flutter and shared_prefs, but never Keystore key
+      material. A restored install therefore gets the encrypted cache file back
+      without the key that opens it, and reinstalling restores that same
+      unusable pair again - which is why reinstalling did not fix the phone
+      that reported this. The cache also holds a child's plan and notes, and
+      copying that to a Google account is not something this app ever promised
+      its users.
+    -->
     <application
         android:label="DekapAutis"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

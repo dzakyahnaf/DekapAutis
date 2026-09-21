@@ -57,6 +57,10 @@ dependencies:
   uuid: ^4.6.0
 
 dev_dependencies:
+  # Used directly by test/cache_pulih_saat_kunci_hilang_test.dart to put
+  # the cache file somewhere temporary and to mock the keystore channel.
+  path_provider_platform_interface: ^2.1.2
+  plugin_platform_interface: ^2.1.8
   flutter_test:
     sdk: flutter
 
