@@ -400,6 +400,30 @@ begin
 end $$;
 reset role;
 
+-- ================================================ nama yang dapat dibaca ==
+
+-- The directory prints "nama_lengkap, gelar". That reads correctly for a
+-- person - "Sari Wulandari, Dra., M.Psi." - and turned into nonsense for an
+-- organisation, because the seed had been putting the kind of place into the
+-- academic-title column: "Klinik Anak Nusantara, Klinik". Thirteen of the
+-- eighteen entries on the screen a judge opens read that way.
+
+do $$
+declare menduplikasi int;
+begin
+  select count(*) into menduplikasi
+    from profesional
+   where gelar is not null
+     and gelar <> ''
+     and nama_lengkap ilike '%' || gelar || '%';
+
+  perform uji_f7.catat(
+    'gelar tidak mengulang kata yang sudah ada di nama',
+    menduplikasi = 0,
+    menduplikasi || ' entri menampilkan nama yang mengulang dirinya sendiri'
+  );
+end $$;
+
 -- ================================================================= report ==
 
 select urutan,

@@ -176,21 +176,21 @@ select
   now(), now(),
   '', '', '', '', '', '', '', ''
 from (values
-  (1,  'Klinik Tumbuh Harmoni',      'Klinik',  'Terapis wicara',          'Terapi wicara',      '[{"hari":"Senin","jam":"09.00-11.00"}]',  -7.2575, 112.7521, 'Surabaya'),
-  (2,  'Pusat Terapi Anak Melati',   'Pusat',   'Terapis okupasi',         'Terapi okupasi',     '[{"hari":"Selasa","jam":"13.00-15.00"}]', -7.2650, 112.7420, 'Surabaya'),
-  (3,  'Ruang Tenang Kenjeran',      'Pusat',   'Terapis sensorik',        'Integrasi sensorik', '[{"hari":"Rabu","jam":"09.00-11.00"}]',   -7.2360, 112.7930, 'Surabaya'),
-  (4,  'Praktik Psikologi Anggrek',  'Praktik', 'Psikolog anak',           'Konsultasi orang tua','[{"hari":"Kamis","jam":"15.00-17.00"}]', -7.2890, 112.7350, 'Surabaya'),
-  (5,  'Klinik Tumbuh Kembang Cakra','Klinik',  'Dokter tumbuh kembang',   'Pemeriksaan berkala','[{"hari":"Jumat","jam":"09.00-11.00"}]',  -7.2700, 112.7680, 'Surabaya'),
-  (6,  'Sanggar Bicara Ceria',       'Sanggar', 'Terapis wicara',          'Terapi wicara',      '[{"hari":"Senin","jam":"13.00-15.00"}]',  -7.3050, 112.7250, 'Surabaya'),
-  (7,  'Klinik Anak Nusantara',      'Klinik',  'Dokter tumbuh kembang',   'Pemeriksaan berkala','[{"hari":"Selasa","jam":"09.00-11.00"}]', -7.2480, 112.7280, 'Surabaya'),
-  (8,  'Rumah Belajar Pelangi',      'Pusat',   'Terapis okupasi',         'Terapi okupasi',     '[{"hari":"Rabu","jam":"13.00-15.00"}]',   -7.3180, 112.7400, 'Sidoarjo'),
-  (9,  'Praktik Psikologi Cempaka',  'Praktik', 'Psikolog anak',           'Asesmen perkembangan','[{"hari":"Kamis","jam":"09.00-11.00"}]', -7.4478, 112.7183, 'Sidoarjo'),
-  (10, 'Klinik Bina Mandiri',        'Klinik',  'Terapis okupasi',         'Terapi okupasi',     '[{"hari":"Jumat","jam":"13.00-15.00"}]',  -7.1554, 112.6531, 'Gresik'),
-  (11, 'Sanggar Wicara Gresik',      'Sanggar', 'Terapis wicara',          'Terapi wicara',      '[{"hari":"Senin","jam":"09.00-11.00"}]',  -7.1620, 112.6600, 'Gresik'),
-  (12, 'Pusat Sensorik Darmo',       'Pusat',   'Terapis sensorik',        'Integrasi sensorik', '[{"hari":"Selasa","jam":"15.00-17.00"}]', -7.2900, 112.7400, 'Surabaya'),
-  (13, 'Klinik Anak Rungkut',        'Klinik',  'Dokter tumbuh kembang',   'Pemeriksaan berkala','[{"hari":"Rabu","jam":"09.00-11.00"}]',   -7.3300, 112.7650, 'Surabaya'),
-  (14, 'Praktik Psikologi Wiyung',   'Praktik', 'Psikolog anak',           'Konsultasi orang tua','[{"hari":"Kamis","jam":"13.00-15.00"}]', -7.3100, 112.6800, 'Surabaya'),
-  (15, 'Rumah Terapi Malang Raya',   'Pusat',   'Terapis okupasi',         'Terapi okupasi',     '[{"hari":"Jumat","jam":"09.00-11.00"}]',  -7.9666, 112.6326, 'Malang')
+  (1,  'Klinik Tumbuh Harmoni',      NULL    ,  'Terapis wicara',          'Terapi wicara',      '[{"hari":"Senin","jam":"09.00-11.00"}]',  -7.2575, 112.7521, 'Surabaya'),
+  (2,  'Pusat Terapi Anak Melati',   NULL   ,   'Terapis okupasi',         'Terapi okupasi',     '[{"hari":"Selasa","jam":"13.00-15.00"}]', -7.2650, 112.7420, 'Surabaya'),
+  (3,  'Ruang Tenang Kenjeran',      NULL   ,   'Terapis sensorik',        'Integrasi sensorik', '[{"hari":"Rabu","jam":"09.00-11.00"}]',   -7.2360, 112.7930, 'Surabaya'),
+  (4,  'Praktik Psikologi Anggrek',  NULL     , 'Psikolog anak',           'Konsultasi orang tua','[{"hari":"Kamis","jam":"15.00-17.00"}]', -7.2890, 112.7350, 'Surabaya'),
+  (5,  'Klinik Tumbuh Kembang Cakra',NULL    ,  'Dokter tumbuh kembang',   'Pemeriksaan berkala','[{"hari":"Jumat","jam":"09.00-11.00"}]',  -7.2700, 112.7680, 'Surabaya'),
+  (6,  'Sanggar Bicara Ceria',       NULL     , 'Terapis wicara',          'Terapi wicara',      '[{"hari":"Senin","jam":"13.00-15.00"}]',  -7.3050, 112.7250, 'Surabaya'),
+  (7,  'Klinik Anak Nusantara',      NULL    ,  'Dokter tumbuh kembang',   'Pemeriksaan berkala','[{"hari":"Selasa","jam":"09.00-11.00"}]', -7.2480, 112.7280, 'Surabaya'),
+  (8,  'Rumah Belajar Pelangi',      NULL   ,   'Terapis okupasi',         'Terapi okupasi',     '[{"hari":"Rabu","jam":"13.00-15.00"}]',   -7.3180, 112.7400, 'Sidoarjo'),
+  (9,  'Praktik Psikologi Cempaka',  NULL     , 'Psikolog anak',           'Asesmen perkembangan','[{"hari":"Kamis","jam":"09.00-11.00"}]', -7.4478, 112.7183, 'Sidoarjo'),
+  (10, 'Klinik Bina Mandiri',        NULL    ,  'Terapis okupasi',         'Terapi okupasi',     '[{"hari":"Jumat","jam":"13.00-15.00"}]',  -7.1554, 112.6531, 'Gresik'),
+  (11, 'Sanggar Wicara Gresik',      NULL     , 'Terapis wicara',          'Terapi wicara',      '[{"hari":"Senin","jam":"09.00-11.00"}]',  -7.1620, 112.6600, 'Gresik'),
+  (12, 'Pusat Sensorik Darmo',       NULL   ,   'Terapis sensorik',        'Integrasi sensorik', '[{"hari":"Selasa","jam":"15.00-17.00"}]', -7.2900, 112.7400, 'Surabaya'),
+  (13, 'Klinik Anak Rungkut',        NULL    ,  'Dokter tumbuh kembang',   'Pemeriksaan berkala','[{"hari":"Rabu","jam":"09.00-11.00"}]',   -7.3300, 112.7650, 'Surabaya'),
+  (14, 'Praktik Psikologi Wiyung',   NULL     , 'Psikolog anak',           'Konsultasi orang tua','[{"hari":"Kamis","jam":"13.00-15.00"}]', -7.3100, 112.6800, 'Surabaya'),
+  (15, 'Rumah Terapi Malang Raya',   NULL   ,   'Terapis okupasi',         'Terapi okupasi',     '[{"hari":"Jumat","jam":"09.00-11.00"}]',  -7.9666, 112.6326, 'Malang')
 ) as t(i, nama, gelar, spesialisasi, layanan, jadwal, lat, lng, kota);
 
 insert into profesional (
@@ -206,21 +206,21 @@ select
   array[layanan], jadwal::jsonb, lat, lng, kota, 'disetujui',
   'STR-CONTOH-' || lpad(i::text, 4, '0')
 from (values
-  (1,  'Klinik Tumbuh Harmoni',      'Klinik',  'Terapis wicara',        'Terapi wicara',       '[{"hari":"Senin","jam":"09.00-11.00"}]',  -7.2575, 112.7521, 'Surabaya'),
-  (2,  'Pusat Terapi Anak Melati',   'Pusat',   'Terapis okupasi',       'Terapi okupasi',      '[{"hari":"Selasa","jam":"13.00-15.00"}]', -7.2650, 112.7420, 'Surabaya'),
-  (3,  'Ruang Tenang Kenjeran',      'Pusat',   'Terapis sensorik',      'Integrasi sensorik',  '[{"hari":"Rabu","jam":"09.00-11.00"}]',   -7.2360, 112.7930, 'Surabaya'),
-  (4,  'Praktik Psikologi Anggrek',  'Praktik', 'Psikolog anak',         'Konsultasi orang tua','[{"hari":"Kamis","jam":"15.00-17.00"}]',  -7.2890, 112.7350, 'Surabaya'),
-  (5,  'Klinik Tumbuh Kembang Cakra','Klinik',  'Dokter tumbuh kembang', 'Pemeriksaan berkala', '[{"hari":"Jumat","jam":"09.00-11.00"}]',  -7.2700, 112.7680, 'Surabaya'),
-  (6,  'Sanggar Bicara Ceria',       'Sanggar', 'Terapis wicara',        'Terapi wicara',       '[{"hari":"Senin","jam":"13.00-15.00"}]',  -7.3050, 112.7250, 'Surabaya'),
-  (7,  'Klinik Anak Nusantara',      'Klinik',  'Dokter tumbuh kembang', 'Pemeriksaan berkala', '[{"hari":"Selasa","jam":"09.00-11.00"}]', -7.2480, 112.7280, 'Surabaya'),
-  (8,  'Rumah Belajar Pelangi',      'Pusat',   'Terapis okupasi',       'Terapi okupasi',      '[{"hari":"Rabu","jam":"13.00-15.00"}]',   -7.3180, 112.7400, 'Sidoarjo'),
-  (9,  'Praktik Psikologi Cempaka',  'Praktik', 'Psikolog anak',         'Asesmen perkembangan','[{"hari":"Kamis","jam":"09.00-11.00"}]',  -7.4478, 112.7183, 'Sidoarjo'),
-  (10, 'Klinik Bina Mandiri',        'Klinik',  'Terapis okupasi',       'Terapi okupasi',      '[{"hari":"Jumat","jam":"13.00-15.00"}]',  -7.1554, 112.6531, 'Gresik'),
-  (11, 'Sanggar Wicara Gresik',      'Sanggar', 'Terapis wicara',        'Terapi wicara',       '[{"hari":"Senin","jam":"09.00-11.00"}]',  -7.1620, 112.6600, 'Gresik'),
-  (12, 'Pusat Sensorik Darmo',       'Pusat',   'Terapis sensorik',      'Integrasi sensorik',  '[{"hari":"Selasa","jam":"15.00-17.00"}]', -7.2900, 112.7400, 'Surabaya'),
-  (13, 'Klinik Anak Rungkut',        'Klinik',  'Dokter tumbuh kembang', 'Pemeriksaan berkala', '[{"hari":"Rabu","jam":"09.00-11.00"}]',   -7.3300, 112.7650, 'Surabaya'),
-  (14, 'Praktik Psikologi Wiyung',   'Praktik', 'Psikolog anak',         'Konsultasi orang tua','[{"hari":"Kamis","jam":"13.00-15.00"}]',  -7.3100, 112.6800, 'Surabaya'),
-  (15, 'Rumah Terapi Malang Raya',   'Pusat',   'Terapis okupasi',       'Terapi okupasi',      '[{"hari":"Jumat","jam":"09.00-11.00"}]',  -7.9666, 112.6326, 'Malang')
+  (1,  'Klinik Tumbuh Harmoni',      NULL    ,  'Terapis wicara',        'Terapi wicara',       '[{"hari":"Senin","jam":"09.00-11.00"}]',  -7.2575, 112.7521, 'Surabaya'),
+  (2,  'Pusat Terapi Anak Melati',   NULL   ,   'Terapis okupasi',       'Terapi okupasi',      '[{"hari":"Selasa","jam":"13.00-15.00"}]', -7.2650, 112.7420, 'Surabaya'),
+  (3,  'Ruang Tenang Kenjeran',      NULL   ,   'Terapis sensorik',      'Integrasi sensorik',  '[{"hari":"Rabu","jam":"09.00-11.00"}]',   -7.2360, 112.7930, 'Surabaya'),
+  (4,  'Praktik Psikologi Anggrek',  NULL     , 'Psikolog anak',         'Konsultasi orang tua','[{"hari":"Kamis","jam":"15.00-17.00"}]',  -7.2890, 112.7350, 'Surabaya'),
+  (5,  'Klinik Tumbuh Kembang Cakra',NULL    ,  'Dokter tumbuh kembang', 'Pemeriksaan berkala', '[{"hari":"Jumat","jam":"09.00-11.00"}]',  -7.2700, 112.7680, 'Surabaya'),
+  (6,  'Sanggar Bicara Ceria',       NULL     , 'Terapis wicara',        'Terapi wicara',       '[{"hari":"Senin","jam":"13.00-15.00"}]',  -7.3050, 112.7250, 'Surabaya'),
+  (7,  'Klinik Anak Nusantara',      NULL    ,  'Dokter tumbuh kembang', 'Pemeriksaan berkala', '[{"hari":"Selasa","jam":"09.00-11.00"}]', -7.2480, 112.7280, 'Surabaya'),
+  (8,  'Rumah Belajar Pelangi',      NULL   ,   'Terapis okupasi',       'Terapi okupasi',      '[{"hari":"Rabu","jam":"13.00-15.00"}]',   -7.3180, 112.7400, 'Sidoarjo'),
+  (9,  'Praktik Psikologi Cempaka',  NULL     , 'Psikolog anak',         'Asesmen perkembangan','[{"hari":"Kamis","jam":"09.00-11.00"}]',  -7.4478, 112.7183, 'Sidoarjo'),
+  (10, 'Klinik Bina Mandiri',        NULL    ,  'Terapis okupasi',       'Terapi okupasi',      '[{"hari":"Jumat","jam":"13.00-15.00"}]',  -7.1554, 112.6531, 'Gresik'),
+  (11, 'Sanggar Wicara Gresik',      NULL     , 'Terapis wicara',        'Terapi wicara',       '[{"hari":"Senin","jam":"09.00-11.00"}]',  -7.1620, 112.6600, 'Gresik'),
+  (12, 'Pusat Sensorik Darmo',       NULL   ,   'Terapis sensorik',      'Integrasi sensorik',  '[{"hari":"Selasa","jam":"15.00-17.00"}]', -7.2900, 112.7400, 'Surabaya'),
+  (13, 'Klinik Anak Rungkut',        NULL    ,  'Dokter tumbuh kembang', 'Pemeriksaan berkala', '[{"hari":"Rabu","jam":"09.00-11.00"}]',   -7.3300, 112.7650, 'Surabaya'),
+  (14, 'Praktik Psikologi Wiyung',   NULL     , 'Psikolog anak',         'Konsultasi orang tua','[{"hari":"Kamis","jam":"13.00-15.00"}]',  -7.3100, 112.6800, 'Surabaya'),
+  (15, 'Rumah Terapi Malang Raya',   NULL   ,   'Terapis okupasi',       'Terapi okupasi',      '[{"hari":"Jumat","jam":"09.00-11.00"}]',  -7.9666, 112.6326, 'Malang')
 ) as t(i, nama, gelar, spesialisasi, layanan, jadwal, lat, lng, kota);
 
 -- ====================================================== riwayat 4 minggu ==
